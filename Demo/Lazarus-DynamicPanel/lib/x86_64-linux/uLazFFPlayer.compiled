@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="/usr/local/codetyphon/fpc/fpc64/bin/x86_64-linux/fpc" Date="1597520640"/>
+  <Params Value=" -MObjFPC -Scghi -Cg -O2 -gw2 -godwarfsets -gl -l -vewnhibq -Fi/mnt/dataHDD/VM-Share/Github/FFPlay-3.4.8/Demo/Lazarus/lib/x86_64-linux -Fl/usr/local/lib -Fu/usr/local/codetyphon/typhon/lcl/units/x86_64-linux/gtk2 -Fu/usr/local/codetyphon/typhon/lcl/units/x86_64-linux -Fu/usr/local/codetyphon/typhon/components/BaseUtils/lib/x86_64-linux -Fu/usr/local/codetyphon/typhon/packager/units/x86_64-linux -Fu/mnt/dataHDD/VM-Share/Github/FFPlay-3.4.8/Demo/Lazarus/ -FU/mnt/dataHDD/VM-Share/Github/FFPlay-3.4.8/Demo/Lazarus/lib/x86_64-linux/ -FE/mnt/dataHDD/VM-Share/Github/FFPlay-3.4.8/Demo/Bin/ -o/mnt/dataHDD/VM-Share/Github/FFPlay-3.4.8/Demo/Bin/uLazFFPlayer -dLCL -dadLCL -dLCLgtk2 -dUseCThreads uLazFFPlayer.ppr"/>
+</CONFIG>

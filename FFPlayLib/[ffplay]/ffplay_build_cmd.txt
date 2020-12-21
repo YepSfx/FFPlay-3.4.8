@@ -1,0 +1,4 @@
+gcc -fPIC -I. -I./ -I.. -I../ -O3 -g -c -o cmdutils.o cmdutils.c
+gcc -fPIC -I. -I./ -I.. -I../ -I/usr/include/SDL2 -D_REENTRANT -g -O3 -c -o ffplay.o ffplay.c
+gcc -o ffplay_g cmdutils.o ffplay.o -L/usr/local/lib -lavdevice -lavfilter -lavformat -lavcodec -lswresample -lswscale -lavutil -lXv -lX11 -lXext -lxcb -lxcb-shm -lxcb-xfixes -lxcb-shape -lsndio -lasound -lSDL2 -lm -ldl -lz -pthread
+strip -o FFPlay-3.4.8 ffplay_g
