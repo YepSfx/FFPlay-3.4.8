@@ -394,12 +394,12 @@ static const struct TextureFormatEntry {
 
 //---->> FFPlayLib
     static int isFileOpen = 0;
-    static int isAudioLock = 0;
+
     static FFP_EVENTS  *FFP_events = NULL;
     static FFP_AUD_PARAMS ffp_aud_params;
     static FFP_VID_PARAMS ffp_vid_params;
     static FFP_VID_PARAMS ffp_vidstr_params;
-    static VideoState  *FFP_is    = NULL;;
+    static VideoState  *FFP_is    = NULL;
 
     static void __ClearVideoState()
     {
@@ -943,22 +943,28 @@ static int realloc_texture(SDL_Texture **texture, Uint32 new_format, int new_wid
 {
     Uint32 format;
     int access, w, h;
+
     if (SDL_QueryTexture(*texture, &format, &access, &w, &h) < 0 || new_width != w || new_height != h || new_format != format) {
         void *pixels;
         int pitch;
         SDL_DestroyTexture(*texture);
         if (!(*texture = SDL_CreateTexture(renderer, new_format, SDL_TEXTUREACCESS_STREAMING, new_width, new_height)))
+        {
             return -1;
+        }
         if (SDL_SetTextureBlendMode(*texture, blendmode) < 0)
+        {
             return -1;
-        if (init_texture) {
+        }
+        if (init_texture) 
+        {
             if (SDL_LockTexture(*texture, NULL, &pixels, &pitch) < 0)
                 return -1;
             memset(pixels, 0, pitch * new_height);
             SDL_UnlockTexture(*texture);
         }
         av_log(NULL, AV_LOG_VERBOSE, "Created %dx%d texture with %s.\n", new_width, new_height, SDL_GetPixelFormatName(new_format));
-        FFP_LOG( FFP_INFO_DEBUG, "Created %dx%d texture with %s.\n", new_width, new_height, SDL_GetPixelFormatName(new_format) );        
+        FFP_LOG( FFP_INFO_DEBUG, "Created %dx%d texture with %s.(pitch:%d ; height:%d)\n", new_width, new_height, SDL_GetPixelFormatName(new_format), pitch, new_height );        
     }
     return 0;
 }
@@ -1477,6 +1483,7 @@ static void set_default_window_size(int width, int height, AVRational sar)
 static int video_open(VideoState *is)
 {
     int w,h;
+    FFP_LOG( FFP_INFO_ERROR, "---->> video_open()\n" );
     if (screen_width) {
         w = screen_width;
         h = screen_height;
@@ -3283,6 +3290,7 @@ static VideoState *stream_open(const char *filename, AVInputFormat *iformat)
     is = av_mallocz(sizeof(VideoState));
     if (!is)
         return NULL;
+            
     is->filename = av_strdup(filename);
     if (!is->filename)
         goto fail;
@@ -3972,7 +3980,6 @@ static void event_gui_loop(VideoState *cur_stream)
     SDL_Event event;
     double incr, pos, frac;
     int isQuit = 0;
-    
     for (;;) {
         double x;
         event_loop_alive = 1;
@@ -4314,9 +4321,13 @@ int EXPORTDLL multimedia_init_device(FFP_EVENTS *ffp_events)
     
     init_yuv420p_table();
     
-    autoexit = 1;	
-    duration = 0;
-    
+    autoexit 		= 1;	
+    duration 		= 0;
+    screen_width 	= 0;
+    screen_height 	= 0;    
+    default_width 	= 640;
+    default_height 	= 480;
+
     av_log_set_flags(AV_LOG_SKIP_REPEATED);    
 
         /* register all codecs, demux and protocols */
@@ -4398,7 +4409,7 @@ int EXPORTDLL multimedia_init_device(FFP_EVENTS *ffp_events)
             #ifdef _DEF_WIN
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             #else
-            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE);
+            renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_SOFTWARE );
             #endif
             if (!renderer) 
             {
@@ -4457,7 +4468,7 @@ static SDL_Thread *FFPThread = NULL;
 
 static int runPlayThread(void *ptr)
 {
-    
+
     multimedia_stream_start();
 
     return 0;
@@ -4472,13 +4483,14 @@ static int runPlayThreadWithInit(void *ptr)
         multimedia_exit();
         return 1;
     }
-     
+
     if ( !multimedia_stream_open() )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to open the stream!\n" );
 	multimedia_exit();        
 	return 2;
     }
+
     multimedia_stream_start();
     return 0;
 }

@@ -40,6 +40,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormWindowStateChange(Sender: TObject);
     procedure ImageRGBClick(Sender: TObject);
     procedure Panel1Resize(Sender: TObject);
     procedure PanelYUVMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -139,8 +140,8 @@ procedure EventInfo( sender : pointer; infoCode : Integer ; msg : PFFP_CHAR ) ; 
 begin
   //if (infocode <> Integer(FFP_INFO_DEBUG)) then
   begin
-    //dbgMsg := String(msg);
-    //PrintDebugMessage(dbgMsg);
+    dbgMsg := String(msg);
+//    PrintDebugMessage(dbgMsg);
   end;
 end;
 
@@ -278,6 +279,7 @@ begin
                    PanelYUV.Visible:= False;
                    ImageRGB.Visible:= False;
                    StopPlaying();
+                   Self.WindowState:= wsNormal;
                    end;
   FFP_PLAY:   begin
                    Timer1.Enabled := True;
@@ -368,6 +370,11 @@ begin
 
 end;
 
+procedure TfrmMain.FormWindowStateChange(Sender: TObject);
+begin
+
+end;
+
 procedure TfrmMain.ImageRGBClick(Sender: TObject);
 begin
 
@@ -411,6 +418,8 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
       XWinID    : TXID;
 {$ENDIF}
 begin
+  Self.WindowState:= wsNormal;
+  Application.ProcessMessages();
   sti_events.sender           := self;
 {$IFDEF DEF_OUTPUT_WIN}
   sti_events.screenID         := PanelYUV.Handle;
@@ -457,8 +466,11 @@ begin
 {$ELSE}
        if OpenDialog.Execute() then
        begin
+         Application.ProcessMessages();
          mediaFile := AnsiString(OpenDialog.FileName);
          try
+           Self.WindowState:= wsMaximized;
+           Application.ProcessMessages();
            multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
          except
            ShowMessage('Have a problem to play!');

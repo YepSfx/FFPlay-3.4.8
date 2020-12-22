@@ -33,7 +33,6 @@ void PlayProgress(void *sender)
 void CallbackVideo(void *sender, void *videoData)
 {
    FFP_RGB_DATA *rgbData = (FFP_RGB_DATA*)videoData;
-   multimedia_rgb_swap(rgbData->pixels, rgbData->w, rgbData->h, 4, 0, 8, 16);
    SaveFramebufferAsPPM(rgbData->pixels, rgbData->w, rgbData->h, 4 ); 
 } 
 
@@ -61,7 +60,7 @@ void CallbackResize(void *sender, int w , int h)
 
 void MessageInfo(void *sender, int infoCode, char *Message)
 {
-//        printf( "--->> %d: %s\n", infoCode, Message );
+        printf( "--->> %d: %s\n", infoCode, Message );
 }
 
 int main(int argc, char **argv)
@@ -77,8 +76,8 @@ int main(int argc, char **argv)
     FFP_events.ui_type       = FFP_CLI;
     FFP_events.event_exit    = ExitEvent; 
     FFP_events.event_info    = MessageInfo;
-    FFP_events.event_audio   = CallbackAudio;
-    FFP_events.event_video   = CallbackVideo;
+    FFP_events.event_audio   = NULL;//CallbackAudio;
+    FFP_events.event_video   = NULL;//CallbackVideo;
     FFP_events.event_video_resize = CallbackResize;
     FFP_events.playstatus    = FFP_STOP;
     
