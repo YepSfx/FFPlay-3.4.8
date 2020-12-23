@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="410"/>
-        <CursorPos X="32" Y="422"/>
+        <TopLine Value="128"/>
+        <CursorPos X="28" Y="144"/>
         <UsageCount Value="180"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -210,19 +210,19 @@
       </Position26>
       <Position27>
         <Filename Value="umain.pas"/>
-        <Caret Line="375" Column="3" TopLine="380"/>
+        <Caret Line="471" TopLine="471"/>
       </Position27>
       <Position28>
         <Filename Value="umain.pas"/>
-        <Caret Line="471" TopLine="471"/>
+        <Caret Line="375" Column="3" TopLine="365"/>
       </Position28>
       <Position29>
         <Filename Value="umain.pas"/>
-        <Caret Line="375" Column="3" TopLine="365"/>
+        <Caret Line="421" Column="30" TopLine="410"/>
       </Position29>
       <Position30>
         <Filename Value="umain.pas"/>
-        <Caret Line="421" Column="30" TopLine="410"/>
+        <Caret Line="422" Column="32" TopLine="410"/>
       </Position30>
     </JumpHistory>
     <RunParams>

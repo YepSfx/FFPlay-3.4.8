@@ -1321,6 +1321,21 @@ static void video_audio_display(VideoState *s)
                 }
                 SDL_UnlockTexture(s->vis_texture);
             }
+#ifndef DEF_WIN
+            if (FFP_events->ui_type == FFP_GUI)
+            {
+		SDL_Rect viewRect;
+               SDL_RenderGetViewport( renderer, &viewRect );
+               if ((viewRect.w != s->width) || (viewRect.h != s->height))
+               {
+		   viewRect.x = 0;
+		   viewRect.y = 0;
+		   viewRect.w = s->width;
+		   viewRect.h = s->height;
+		   SDL_RenderSetViewport(renderer, &viewRect);
+		}
+            }
+#endif            
             SDL_RenderCopy(renderer, s->vis_texture, NULL, NULL);
         }
         if (!s->paused)
@@ -1483,7 +1498,7 @@ static void set_default_window_size(int width, int height, AVRational sar)
 static int video_open(VideoState *is)
 {
     int w,h;
-    FFP_LOG( FFP_INFO_ERROR, "---->> video_open()\n" );
+
     if (screen_width) {
         w = screen_width;
         h = screen_height;

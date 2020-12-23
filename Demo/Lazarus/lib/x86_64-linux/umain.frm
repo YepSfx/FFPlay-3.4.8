@@ -10,12 +10,13 @@ object frmMain: TfrmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
+  OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '6.5'
+  LCLVersion = '7.1'
   object ScrollBar1: TScrollBar
     Left = 8
-    Height = 13
-    Top = 394
+    Height = 10
+    Top = 397
     Width = 793
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
@@ -69,7 +70,7 @@ object frmMain: TfrmMain
     Font.Height = -8
     Font.Name = 'Sans'
     Lines.Strings = (
-      'Memo1'
+      'Clean up and Build ...'
     )
     ParentFont = False
     ReadOnly = True

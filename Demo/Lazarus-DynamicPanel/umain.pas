@@ -52,7 +52,7 @@ type
     FThreadPlayingID   : TThreadID;
     FresImage          : TBitmap;
     sti_events         : TFFP_EVENTS;
-    PAnelYUV           : TGroupBox;
+    PanelYUV           : TGroupBox;
   public
     { public declarations }
     procedure OnResizeScreen(var Msg : TLMessage); message WM_USER_RESIZE;
@@ -295,6 +295,7 @@ begin
                    Application.ProcessMessages();
                    multimedia_resize_screen(PanelYUV.Width, PanelYUV.Height);
                    Application.ProcessMessages();
+                   PanelYUV.Invalidate();
                    end
   else begin
        end;
@@ -598,6 +599,7 @@ begin
   PanelYUV.Top    := Panel1.Top;
   PanelYUV.Left   := Panel1.Left;
   PanelYUV.Anchors:= [akLeft, akRight, akTop, akBottom];
+  PanelYUV.Invalidate();
   Application.ProcessMessages();
 end;
 

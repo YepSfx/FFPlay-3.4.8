@@ -141,7 +141,7 @@ begin
   //if (infocode <> Integer(FFP_INFO_DEBUG)) then
   begin
     dbgMsg := String(msg);
-//    PrintDebugMessage(dbgMsg);
+    PrintDebugMessage(dbgMsg);
   end;
 end;
 

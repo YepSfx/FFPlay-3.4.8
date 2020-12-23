@@ -11,7 +11,7 @@ object frmMain: TfrmMain
   OnDestroy = FormDestroy
   OnResize = FormResize
   Position = poScreenCenter
-  LCLVersion = '6.5'
+  LCLVersion = '7.1'
   object ScrollBar1: TScrollBar
     Left = 8
     Height = 10
@@ -53,9 +53,9 @@ object frmMain: TfrmMain
   end
   object Label1: TLabel
     Left = 8
-    Height = 16
-    Top = 425
-    Width = 37
+    Height = 17
+    Top = 424
+    Width = 45
     Anchors = [akLeft, akBottom]
     Caption = 'Label1'
     ParentColor = False
@@ -77,10 +77,10 @@ object frmMain: TfrmMain
     TabOrder = 4
   end
   object Label2: TLabel
-    Left = 823
-    Height = 16
+    Left = 808
+    Height = 17
     Top = 134
-    Width = 90
+    Width = 105
     Anchors = [akTop, akRight]
     Caption = 'Debug Message'
     ParentColor = False
