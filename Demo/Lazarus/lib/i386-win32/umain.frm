@@ -12,7 +12,7 @@ object frmMain: TfrmMain
   OnResize = FormResize
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '7.1'
+  LCLVersion = '6.5'
   object ScrollBar1: TScrollBar
     Left = 8
     Height = 10
@@ -54,9 +54,9 @@ object frmMain: TfrmMain
   end
   object Label1: TLabel
     Left = 8
-    Height = 17
-    Top = 424
-    Width = 45
+    Height = 16
+    Top = 425
+    Width = 37
     Anchors = [akLeft, akBottom]
     Caption = 'Label1'
     ParentColor = False
@@ -78,10 +78,10 @@ object frmMain: TfrmMain
     TabOrder = 4
   end
   object Label2: TLabel
-    Left = 808
-    Height = 17
+    Left = 823
+    Height = 16
     Top = 134
-    Width = 105
+    Width = 90
     Anchors = [akTop, akRight]
     Caption = 'Debug Message'
     ParentColor = False
@@ -95,6 +95,7 @@ object frmMain: TfrmMain
     Color = clInfoBk
     ParentColor = False
     TabOrder = 5
+    OnMouseDown = PanelYUVMouseDown
     OnMouseMove = PanelYUVMouseMove
     OnResize = PanelYUVResize
   end
@@ -103,9 +104,11 @@ object frmMain: TfrmMain
     Height = 385
     Top = 6
     Width = 791
+    AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]
     Center = True
     OnClick = ImageRGBClick
+    OnMouseDown = ImageRGBMouseDown
     Proportional = True
     Stretch = True
   end

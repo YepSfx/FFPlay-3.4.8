@@ -359,7 +359,7 @@ static int64_t audio_callback_time;
 
 static AVPacket flush_pkt;
 
-#define FF_QUIT_EVENT    (SDL_USEREVENT + 2)
+#define FF_QUIT_EVENT    		(SDL_USEREVENT + 2)
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
@@ -3497,8 +3497,10 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
             #endif
         }
         SDL_PumpEvents();
+#ifdef DEF_WIN
         SDL_Delay( (int)(remaining_time*1000) );
         remaining_time = 0.0;
+#endif
       }
 }
 
@@ -3765,8 +3767,8 @@ static int lockmgr(void **mtx, enum AVLockOp op)
 #define PIXELBYTE32     4
 #define PIXELBYTE24     3
 
-#define FF_PAUSERESME_EVENT    (SDL_USEREVENT + 3)
-
+#define FF_PAUSERESME_EVENT    	(SDL_USEREVENT + 3)
+#define FF_FULLSCREEN_EVENT      	(SDL_USEREVENT + 10)
 static int event_loop_alive = 0;
 
 /* handle an event sent by the GUI */
@@ -4036,6 +4038,10 @@ static void event_gui_loop(VideoState *cur_stream)
             case FF_PAUSERESME_EVENT:
                 toggle_pause(cur_stream);
                 break;
+	    case FF_FULLSCREEN_EVENT:
+		 toggle_full_screen(cur_stream);
+    		 FFP_is->force_refresh = 1;
+	    	break; 		
             default:
                 break;
         }
@@ -4322,10 +4328,11 @@ void multimedia_halt_palying()
     multimedia_stream_stop(); 
 }
 
-void multimedia_toggle_fullscreen()
+void  multimedia_toggle_fullscreen()
 {
-    toggle_full_screen(FFP_is);
-    FFP_is->force_refresh = 1;
+  SDL_Event   event;
+  event.type = FF_FULLSCREEN_EVENT;
+  SDL_PushEvent(&event);
 }
 
 int EXPORTDLL multimedia_init_device(FFP_EVENTS *ffp_events)
@@ -4421,7 +4428,7 @@ int EXPORTDLL multimedia_init_device(FFP_EVENTS *ffp_events)
         }    
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
         if (window) {
-            #ifdef _DEF_WIN
+            #ifdef DEF_WIN
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             #else
             renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_SOFTWARE );

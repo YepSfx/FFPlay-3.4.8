@@ -24,7 +24,7 @@ type
     ButtonPause : TButton;
     ButtonStop  : TButton;
     ButtonPlay  : TButton;
-    ImageRGB: TImage;
+    ImageRGB    : TImage;
     Label1      : TLabel;
     Label2      : TLabel;
     Memo1       : TMemo;
@@ -42,7 +42,11 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure ImageRGBClick(Sender: TObject);
+    procedure ImageRGBMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure Panel1Resize(Sender: TObject);
+    procedure PanelYUVMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure PanelYUVMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure PanelYUVResize(Sender: TObject);
@@ -282,7 +286,7 @@ begin
                    Self.WindowState:= wsNormal;
                    end;
   FFP_PLAY:   begin
-                   Timer1.Enabled := True;
+                   Timer1.Enabled     := True;
                    ButtonPlay.Enabled := False;
                    ButtonStop.Enabled := True;
                    ButtonPause.Enabled:= True;
@@ -367,15 +371,19 @@ end;
 
 procedure TfrmMain.FormResize(Sender: TObject);
 begin
-
 end;
 
 procedure TfrmMain.FormWindowStateChange(Sender: TObject);
 begin
-
 end;
 
 procedure TfrmMain.ImageRGBClick(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmMain.ImageRGBMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
 begin
 
 end;
@@ -384,6 +392,12 @@ procedure TfrmMain.Panel1Resize(Sender: TObject);
 begin
   resizeScreen(PanelYUV.Width, PanelYUV.Height);
   multimedia_resize_screen(PanelYUV.Width,PanelYUV.Height);
+end;
+
+procedure TfrmMain.PanelYUVMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  PrintDebugMessage('Mouse Down YUV');
 end;
 
 procedure TfrmMain.PanelYUVResize(Sender: TObject);
@@ -441,16 +455,16 @@ begin
   sti_events.eventVideo       := @EventVideo;
   PanelYUV.Enabled            := False;
   PanelYUV.Visible            := False;
-
+  {$IFDEF  DEF_OUTPUT_WIN}
   PanelYUV.Top :=             Height +100;
   PanelYUV.Left:=             Width +100;
-
+  {$ENDIF}
   ImageRGB.Visible            := True;
 {$ELSE}
   sti_events.eventVideo       := nil;
-  PanelYUV.Enabled            := True;
   PanelYUV.Visible            := True;
   ImageRGB.Visible            := False;
+  Application.ProcessMessages();
 {$ENDIF}
 
 {$IFDEF  DEF_OUTPUT_WIN}

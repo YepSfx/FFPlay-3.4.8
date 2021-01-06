@@ -95,6 +95,7 @@ object frmMain: TfrmMain
     Color = clInfoBk
     ParentColor = False
     TabOrder = 5
+    OnMouseDown = PanelYUVMouseDown
     OnMouseMove = PanelYUVMouseMove
     OnResize = PanelYUVResize
   end
@@ -103,9 +104,11 @@ object frmMain: TfrmMain
     Height = 385
     Top = 6
     Width = 791
+    AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]
     Center = True
     OnClick = ImageRGBClick
+    OnMouseDown = ImageRGBMouseDown
     Proportional = True
     Stretch = True
   end
