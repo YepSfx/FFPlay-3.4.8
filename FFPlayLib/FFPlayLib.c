@@ -3462,7 +3462,6 @@ static void toggle_audio_display(VideoState *is)
 static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
     double remaining_time = 0.0;
     double  currentTimeinMilliSecond = 0;
-    static int msgUpdate;
 
     SDL_PumpEvents();
     while (!SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) 
@@ -3476,31 +3475,22 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
         
         if (remaining_time > 0.0)
         {
-            av_usleep((int64_t)(remaining_time * 1000000.0));
+#ifdef DEF_WIN
+           SDL_Delay( (int)(remaining_time*1000) );
+           remaining_time = 0.0;
+#else
+           av_usleep((int64_t)(remaining_time * 1000000.0));
+#endif
         }
         remaining_time = REFRESH_RATE;
         if (is->show_mode != SHOW_MODE_NONE && (!is->paused || is->force_refresh))
         {
             video_refresh(is, &remaining_time);
-
-            #if 0
-            currentTimeinMilliSecond = (is->video_current_pts);
-            if ((!(msgUpdate++ % MSG_REFRESH))&&(duration!=AV_NOPTS_VALUE))   //Occurs around every 500ms
-            {
-                FFP_events->current_in_s = currentTimeinMilliSecond;
-                FFP_events->duration_in_us = duration;
-            }
-            #else
 	          currentTimeinMilliSecond = get_master_clock(is);
             FFP_events->current_in_s = currentTimeinMilliSecond;
             FFP_events->duration_in_us = duration;
-            #endif
         }
         SDL_PumpEvents();
-#ifdef DEF_WIN
-        SDL_Delay( (int)(remaining_time*1000) );
-        remaining_time = 0.0;
-#endif
       }
 }
 
@@ -4039,7 +4029,7 @@ static void event_gui_loop(VideoState *cur_stream)
                 toggle_pause(cur_stream);
                 break;
 	    case FF_FULLSCREEN_EVENT:
-		 toggle_full_screen(cur_stream);
+		     toggle_full_screen(cur_stream);
     		 FFP_is->force_refresh = 1;
 	    	break; 		
             default:
@@ -4096,7 +4086,7 @@ void EXPORTDLL multimedia_stream_start()
       event_cli_loop(FFP_is);
       break;
     case FFP_GUI:
-      FFP_LOG( FFP_INFO_DEBUG, "-----GUI LOOP-----");
+      FFP_LOG( FFP_INFO_DEBUG, "-----Pumping GUI Event-----");
       event_gui_loop(FFP_is);      
       break;
     default:
@@ -4428,11 +4418,7 @@ int EXPORTDLL multimedia_init_device(FFP_EVENTS *ffp_events)
         }    
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
         if (window) {
-            #ifdef DEF_WIN
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-            #else
-            renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_SOFTWARE );
-            #endif
             if (!renderer) 
             {
                 av_log(NULL, AV_LOG_WARNING, "Failed to initialize a hardware accelerated renderer: %s\n", SDL_GetError());
@@ -4509,8 +4495,8 @@ static int runPlayThreadWithInit(void *ptr)
     if ( !multimedia_stream_open() )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to open the stream!\n" );
-	multimedia_exit();        
-	return 2;
+	      multimedia_exit();        
+	      return 2;
     }
 
     multimedia_stream_start();

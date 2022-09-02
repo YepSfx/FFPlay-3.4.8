@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
-  Left = 324
+  Left = 459
   Height = 441
-  Top = 217
+  Top = 201
   Width = 1030
   Caption = 'lazPlayer'
   ClientHeight = 441
@@ -12,7 +12,7 @@ object frmMain: TfrmMain
   OnResize = FormResize
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
-  LCLVersion = '6.5'
+  LCLVersion = '7.8'
   object ScrollBar1: TScrollBar
     Left = 8
     Height = 10
@@ -54,11 +54,12 @@ object frmMain: TfrmMain
   end
   object Label1: TLabel
     Left = 8
-    Height = 16
-    Top = 425
-    Width = 37
+    Height = 15
+    Top = 426
+    Width = 34
     Anchors = [akLeft, akBottom]
     Caption = 'Label1'
+    Color = clDefault
     ParentColor = False
   end
   object Memo1: TMemo
@@ -78,12 +79,13 @@ object frmMain: TfrmMain
     TabOrder = 4
   end
   object Label2: TLabel
-    Left = 823
-    Height = 16
+    Left = 829
+    Height = 15
     Top = 134
-    Width = 90
+    Width = 84
     Anchors = [akTop, akRight]
     Caption = 'Debug Message'
+    Color = clDefault
     ParentColor = False
   end
   object PanelYUV: TGroupBox
@@ -93,6 +95,7 @@ object frmMain: TfrmMain
     Width = 792
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clInfoBk
+    ParentBackground = False
     ParentColor = False
     TabOrder = 5
     OnMouseDown = PanelYUVMouseDown

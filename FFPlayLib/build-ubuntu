@@ -15,3 +15,4 @@ strip FFPlay
 
 rm *.o
 rm ./config.h
+

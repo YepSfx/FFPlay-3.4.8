@@ -170,11 +170,11 @@ begin
      pDst := RGBBuffer;
      size := pRGB^.width * pRGB^.height * pRGB^.bpp;
      Move( pSrc^, pDst^, size );
-
      GetMem( pPlay , sizeof(TPlayData) );
      pPlay^.w   := pRGB^.width;
      pPlay^.h   := pRGB^.height;
      pPlay^.Bpp := 4;
+
      PostMessage( handle, WM_USER_REFRESH, PtrInt(pPlay), 0 );
 end;
 
@@ -283,7 +283,7 @@ begin
                    PanelYUV.Visible:= False;
                    ImageRGB.Visible:= False;
                    StopPlaying();
-                   Self.WindowState:= wsNormal;
+
                    end;
   FFP_PLAY:   begin
                    Timer1.Enabled     := True;
@@ -305,6 +305,7 @@ procedure TfrmMain.OnRefreshScreen(var Msg : TLMessage);
 
 begin
   pPlay := PPlayData(Msg.WParam);
+  multimedia_rgb_swap(RGBBuffer, pPlay^.w, pPlay^.h, pPlay^.Bpp, 16, 8, 0);
   updateScreen(RGBBuffer, pPlay^.w, pPlay^.h, pPlay^.Bpp);
   FreeMem(pPlay);
 end;
@@ -345,6 +346,7 @@ begin
   Self.Caption := 'Win32 LazFFPlayer';
   ImageRGB.Picture.Bitmap.PixelFormat := pf32Bit;
   FresImage.PixelFormat := pf32Bit;
+  Self.DoubleBuffered:=True;
   {$ELSE}
   Self.Caption := 'Linux lazPlayer';
   ImageRGB.Picture.Bitmap.PixelFormat := pf32Bit;
@@ -432,7 +434,7 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
       XWinID    : TXID;
 {$ENDIF}
 begin
-  Self.WindowState:= wsNormal;
+
   Application.ProcessMessages();
   sti_events.sender           := self;
 {$IFDEF DEF_OUTPUT_WIN}
@@ -455,10 +457,8 @@ begin
   sti_events.eventVideo       := @EventVideo;
   PanelYUV.Enabled            := False;
   PanelYUV.Visible            := False;
-  {$IFDEF  DEF_OUTPUT_WIN}
-  PanelYUV.Top :=             Height +100;
-  PanelYUV.Left:=             Width +100;
-  {$ENDIF}
+  PanelYUV.Top                := -4096*4;   //Relocate the YUV Panel to invisible area
+  PanelYUV.Left               := -4096*4;   //Relocate the YUV Panel to invisible area
   ImageRGB.Visible            := True;
 {$ELSE}
   sti_events.eventVideo       := nil;
@@ -483,7 +483,7 @@ begin
          Application.ProcessMessages();
          mediaFile := AnsiString(OpenDialog.FileName);
          try
-           Self.WindowState:= wsMaximized;
+
            Application.ProcessMessages();
            multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
          except
