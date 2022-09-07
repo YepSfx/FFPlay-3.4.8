@@ -15,8 +15,8 @@ object frmMain: TfrmMain
   LCLVersion = '7.8'
   object ScrollBar1: TScrollBar
     Left = 8
-    Height = 10
-    Top = 397
+    Height = 13
+    Top = 394
     Width = 793
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
@@ -25,7 +25,7 @@ object frmMain: TfrmMain
   object ButtonPlay: TButton
     Left = 808
     Height = 33
-    Top = 8
+    Top = 7
     Width = 211
     Anchors = [akTop, akRight]
     Caption = 'Play'
@@ -61,6 +61,7 @@ object frmMain: TfrmMain
     Caption = 'Label1'
     Color = clDefault
     ParentColor = False
+    Transparent = False
   end
   object Memo1: TMemo
     Left = 808
@@ -87,15 +88,14 @@ object frmMain: TfrmMain
     Caption = 'Debug Message'
     Color = clDefault
     ParentColor = False
+    Transparent = False
   end
   object PanelYUV: TGroupBox
-    Left = 8
-    Height = 384
-    Top = 8
-    Width = 792
+    Left = 9
+    Height = 376
+    Top = 7
+    Width = 791
     Anchors = [akTop, akLeft, akRight, akBottom]
-    Color = clInfoBk
-    ParentBackground = False
     ParentColor = False
     TabOrder = 5
     OnMouseDown = PanelYUVMouseDown
@@ -104,8 +104,8 @@ object frmMain: TfrmMain
   end
   object ImageRGB: TImage
     Left = 8
-    Height = 385
-    Top = 6
+    Height = 375
+    Top = 8
     Width = 791
     AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]

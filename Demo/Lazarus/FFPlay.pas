@@ -10,12 +10,12 @@ interface
 
        const FFP_AUDIO_U8	    = $0008;
        const FFP_AUDIO_S8	    = $8008;
-       const FFP_AUDIO_U16LSB	= $0010;
-       const FFP_AUDIO_S16LSB	= $8010;
-       const FFP_AUDIO_U16MSB	= $1010;
-       const FFP_AUDIO_S16MSB	= $9010;
-       const FFP_AUDIO_U16	  = FFP_AUDIO_U16LSB;
-       const FFP_AUDIO_S16	  = FFP_AUDIO_S16LSB;
+       const FFP_AUDIO_U16LSB	    = $0010;
+       const FFP_AUDIO_S16LSB	    = $8010;
+       const FFP_AUDIO_U16MSB	    = $1010;
+       const FFP_AUDIO_S16MSB	    = $9010;
+       const FFP_AUDIO_U16	    = FFP_AUDIO_U16LSB;
+       const FFP_AUDIO_S16	    = FFP_AUDIO_S16LSB;
 
        type TFFP_UITYPE = ( FFP_CLI = 0, FFP_GUI = 1 );
        type TFFP_BOOL   = ( FFP_FALSE = 0, FFP_TRUE = 1);
@@ -61,7 +61,7 @@ interface
        type TFFP_EVENTEXIT         = procedure( sender : pointer ; exitCode : Integer ) ; cdecl ;
        type TFFP_EVENTINFO         = procedure( sender : pointer ; infoCode : Integer ; msg : PFFP_CHAR ) ; cdecl ;
        type TFFP_EVENTAUDIO        = procedure( sender : pointer ; buff : PByte ; BuffLenInByte : Integer ) ; cdecl ;
-       type TFFP_EVENTVIDEO        = procedure( sender : pointer ; videoData :  Pointer ) ; cdecl ;
+       type TFFP_EVENTVIDEO        = procedure( sender : pointer ; videoData :  Pointer; isRGB : Integer ) ; cdecl ;
        type TFFP_EVENTVIDEORESIZE  = procedure( sender : pointer ; w , h : Integer ) ; cdecl;
        type TFFP_EVENTPLAYSTATUS   = procedure( sender : pointer ; status : TFFP_PLAY_STATUS ) ; cdecl;
 

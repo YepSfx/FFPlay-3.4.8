@@ -30,10 +30,13 @@ void PlayProgress(void *sender)
     FFP_AUD_PARAMS  *audParams = multimedia_get_audioformat();
 }
 
-void CallbackVideo(void *sender, void *videoData)
+void CallbackVideo(void *sender, void *videoData, int isRGB)
 {
-   FFP_RGB_DATA *rgbData = (FFP_RGB_DATA*)videoData;
-   SaveFramebufferAsPPM(rgbData->pixels, rgbData->w, rgbData->h, 4 ); 
+   if (isRGB != 0)
+   {
+      FFP_YUV420P_DATA *yuvData = (FFP_YUV420P_DATA*)videoData;
+      SaveFramebufferAsPPM(yuvData->pixels, yuvData->w, yuvData->h, 4 );  
+   }
 } 
 
 void CallbackAudio(void *sender, unsigned char **buffer, int BufLenInByte)
@@ -76,8 +79,8 @@ int main(int argc, char **argv)
     FFP_events.ui_type       = FFP_CLI;
     FFP_events.event_exit    = ExitEvent; 
     FFP_events.event_info    = MessageInfo;
-    FFP_events.event_audio   = NULL;//CallbackAudio;
-    FFP_events.event_video   = NULL;//CallbackVideo;
+    FFP_events.event_audio   = CallbackAudio;
+    FFP_events.event_video   = CallbackVideo;
     FFP_events.event_video_resize = CallbackResize;
     FFP_events.playstatus    = FFP_STOP;
     

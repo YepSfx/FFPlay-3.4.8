@@ -76,7 +76,7 @@ typedef enum {
 typedef void (*FFP_EVENT_EXIT)(void *sender, int exitCode);
 typedef void (*FFP_EVENT_INFO)(void *sender, int infoCode, char *Message);
 typedef void (*FFP_EVENT_AUDIO)(void *sender, unsigned char **AudBuffer, int BufferLengthInByte);
-typedef void (*FFP_EVENT_VIDEO)(void *sender, void *rgbData);
+typedef void (*FFP_EVENT_VIDEO)(void *sender, void *rgbData, int isRGB);
 typedef void (*FFP_EVENT_VIDEORESIZE)(void *sender, int width, int height);
 typedef void (*FFP_EVENT_PLAYSTATUS)(void *sender, FFP_PLAY_STATUS status);
 
@@ -116,6 +116,6 @@ void             EXPORTDLL multimedia_pause_resume();
 void             EXPORTDLL multimedia_stream_stop();  
 void             EXPORTDLL multimedia_stream_start();
 void             EXPORTDLL multimedia_exit();
-void 		  EXPORTDLL multimedia_test_screen( int xWinID, int latency ); 
+void 		         EXPORTDLL multimedia_test_screen( int xWinID, int latency ); 
 void             EXPORTDLL SaveFramebufferAsPPM(void* Buff, int w, int h, int Bpp); 
 

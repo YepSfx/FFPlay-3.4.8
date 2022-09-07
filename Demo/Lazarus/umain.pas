@@ -44,7 +44,6 @@ type
     procedure ImageRGBClick(Sender: TObject);
     procedure ImageRGBMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure Panel1Resize(Sender: TObject);
     procedure PanelYUVMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure PanelYUVMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -66,7 +65,6 @@ type
     procedure OnUserEvent(var Msg : TLMessage); message WM_USER_EVENT_UPDATE;
     procedure OnUserLog(var Msg : TLMessage); message WM_USER_EVENT_LOG;
     procedure stopPlaying();
-    procedure startPlaying();
     procedure updateScreen( Buffer : pointer ; w,h,Bpp : Integer);
     procedure updateTime(Current : double);
     procedure resizeScreen(w, h : Integer);
@@ -154,7 +152,7 @@ begin
 
 end;
 
-procedure EventVideo( sender : pointer ; videoData : Pointer ) ; cdecl;
+procedure EventVideo( sender : pointer ; videoData : Pointer ; isRGB : Integer  ) ; cdecl;
   var handle : HWND;
       msg    : String;
       pPlay  : PPlayData;
@@ -163,19 +161,35 @@ procedure EventVideo( sender : pointer ; videoData : Pointer ) ; cdecl;
       pSrc, pDst : PByte;
       size   : Integer;
 begin
-     handle := TfrmMain(sender).Handle;
-     pRGB := PFFP_RGB_DATA(videoData);
+{$IFDEF DEF_RGB}
+     if isRGB = 0 then
+     begin
+       handle := TfrmMain(sender).Handle;
+       pYUV := PFFP_YUV_DATA(videoData);
+       multimedia_yuv420p_to_rgb32( pYUV,  RGBBuffer);
 
-     pSrc := pRGB^.pixels;
-     pDst := RGBBuffer;
-     size := pRGB^.width * pRGB^.height * pRGB^.bpp;
-     Move( pSrc^, pDst^, size );
-     GetMem( pPlay , sizeof(TPlayData) );
-     pPlay^.w   := pRGB^.width;
-     pPlay^.h   := pRGB^.height;
-     pPlay^.Bpp := 4;
+       GetMem( pPlay , sizeof(TPlayData) );
+       FillChar( pPlay^,Sizeof(TPlayData), 0);
+       pPlay^.w   := pYUV^.width;
+       pPlay^.h   := pYUV^.height;
+       pPlay^.Bpp := 4;
+     end
+     else
+     begin
+       handle := TfrmMain(sender).Handle;
+       pRGB := PFFP_RGB_DATA(videoData);
 
+       pSrc := pRGB^.pixels;
+       pDst := RGBBuffer;
+       size := pRGB^.width * pRGB^.height * pRGB^.bpp;
+       Move( pSrc^, pDst^, size );
+       GetMem( pPlay , sizeof(TPlayData) );
+       pPlay^.w   := pRGB^.width;
+       pPlay^.h   := pRGB^.height;
+       pPlay^.Bpp := 4;
+     end;
      PostMessage( handle, WM_USER_REFRESH, PtrInt(pPlay), 0 );
+{$ENDIF}
 end;
 
 procedure EventResize(sender : pointer ; w, h : Integer) ; cdecl;
@@ -292,7 +306,7 @@ begin
                    ButtonPause.Enabled:= True;
                    resizeScreen(PanelYUV.Width, PanelYUV.Height);
                    multimedia_resize_screen(PanelYUV.Width, PanelYUV.Height);
-                   end
+              end
   else begin
        end;
   end;
@@ -312,9 +326,13 @@ end;
 
 procedure TfrmMain.OnResizeScreen(var Msg: TLMessage);
   var pPlay : PPlayData;
-      dMsg   : String;
+      dMsg  : String;
+      w,h   : Integer;
 begin
   pPlay := PPlayData(Msg.WParam);
+  w := pPlay^.w;
+  h := pPlay^.h;
+
   FreeMem(pPlay);
 end;
 
@@ -388,12 +406,6 @@ procedure TfrmMain.ImageRGBMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
 
-end;
-
-procedure TfrmMain.Panel1Resize(Sender: TObject);
-begin
-  resizeScreen(PanelYUV.Width, PanelYUV.Height);
-  multimedia_resize_screen(PanelYUV.Width,PanelYUV.Height);
 end;
 
 procedure TfrmMain.PanelYUVMouseDown(Sender: TObject; Button: TMouseButton;
@@ -483,7 +495,7 @@ begin
          Application.ProcessMessages();
          mediaFile := AnsiString(OpenDialog.FileName);
          try
-
+           Self.WindowState := wsMaximized;
            Application.ProcessMessages();
            multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
          except
@@ -511,7 +523,7 @@ end;
 procedure TfrmMain.stopPlaying();
   var i : Integer;
 begin
-  for i := 0 to 39 do
+  for i := 0 to 9 do
   begin
     Application.ProcessMessages();
     Sleep(10);
@@ -533,12 +545,14 @@ begin
 end;
 
 procedure TfrmMain.resizeScreen(w, h : Integer );
-  var center_x, center_y : Integer;
-      dMsg : String;
 begin
-{$IFDEF DEF_RGB}
-{$ELSE}
-{$ENDIF}
+  if (PanelYUV.Width <> w) or (PanelYUV.Height <> h) then
+  begin
+     PanelYUV.Width := w;
+     PanelYUV.Height:= h;
+     ImageRGB.Width := w;
+     ImageRGB.Height:=h;
+  end;
 end;
 
 procedure TfrmMain.UpdateScreen(Buffer : pointer ; w, h, BPP : Integer);
@@ -556,12 +570,6 @@ begin
   FresImage.EndUpdate(False);
 
   ImageRGB.Picture.Assign(FresImage);
-end;
-
-procedure TfrmMain.startPlaying();
-begin
-  FThreadPlayingID := BeginThread(@ThreadPlaying, @sti_events);
-  multimedia_resize_screen(PanelYUV.Width, PanelYUV.Height);
 end;
 
 end.

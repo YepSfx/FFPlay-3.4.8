@@ -1077,7 +1077,8 @@ static void video_image_display(VideoState *is)
     Frame *sp = NULL;
     SDL_Rect rect;
 
-    FFP_RGB_DATA    rgbData;
+    FFP_RGB_DATA      rgbData;
+    FFP_YUV420P_DATA  yuvData;
 
     vp = frame_queue_peek_last(&is->pictq);
     if (is->subtitle_st) {
@@ -1144,11 +1145,21 @@ static void video_image_display(VideoState *is)
 
     if (FFP_events->event_video)
     {
-        rgbData.w = vp->width;
-        rgbData.h = vp->height;
-        rgbData.BPP = 4;
-        rgbData.pixels = vp->frame->data[0];
-        FFP_events->event_video( FFP_events->sender, &rgbData );
+        if (vp->frame->format == AV_PIX_FMT_YUV420P)
+        {
+           yuvData.w = vp->width;
+           yuvData.h = vp->height;
+           yuvData.pixels = vp->frame->data;
+           FFP_events->event_video( FFP_events->sender, &yuvData, 0 );
+        }
+        else
+        {
+           rgbData.w = vp->width;
+           rgbData.h = vp->height;
+           rgbData.BPP = 4;
+           rgbData.pixels = vp->frame->data[0];
+           FFP_events->event_video( FFP_events->sender, &rgbData, 1 );
+        }
     }
     else  
     {
@@ -1324,16 +1335,16 @@ static void video_audio_display(VideoState *s)
 #ifndef DEF_WIN
             if (FFP_events->ui_type == FFP_GUI)
             {
-		SDL_Rect viewRect;
+		           SDL_Rect viewRect;
                SDL_RenderGetViewport( renderer, &viewRect );
                if ((viewRect.w != s->width) || (viewRect.h != s->height))
                {
-		   viewRect.x = 0;
-		   viewRect.y = 0;
-		   viewRect.w = s->width;
-		   viewRect.h = s->height;
-		   SDL_RenderSetViewport(renderer, &viewRect);
-		}
+		              viewRect.x = 0;
+		              viewRect.y = 0;
+		              viewRect.w = s->width;
+		              viewRect.h = s->height;
+		              SDL_RenderSetViewport(renderer, &viewRect);
+		           }
             }
 #endif            
             SDL_RenderCopy(renderer, s->vis_texture, NULL, NULL);
@@ -4086,7 +4097,7 @@ void EXPORTDLL multimedia_stream_start()
       event_cli_loop(FFP_is);
       break;
     case FFP_GUI:
-      FFP_LOG( FFP_INFO_DEBUG, "-----Pumping GUI Event-----");
+      FFP_LOG( FFP_INFO_DEBUG, "----GUI Event Handler----");
       event_gui_loop(FFP_is);      
       break;
     default:
