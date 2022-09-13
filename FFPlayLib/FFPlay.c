@@ -30,15 +30,28 @@ void PlayProgress(void *sender)
     FFP_AUD_PARAMS  *audParams = multimedia_get_audioformat();
 }
 
+#if 1
 void CallbackVideo(void *sender, void *videoData, int isRGB)
 {
-   if (isRGB != 0)
-   {
-      FFP_YUV420P_DATA *yuvData = (FFP_YUV420P_DATA*)videoData;
-      SaveFramebufferAsPPM(yuvData->pixels, yuvData->w, yuvData->h, 4 );  
-   }
+      if (isRGB != 1)
+      {
+         FFP_YUV420P_DATA *yuvData = (FFP_YUV420P_DATA*)videoData;
+         multimedia_yuv420p_to_rgb32( yuvData,  RGBBuff);      
+         SaveFramebufferAsPPM(RGBBuff, yuvData->w, yuvData->h, 4 );  
+      }
+      else
+      {
+         FFP_RGB_DATA *rgbData = (FFP_RGB_DATA*)videoData;
+         SaveFramebufferAsPPM(rgbData->pixels, rgbData->w, rgbData->h, rgbData->BPP );
+      }   
 } 
-
+#else
+void CallbackVideo(void *sender, void *videoData)
+{
+     FFP_RGB_DATA *rgbData = (FFP_RGB_DATA*)videoData;
+     SaveFramebufferAsPPM(rgbData->pixels, rgbData->w, rgbData->h, rgbData->BPP );
+} 
+#endif
 void CallbackAudio(void *sender, unsigned char **buffer, int BufLenInByte)
 {
     FFP_AUD_PARAMS *params = multimedia_get_audioformat();
@@ -57,8 +70,12 @@ void CallbackAudio(void *sender, unsigned char **buffer, int BufLenInByte)
     }    
 }
 
-void CallbackResize(void *sender, int w , int h)
+void CallbackResize(void *sender, int w , int h, int isOriginalSize)
 {
+    if (isOriginalSize)
+    {
+        printf( "--->> Report Original Size  %d x %d\n\n", w, h );
+    }
 }
 
 void MessageInfo(void *sender, int infoCode, char *Message)
@@ -77,13 +94,14 @@ int main(int argc, char **argv)
     
     FFP_events.sender        = &theID; 
     FFP_events.ui_type       = FFP_CLI;
+    FFP_events.bRendererRGB  = 0;
     FFP_events.event_exit    = ExitEvent; 
     FFP_events.event_info    = MessageInfo;
-    FFP_events.event_audio   = CallbackAudio;
-    FFP_events.event_video   = CallbackVideo;
+    FFP_events.event_audio   = NULL;//CallbackAudio;
+    FFP_events.event_video   = NULL;//CallbackVideo;
     FFP_events.event_video_resize = CallbackResize;
     FFP_events.playstatus    = FFP_STOP;
-    
+
     signal(SIGINT , sigterm_handler); /* Interrupt (ANSI).    */
     signal(SIGTERM, sigterm_handler); /* Termination (ANSI).  */
 

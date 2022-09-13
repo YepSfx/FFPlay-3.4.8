@@ -1,11 +1,11 @@
 object frmMain: TfrmMain
-  Left = 459
-  Height = 441
-  Top = 201
-  Width = 1030
+  Left = 330
+  Height = 524
+  Top = 215
+  Width = 1105
   Caption = 'lazPlayer'
-  ClientHeight = 441
-  ClientWidth = 1030
+  ClientHeight = 524
+  ClientWidth = 1105
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -16,113 +16,108 @@ object frmMain: TfrmMain
   object ScrollBar1: TScrollBar
     Left = 8
     Height = 13
-    Top = 394
-    Width = 793
+    Top = 453
+    Width = 1097
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 0
   end
   object ButtonPlay: TButton
-    Left = 808
-    Height = 33
-    Top = 7
+    Left = 456
+    Height = 35
+    Top = 477
     Width = 211
-    Anchors = [akTop, akRight]
+    Anchors = [akRight, akBottom]
     Caption = 'Play'
     OnClick = ButtonPlayClick
     TabOrder = 1
   end
   object ButtonStop: TButton
-    Left = 808
-    Height = 34
-    Top = 48
+    Left = 888
+    Height = 35
+    Top = 477
     Width = 211
-    Anchors = [akTop, akRight]
+    Anchors = [akRight, akBottom]
     Caption = 'Stop'
     OnClick = ButtonStopClick
     TabOrder = 2
   end
-  object ButtonPause: TButton
-    Left = 808
-    Height = 35
-    Top = 88
-    Width = 210
-    Anchors = [akTop, akRight]
-    Caption = 'Pause'
-    OnClick = ButtonPauseClick
-    TabOrder = 3
-  end
   object Label1: TLabel
-    Left = 8
-    Height = 15
-    Top = 426
-    Width = 34
+    Left = 9
+    Height = 1
+    Top = 502
+    Width = 1
     Anchors = [akLeft, akBottom]
-    Caption = 'Label1'
     Color = clDefault
     ParentColor = False
-    Transparent = False
-  end
-  object Memo1: TMemo
-    Left = 808
-    Height = 287
-    Top = 152
-    Width = 214
-    Anchors = [akTop, akRight, akBottom]
-    Font.Height = -8
-    Font.Name = 'Sans'
-    Lines.Strings = (
-      'Clean up and Build ...'
-    )
-    ParentFont = False
-    ReadOnly = True
-    ScrollBars = ssAutoBoth
-    TabOrder = 4
-  end
-  object Label2: TLabel
-    Left = 829
-    Height = 15
-    Top = 134
-    Width = 84
-    Anchors = [akTop, akRight]
-    Caption = 'Debug Message'
-    Color = clDefault
-    ParentColor = False
-    Transparent = False
   end
   object PanelYUV: TGroupBox
-    Left = 9
-    Height = 376
-    Top = 7
-    Width = 791
+    Left = 8
+    Height = 448
+    Top = 8
+    Width = 1091
     Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = clInfoBk
+    ParentBackground = False
     ParentColor = False
-    TabOrder = 5
+    TabOrder = 3
+    OnDblClick = PanelYUVDblClick
     OnMouseDown = PanelYUVMouseDown
     OnMouseMove = PanelYUVMouseMove
     OnResize = PanelYUVResize
   end
   object ImageRGB: TImage
-    Left = 8
-    Height = 375
+    Left = 9
+    Height = 448
     Top = 8
-    Width = 791
+    Width = 1090
     AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]
     Center = True
     OnClick = ImageRGBClick
+    OnDblClick = ImageRGBDblClick
     OnMouseDown = ImageRGBMouseDown
+    OnResize = ImageRGBResize
     Proportional = True
     Stretch = True
+    StretchInEnabled = False
+  end
+  object ButtonPause: TButton
+    Left = 672
+    Height = 35
+    Top = 477
+    Width = 209
+    Anchors = [akRight, akBottom]
+    Caption = 'Pause'
+    OnClick = ButtonPauseClick
+    TabOrder = 4
+  end
+  object Memo1: TMemo
+    Left = 8
+    Height = 453
+    Top = 3
+    Width = 367
+    Anchors = [akTop, akLeft, akBottom]
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -11
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Lines.Strings = (
+      'Memo1'
+    )
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 5
+    Visible = False
   end
   object Timer1: TTimer
     Enabled = False
     OnTimer = Timer1Timer
-    Left = 600
-    Top = 408
+    Left = 56
+    Top = 424
   end
   object OpenDialog: TOpenDialog
-    Left = 704
-    Top = 408
+    Left = 96
+    Top = 424
   end
 end

@@ -965,6 +965,12 @@ static int realloc_texture(SDL_Texture **texture, Uint32 new_format, int new_wid
         }
         av_log(NULL, AV_LOG_VERBOSE, "Created %dx%d texture with %s.\n", new_width, new_height, SDL_GetPixelFormatName(new_format));
         FFP_LOG( FFP_INFO_DEBUG, "Created %dx%d texture with %s.(pitch:%d ; height:%d)\n", new_width, new_height, SDL_GetPixelFormatName(new_format), pitch, new_height );        
+
+        if (FFP_events->event_video_resize)
+        {
+              FFP_events->event_video_resize( FFP_events->sender, new_width, new_height, 1 );
+        }
+        
     }
     return 0;
 }
@@ -1077,9 +1083,9 @@ static void video_image_display(VideoState *is)
     Frame *sp = NULL;
     SDL_Rect rect;
 
-    FFP_RGB_DATA      rgbData;
+    FFP_RGB_DATA    rgbData;    
     FFP_YUV420P_DATA  yuvData;
-
+    
     vp = frame_queue_peek_last(&is->pictq);
     if (is->subtitle_st) {
         if (frame_queue_nb_remaining(&is->subpq) > 0) {
@@ -1145,6 +1151,7 @@ static void video_image_display(VideoState *is)
 
     if (FFP_events->event_video)
     {
+#if 1
         if (vp->frame->format == AV_PIX_FMT_YUV420P)
         {
            yuvData.w = vp->width;
@@ -1160,6 +1167,14 @@ static void video_image_display(VideoState *is)
            rgbData.pixels = vp->frame->data[0];
            FFP_events->event_video( FFP_events->sender, &rgbData, 1 );
         }
+#else
+           rgbData.w = vp->width;
+           rgbData.h = vp->height;
+           rgbData.BPP = 4;
+           rgbData.pixels = vp->frame->data[0];
+           FFP_events->event_video( FFP_events->sender, &rgbData );
+
+#endif        
     }
     else  
     {
@@ -1335,16 +1350,16 @@ static void video_audio_display(VideoState *s)
 #ifndef DEF_WIN
             if (FFP_events->ui_type == FFP_GUI)
             {
-		           SDL_Rect viewRect;
+		SDL_Rect viewRect;
                SDL_RenderGetViewport( renderer, &viewRect );
                if ((viewRect.w != s->width) || (viewRect.h != s->height))
                {
-		              viewRect.x = 0;
-		              viewRect.y = 0;
-		              viewRect.w = s->width;
-		              viewRect.h = s->height;
-		              SDL_RenderSetViewport(renderer, &viewRect);
-		           }
+		   viewRect.x = 0;
+		   viewRect.y = 0;
+		   viewRect.w = s->width;
+		   viewRect.h = s->height;
+		   SDL_RenderSetViewport(renderer, &viewRect);
+		}
             }
 #endif            
             SDL_RenderCopy(renderer, s->vis_texture, NULL, NULL);
@@ -1459,10 +1474,12 @@ static void do_exit(VideoState *is)
     }
 #ifdef DEF_WIN
 	    if (renderer)
-		SDL_DestroyRenderer(renderer);
-
+	    {
+         SDL_RenderClear(renderer);
+		     SDL_DestroyRenderer(renderer);
+      }  
 	    if (window)
-		SDL_DestroyWindow(window);
+		     SDL_DestroyWindow(window);
 
 	    av_lockmgr_register(NULL);
 	    uninit_opts();
@@ -1477,8 +1494,10 @@ static void do_exit(VideoState *is)
 	    __exit(0);
 #else
 	    if (renderer)
-	    	SDL_DestroyRenderer(renderer);
-
+	    {
+   	     SDL_RenderClear(renderer);
+	    	 SDL_DestroyRenderer(renderer);
+      }
 	    if (window)
 	    	SDL_DestroyWindow(window);
 
@@ -3473,6 +3492,7 @@ static void toggle_audio_display(VideoState *is)
 static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
     double remaining_time = 0.0;
     double  currentTimeinMilliSecond = 0;
+    static int msgUpdate;
 
     SDL_PumpEvents();
     while (!SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) 
@@ -3486,22 +3506,31 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
         
         if (remaining_time > 0.0)
         {
-#ifdef DEF_WIN
-           SDL_Delay( (int)(remaining_time*1000) );
-           remaining_time = 0.0;
-#else
-           av_usleep((int64_t)(remaining_time * 1000000.0));
-#endif
+            av_usleep((int64_t)(remaining_time * 1000000.0));
         }
         remaining_time = REFRESH_RATE;
         if (is->show_mode != SHOW_MODE_NONE && (!is->paused || is->force_refresh))
         {
             video_refresh(is, &remaining_time);
+
+            #if 0
+            currentTimeinMilliSecond = (is->video_current_pts);
+            if ((!(msgUpdate++ % MSG_REFRESH))&&(duration!=AV_NOPTS_VALUE))   //Occurs around every 500ms
+            {
+                FFP_events->current_in_s = currentTimeinMilliSecond;
+                FFP_events->duration_in_us = duration;
+            }
+            #else
 	          currentTimeinMilliSecond = get_master_clock(is);
             FFP_events->current_in_s = currentTimeinMilliSecond;
             FFP_events->duration_in_us = duration;
+            #endif
         }
         SDL_PumpEvents();
+#ifdef DEF_WIN
+        SDL_Delay( (int)(remaining_time*1000) );
+        remaining_time = 0.0;
+#endif
       }
 }
 
@@ -3964,7 +3993,7 @@ static void event_cli_loop(VideoState *cur_stream)
                     }
                     if (FFP_events->event_video_resize)
                     {
-                        FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height );
+                        FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height, 0 );
                     }                    
                 case SDL_WINDOWEVENT_EXPOSED:
                     cur_stream->force_refresh = 1;
@@ -4024,7 +4053,7 @@ static void event_gui_loop(VideoState *cur_stream)
                         }
                         if (FFP_events->event_video_resize)
                         {
-                            FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height );
+                            FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height, 0 );
                         }                        
                     case SDL_WINDOWEVENT_EXPOSED:
                         cur_stream->force_refresh = 1;
@@ -4040,7 +4069,7 @@ static void event_gui_loop(VideoState *cur_stream)
                 toggle_pause(cur_stream);
                 break;
 	    case FF_FULLSCREEN_EVENT:
-		     toggle_full_screen(cur_stream);
+		 toggle_full_screen(cur_stream);
     		 FFP_is->force_refresh = 1;
 	    	break; 		
             default:
@@ -4097,7 +4126,7 @@ void EXPORTDLL multimedia_stream_start()
       event_cli_loop(FFP_is);
       break;
     case FFP_GUI:
-      FFP_LOG( FFP_INFO_DEBUG, "----GUI Event Handler----");
+      FFP_LOG( FFP_INFO_DEBUG, "-----GUI LOOP-----");
       event_gui_loop(FFP_is);      
       break;
     default:
@@ -4429,7 +4458,11 @@ int EXPORTDLL multimedia_init_device(FFP_EVENTS *ffp_events)
         }    
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
         if (window) {
-            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+            if (FFP_events->bRendererRGB)
+               renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_SOFTWARE );
+            else
+               renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
             if (!renderer) 
             {
                 av_log(NULL, AV_LOG_WARNING, "Failed to initialize a hardware accelerated renderer: %s\n", SDL_GetError());
@@ -4506,8 +4539,8 @@ static int runPlayThreadWithInit(void *ptr)
     if ( !multimedia_stream_open() )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to open the stream!\n" );
-	      multimedia_exit();        
-	      return 2;
+	multimedia_exit();        
+	return 2;
     }
 
     multimedia_stream_start();

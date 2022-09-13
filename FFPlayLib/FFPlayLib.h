@@ -77,12 +77,14 @@ typedef void (*FFP_EVENT_EXIT)(void *sender, int exitCode);
 typedef void (*FFP_EVENT_INFO)(void *sender, int infoCode, char *Message);
 typedef void (*FFP_EVENT_AUDIO)(void *sender, unsigned char **AudBuffer, int BufferLengthInByte);
 typedef void (*FFP_EVENT_VIDEO)(void *sender, void *rgbData, int isRGB);
-typedef void (*FFP_EVENT_VIDEORESIZE)(void *sender, int width, int height);
+typedef void (*FFP_EVENT_VIDEORESIZE)(void *sender, int width, int height, int isOriginalsize);
 typedef void (*FFP_EVENT_PLAYSTATUS)(void *sender, FFP_PLAY_STATUS status);
+typedef void (*FFP_EVENT_VIDEOSIZE)(void *sender, int width, int height);
 
 typedef struct {
    void*                  sender;
    unsigned int           screenID;
+   int                    bRendererRGB;
    int64_t                duration_in_us;
    double                 current_in_s; 
    FFP_UI_TYPE            ui_type;
