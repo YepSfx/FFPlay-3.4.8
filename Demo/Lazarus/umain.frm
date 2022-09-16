@@ -1,31 +1,29 @@
 object frmMain: TfrmMain
-  Left = 330
-  Height = 524
-  Top = 215
-  Width = 1105
+  Left = 258
+  Height = 569
+  Top = 0
+  Width = 1048
   Caption = 'lazPlayer'
-  ClientHeight = 524
-  ClientWidth = 1105
+  ClientHeight = 569
+  ClientWidth = 1048
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnResize = FormResize
-  OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
   LCLVersion = '7.8'
   object ScrollBar1: TScrollBar
     Left = 8
     Height = 13
-    Top = 453
-    Width = 1097
+    Top = 498
+    Width = 1040
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 0
   end
   object ButtonPlay: TButton
-    Left = 456
+    Left = 399
     Height = 35
-    Top = 477
+    Top = 522
     Width = 211
     Anchors = [akRight, akBottom]
     Caption = 'Play'
@@ -33,9 +31,9 @@ object frmMain: TfrmMain
     TabOrder = 1
   end
   object ButtonStop: TButton
-    Left = 888
+    Left = 831
     Height = 35
-    Top = 477
+    Top = 522
     Width = 211
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
@@ -45,7 +43,7 @@ object frmMain: TfrmMain
   object Label1: TLabel
     Left = 9
     Height = 1
-    Top = 502
+    Top = 547
     Width = 1
     Anchors = [akLeft, akBottom]
     Color = clDefault
@@ -53,9 +51,9 @@ object frmMain: TfrmMain
   end
   object PanelYUV: TGroupBox
     Left = 8
-    Height = 448
+    Height = 493
     Top = 8
-    Width = 1091
+    Width = 1034
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clInfoBk
     ParentBackground = False
@@ -68,24 +66,22 @@ object frmMain: TfrmMain
   end
   object ImageRGB: TImage
     Left = 9
-    Height = 448
+    Height = 493
     Top = 8
-    Width = 1090
+    Width = 1033
     AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]
     Center = True
-    OnClick = ImageRGBClick
     OnDblClick = ImageRGBDblClick
-    OnMouseDown = ImageRGBMouseDown
     OnResize = ImageRGBResize
     Proportional = True
     Stretch = True
     StretchInEnabled = False
   end
   object ButtonPause: TButton
-    Left = 672
+    Left = 615
     Height = 35
-    Top = 477
+    Top = 522
     Width = 209
     Anchors = [akRight, akBottom]
     Caption = 'Pause'
@@ -94,7 +90,7 @@ object frmMain: TfrmMain
   end
   object Memo1: TMemo
     Left = 8
-    Height = 453
+    Height = 498
     Top = 3
     Width = 367
     Anchors = [akTop, akLeft, akBottom]

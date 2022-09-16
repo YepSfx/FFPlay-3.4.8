@@ -101,6 +101,7 @@ int main(int argc, char **argv)
     FFP_events.event_video   = NULL;//CallbackVideo;
     FFP_events.event_video_resize = CallbackResize;
     FFP_events.playstatus    = FFP_STOP;
+    FFP_events.event_refresh = NULL;
 
     signal(SIGINT , sigterm_handler); /* Interrupt (ANSI).    */
     signal(SIGTERM, sigterm_handler); /* Termination (ANSI).  */

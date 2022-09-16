@@ -1151,7 +1151,6 @@ static void video_image_display(VideoState *is)
 
     if (FFP_events->event_video)
     {
-#if 1
         if (vp->frame->format == AV_PIX_FMT_YUV420P)
         {
            yuvData.w = vp->width;
@@ -1167,14 +1166,6 @@ static void video_image_display(VideoState *is)
            rgbData.pixels = vp->frame->data[0];
            FFP_events->event_video( FFP_events->sender, &rgbData, 1 );
         }
-#else
-           rgbData.w = vp->width;
-           rgbData.h = vp->height;
-           rgbData.BPP = 4;
-           rgbData.pixels = vp->frame->data[0];
-           FFP_events->event_video( FFP_events->sender, &rgbData );
-
-#endif        
     }
     else  
     {
@@ -1197,6 +1188,11 @@ static void video_image_display(VideoState *is)
             SDL_RenderCopy(renderer, is->sub_texture, sub_rect, &target);
         }
 #endif
+    }
+    
+    if (FFP_events->event_refresh)
+    {
+        FFP_events->event_refresh(FFP_events->sender);
     }
 }
 
@@ -1347,22 +1343,26 @@ static void video_audio_display(VideoState *s)
                 }
                 SDL_UnlockTexture(s->vis_texture);
             }
-#ifndef DEF_WIN
-            if (FFP_events->ui_type == FFP_GUI)
+            if (FFP_events->event_video)
             {
-		SDL_Rect viewRect;
-               SDL_RenderGetViewport( renderer, &viewRect );
-               if ((viewRect.w != s->width) || (viewRect.h != s->height))
-               {
-		   viewRect.x = 0;
-		   viewRect.y = 0;
-		   viewRect.w = s->width;
-		   viewRect.h = s->height;
-		   SDL_RenderSetViewport(renderer, &viewRect);
-		}
+                FFP_RGB_DATA    rgbData;    
+                void *rgbPixs;
+                rgbData.w = s->width;
+                rgbData.h = s->height;
+                rgbData.BPP = 4;
+                if (SDL_LockTexture(s->vis_texture, NULL, &rgbPixs, &pitch) < 0)
+                {
+                    FFP_LOG( FFP_INFO_ERROR, "Fail to acquire the RGB buffer. Terminating...\n");
+                    multimedia_exit();
+                }
+                rgbData.pixels = rgbPixs;
+                FFP_events->event_video( FFP_events->sender, &rgbData, 2 );
+                SDL_UnlockTexture(s->vis_texture);                
             }
-#endif            
-            SDL_RenderCopy(renderer, s->vis_texture, NULL, NULL);
+            else 
+            {
+                SDL_RenderCopy(renderer, s->vis_texture, NULL, NULL);
+            }
         }
         if (!s->paused)
             s->xpos++;
@@ -1488,7 +1488,7 @@ static void do_exit(VideoState *is)
 	#endif
 	    avformat_network_deinit();
 	    if (show_status)
-		printf("\n");
+		      printf("\n");
 	    SDL_Quit();
 	    av_log(NULL, AV_LOG_QUIET, "%s", "");
 	    __exit(0);
@@ -3492,7 +3492,7 @@ static void toggle_audio_display(VideoState *is)
 static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
     double remaining_time = 0.0;
     double  currentTimeinMilliSecond = 0;
-    static int msgUpdate;
+
 
     SDL_PumpEvents();
     while (!SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) 
@@ -3506,7 +3506,11 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
         
         if (remaining_time > 0.0)
         {
+#ifdef DEF_WIN
+            SDL_Delay( (int)(remaining_time*1000) );
+#else
             av_usleep((int64_t)(remaining_time * 1000000.0));
+#endif
         }
         remaining_time = REFRESH_RATE;
         if (is->show_mode != SHOW_MODE_NONE && (!is->paused || is->force_refresh))
@@ -3527,10 +3531,6 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
             #endif
         }
         SDL_PumpEvents();
-#ifdef DEF_WIN
-        SDL_Delay( (int)(remaining_time*1000) );
-        remaining_time = 0.0;
-#endif
       }
 }
 
@@ -4068,12 +4068,12 @@ static void event_gui_loop(VideoState *cur_stream)
             case FF_PAUSERESME_EVENT:
                 toggle_pause(cur_stream);
                 break;
-	    case FF_FULLSCREEN_EVENT:
-		 toggle_full_screen(cur_stream);
-    		 FFP_is->force_refresh = 1;
-	    	break; 		
+	          case FF_FULLSCREEN_EVENT:
+		             toggle_full_screen(cur_stream);
+    		         FFP_is->force_refresh = 1;
+	    	         break; 		
             default:
-                break;
+                 break;
         }
         if (isQuit)
         {

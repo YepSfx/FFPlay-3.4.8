@@ -64,6 +64,7 @@ interface
        type TFFP_EVENTVIDEO        = procedure( sender : pointer ; videoData :  Pointer ; isRGB : Integer ) ; cdecl ;
        type TFFP_EVENTVIDEORESIZE  = procedure( sender : pointer ; w , h, isOriginal : Integer ) ; cdecl;
        type TFFP_EVENTPLAYSTATUS   = procedure( sender : pointer ; status : TFFP_PLAY_STATUS ) ; cdecl;
+       type TFFP_EVENTREFRESH      = procedure( sender : pointer ); cdecl;
 
        type TFFP_EVENTS = record
            sender          : Pointer;
@@ -78,6 +79,7 @@ interface
            eventVideo      : TFFP_EVENTVIDEO;
            eventResize     : TFFP_EVENTVIDEORESIZE;
            eventStatus     : TFFP_EVENTPLAYSTATUS;
+           eventRefresh    : TFFP_EVENTREFRESH;
            playStatus      : TFFP_PLAY_STATUS;
        end;
        type PFFP_EVENTS = ^TFFP_EVENTS;

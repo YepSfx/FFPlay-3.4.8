@@ -76,10 +76,11 @@ typedef enum {
 typedef void (*FFP_EVENT_EXIT)(void *sender, int exitCode);
 typedef void (*FFP_EVENT_INFO)(void *sender, int infoCode, char *Message);
 typedef void (*FFP_EVENT_AUDIO)(void *sender, unsigned char **AudBuffer, int BufferLengthInByte);
-typedef void (*FFP_EVENT_VIDEO)(void *sender, void *rgbData, int isRGB);
+typedef void (*FFP_EVENT_VIDEO)(void *sender, void *rgbData, int isRGB); //isRGB: 0 -> IYUV ; 1 -> RGB for Video Image ; 2 -> RGB for Audio Image
 typedef void (*FFP_EVENT_VIDEORESIZE)(void *sender, int width, int height, int isOriginalsize);
 typedef void (*FFP_EVENT_PLAYSTATUS)(void *sender, FFP_PLAY_STATUS status);
 typedef void (*FFP_EVENT_VIDEOSIZE)(void *sender, int width, int height);
+typedef void (*FFP_EVENT_REFRESH)(void *sender);
 
 typedef struct {
    void*                  sender;
@@ -94,6 +95,7 @@ typedef struct {
    FFP_EVENT_VIDEO        event_video;
    FFP_EVENT_VIDEORESIZE  event_video_resize;
    FFP_EVENT_PLAYSTATUS   event_play_status;
+   FFP_EVENT_REFRESH      event_refresh;
    FFP_PLAY_STATUS        playstatus;   
 }FFP_EVENTS;
 
