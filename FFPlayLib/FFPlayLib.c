@@ -3984,7 +3984,7 @@ static void event_cli_loop(VideoState *cur_stream)
             break;
         case SDL_WINDOWEVENT:
             switch (event.window.event) {
-                case SDL_WINDOWEVENT_RESIZED:
+                case SDL_WINDOWEVENT_SIZE_CHANGED:
                     screen_width  = cur_stream->width  = event.window.data1;
                     screen_height = cur_stream->height = event.window.data2;
                     if (cur_stream->vis_texture) {
@@ -4044,7 +4044,7 @@ static void event_gui_loop(VideoState *cur_stream)
                 break;
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
-                    case SDL_WINDOWEVENT_RESIZED:
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
                         screen_width  = cur_stream->width  = event.window.data1;
                         screen_height = cur_stream->height = event.window.data2;
                         if (cur_stream->vis_texture) {
