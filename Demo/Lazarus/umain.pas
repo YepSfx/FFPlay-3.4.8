@@ -2,7 +2,7 @@ unit umain;
 
 {$mode objfpc}{$H+}
 
-{$DEFINE DEF_RGB}
+//{$DEFINE DEF_RGB}
 
 interface
 

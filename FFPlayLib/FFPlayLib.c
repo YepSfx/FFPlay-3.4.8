@@ -1077,6 +1077,22 @@ static int upload_texture(SDL_Texture **tex, AVFrame *frame, struct SwsContext *
     return ret;
 }
 
+static void set_sdl_yuv_conversion_mode(AVFrame *frame)
+{
+#if SDL_VERSION_ATLEAST(2,0,8)
+    SDL_YUV_CONVERSION_MODE mode = SDL_YUV_CONVERSION_AUTOMATIC;
+    if (frame && (frame->format == AV_PIX_FMT_YUV420P || frame->format == AV_PIX_FMT_YUYV422 || frame->format == AV_PIX_FMT_UYVY422)) {
+        if (frame->color_range == AVCOL_RANGE_JPEG)
+            mode = SDL_YUV_CONVERSION_JPEG;
+        else if (frame->colorspace == AVCOL_SPC_BT709)
+            mode = SDL_YUV_CONVERSION_BT709;
+        else if (frame->colorspace == AVCOL_SPC_BT470BG || frame->colorspace == AVCOL_SPC_SMPTE170M)
+            mode = SDL_YUV_CONVERSION_BT601;
+    }
+    SDL_SetYUVConversionMode(mode); /* FIXME: no support for linear transfer */
+#endif
+}
+
 static void video_image_display(VideoState *is)
 {
     Frame *vp;
@@ -1134,7 +1150,8 @@ static void video_image_display(VideoState *is)
     }
 
     calculate_display_rect(&rect, is->xleft, is->ytop, is->width, is->height, vp->width, vp->height, vp->sar);
-
+    set_sdl_yuv_conversion_mode(vp->frame);
+    
     if (FFP_events->playstatus != FFP_PLAY)
     {
         FFP_events->playstatus = FFP_PLAY;
@@ -1144,7 +1161,10 @@ static void video_image_display(VideoState *is)
 
     if (!vp->uploaded) {
         if (upload_texture(&is->vid_texture, vp->frame, &is->img_convert_ctx) < 0)
+        {
+            set_sdl_yuv_conversion_mode(NULL);
             return;
+        }  
         vp->uploaded = 1;
         vp->flip_v = vp->frame->linesize[0] < 0;
     }
@@ -1170,6 +1190,7 @@ static void video_image_display(VideoState *is)
     else  
     {
         SDL_RenderCopyEx(renderer, is->vid_texture, NULL, &rect, 0, NULL, vp->flip_v ? SDL_FLIP_VERTICAL : 0);  // <--- FFPlayLib Video Callback
+        set_sdl_yuv_conversion_mode(NULL);        
     }
         
     if (sp) {
