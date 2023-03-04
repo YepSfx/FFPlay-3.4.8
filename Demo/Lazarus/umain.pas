@@ -511,8 +511,8 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
       XWinID    : TXID;
 {$ENDIF}
 begin
-  Self.WindowState:= wsNormal;
-  Application.ProcessMessages();
+  //Self.WindowState:= wsNormal;
+  //Application.ProcessMessages();
   sti_events.sender           := self;
 {$IFDEF DEF_OUTPUT_WIN}
   sti_events.screenID         := PanelYUV.Handle;
@@ -545,7 +545,7 @@ begin
   sti_events.eventVideo       := nil;
   PanelYUV.Visible            := True;
   ImageRGB.Visible            := False;
-  Application.ProcessMessages();
+//  Application.ProcessMessages();
 {$ENDIF}
 
 {$IFDEF  DEF_OUTPUT_WIN}
