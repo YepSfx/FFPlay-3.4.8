@@ -64,7 +64,6 @@ type
     procedure stopPlaying();
     procedure updateScreen( Buffer : pointer ; w,h,Bpp : Integer);
     procedure updateTime(Current : double);
-    procedure resizeScreen(w, h : Integer);
   end;
 
 var
@@ -273,6 +272,7 @@ procedure TfrmMain.OnStatus(var Msg: TLMessage);
   var pPlay : PPlayData;
       pVid  : PFFP_VID_PARAMS;
       dMsg  : String;
+      x,y   : Integer;
 begin
   pPlay := PPlayData(Msg.WParam);
 
@@ -295,16 +295,11 @@ begin
                    PrintDebugMessage( dMsg );
               end;
   FFP_PLAY:   begin
-{$IFDEF DEF_OUTPUT_WIN}
-                   Self.WindowState := wsMaximized;
-                   Application.ProcessMessages();
-{$ENDIF}
                    Timer1.Enabled     := True;
                    ButtonPlay.Enabled := False;
                    ButtonStop.Enabled := True;
                    ButtonPause.Enabled:= True;
 {$IFNDEF DEF_RGB}
-                   resizeScreen(PanelYUV.Width, PanelYUV.Height);
                    SendResize(PanelYUV.Width, PanelYUV.Height, 'OnStatus');
 {$ELSE}
 {$ENDIF}
@@ -511,8 +506,6 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
       XWinID    : TXID;
 {$ENDIF}
 begin
-  //Self.WindowState:= wsNormal;
-  //Application.ProcessMessages();
   sti_events.sender           := self;
 {$IFDEF DEF_OUTPUT_WIN}
   sti_events.screenID         := PanelYUV.Handle;
@@ -545,7 +538,6 @@ begin
   sti_events.eventVideo       := nil;
   PanelYUV.Visible            := True;
   ImageRGB.Visible            := False;
-//  Application.ProcessMessages();
 {$ENDIF}
 
 {$IFDEF  DEF_OUTPUT_WIN}
@@ -564,8 +556,6 @@ begin
          Application.ProcessMessages();
          mediaFile := AnsiString(OpenDialog.FileName);
          try
-           Self.WindowState := wsMaximized;
-           Application.ProcessMessages();
            multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
          except
            ShowMessage('Have a problem to play!');
@@ -607,17 +597,6 @@ end;
 procedure TfrmMain.updateTime(Current : double);
 begin
   FCurrentTime_Sec := Current;
-end;
-
-procedure TfrmMain.resizeScreen(w, h : Integer );
-  var center_x, center_y : Integer;
-      dMsg : String;
-begin
-  dMsg := Format('Called resizeScreen %d  %d',[w, h]);
-  PrintDebugMessage(dMsg);
-{$IFDEF DEF_RGB}
-{$ELSE}
-{$ENDIF}
 end;
 
 end.

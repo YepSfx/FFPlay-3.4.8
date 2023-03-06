@@ -21,20 +21,20 @@ object frmMain: TfrmMain
     TabOrder = 0
   end
   object ButtonPlay: TButton
-    Left = 399
+    Left = 616
     Height = 35
-    Top = 522
-    Width = 211
+    Top = 520
+    Width = 131
     Anchors = [akRight, akBottom]
     Caption = 'Play'
     OnClick = ButtonPlayClick
     TabOrder = 1
   end
   object ButtonStop: TButton
-    Left = 831
+    Left = 904
     Height = 35
-    Top = 522
-    Width = 211
+    Top = 520
+    Width = 134
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
     OnClick = ButtonStopClick
@@ -53,11 +53,13 @@ object frmMain: TfrmMain
     Left = 8
     Height = 493
     Top = 8
-    Width = 1034
+    Width = 1024
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clInfoBk
+    DoubleBuffered = False
     ParentBackground = False
     ParentColor = False
+    ParentDoubleBuffered = False
     TabOrder = 3
     OnDblClick = PanelYUVDblClick
     OnMouseDown = PanelYUVMouseDown
@@ -68,7 +70,7 @@ object frmMain: TfrmMain
     Left = 9
     Height = 493
     Top = 8
-    Width = 1033
+    Width = 1029
     AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]
     Center = True
@@ -79,10 +81,10 @@ object frmMain: TfrmMain
     StretchInEnabled = False
   end
   object ButtonPause: TButton
-    Left = 615
+    Left = 760
     Height = 35
-    Top = 522
-    Width = 209
+    Top = 520
+    Width = 129
     Anchors = [akRight, akBottom]
     Caption = 'Pause'
     OnClick = ButtonPauseClick

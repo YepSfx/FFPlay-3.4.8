@@ -1190,7 +1190,7 @@ static void video_image_display(VideoState *is)
     else  
     {
         SDL_RenderCopyEx(renderer, is->vid_texture, NULL, &rect, 0, NULL, vp->flip_v ? SDL_FLIP_VERTICAL : 0);  // <--- FFPlayLib Video Callback
-        set_sdl_yuv_conversion_mode(NULL);        
+        set_sdl_yuv_conversion_mode(NULL); 
     }
         
     if (sp) {
@@ -4005,7 +4005,9 @@ static void event_cli_loop(VideoState *cur_stream)
             break;
         case SDL_WINDOWEVENT:
             switch (event.window.event) {
-										case SDL_WINDOWEVENT_RESIZED:
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_SIZE_CHANGED" );
+					          case SDL_WINDOWEVENT_RESIZED:
                         screen_width  = cur_stream->width  = event.window.data1;
                         screen_height = cur_stream->height = event.window.data2;
                         if (cur_stream->vis_texture) {
@@ -4016,8 +4018,10 @@ static void event_cli_loop(VideoState *cur_stream)
                         {
                             FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height, 0 );
                         }                        
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_RESIZED" );
                     case SDL_WINDOWEVENT_EXPOSED:
                         cur_stream->force_refresh = 1;
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_EXPOSED" );
             }
             break;
         case SDL_QUIT:
@@ -4066,19 +4070,22 @@ static void event_gui_loop(VideoState *cur_stream)
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
                     case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_SIZE_CHANGED" );
+					          case SDL_WINDOWEVENT_RESIZED:
                         if (cur_stream->vis_texture) {
                             SDL_DestroyTexture(cur_stream->vis_texture);
                             cur_stream->vis_texture = NULL;
                         }
-										case SDL_WINDOWEVENT_RESIZED:
                         screen_width  = cur_stream->width  = event.window.data1;
                         screen_height = cur_stream->height = event.window.data2;
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_RESIZED" );
                     case SDL_WINDOWEVENT_EXPOSED:
                         if (FFP_events->event_video_resize)
                         {
                             FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height, 0 );
                         }                        
                         cur_stream->force_refresh = 1;
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_EXPOSED" );
                 }
                 break;
             case SDL_QUIT:
