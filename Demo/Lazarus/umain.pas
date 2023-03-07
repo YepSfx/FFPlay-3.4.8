@@ -37,6 +37,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure ImageRGBDblClick(Sender: TObject);
     procedure ImageRGBResize(Sender: TObject);
     procedure PanelYUVDblClick(Sender: TObject);
@@ -429,6 +430,23 @@ begin
   FresImage.Free();
   FreeMem(RGBBuffer);
   PrintDebugMessage('Application Terminated safely!');
+end;
+
+procedure TfrmMain.FormResize(Sender: TObject);
+  var dMsg : String;
+      aRect : TRect;
+begin
+{$IFNDEF DEF_OUTPUT_WIN}
+  dMsg := Format('[Form size: %d, %d]',[Width, Height]);
+  PrintDebugMessage(dMsg);
+  aRect.Top := PanelYUV.Top;
+  aRect.Bottom:= PanelYUV.Top + PanelYUV.Height;
+  aRect.Left := PanelYUV.Left;
+  aRect.Right := PanelYUV.Left + PanelYUV.Width;
+  aRect := PanelYUV.ClientToScreen(aRect);
+  dMsg := Format('[PanelYUV Screen Location: %d(L),  %d(T), %d(W), %d(H)]',[aRect.Left, aRect.Top, aRect.Width, aRect.Height]);
+  PrintDebugMessage(dMsg);
+{$ENDIF}
 end;
 
 procedure TfrmMain.PanelYUVMouseMove(Sender: TObject; Shift: TShiftState; X,

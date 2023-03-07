@@ -4209,7 +4209,14 @@ void EXPORTDLL multimedia_reset_pointer()
 void EXPORTDLL multimedia_resize_screen(int w, int h)
 {
   SDL_Event   event1, event2;
+  SDL_Rect    viewport;
   
+  if (renderer)
+  {
+      SDL_RenderGetViewport(renderer, &viewport);
+      FFP_LOG(FFP_INFO_ERROR, "GetViewport- x:%d, y:%d, w:%d, h:%d", viewport.x, viewport.y, viewport.w, viewport.h ); 
+  }
+
   event1.type = SDL_WINDOWEVENT;
   event1.window.event = SDL_WINDOWEVENT_RESIZED;
   event1.window.data1 = w;
