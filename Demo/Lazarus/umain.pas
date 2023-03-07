@@ -472,7 +472,9 @@ procedure TfrmMain.PanelYUVResize(Sender: TObject);
   var dMsg : String;
 begin
 {$IFNDEF DEF_RGB}
-  SendResize(PanelYUV.Width,PanelYUV.Height,'PanelYUVResize');
+   {$IFNDEF  DEF_OUTPUT_WIN}
+     SendResize(PanelYUV.Width,PanelYUV.Height,'PanelYUVResize');
+   {$endif}
 {$ELSE}
   dMsg := Format('[RGB Screen PanelYUV reseize %d %d]', [PanelYUV.Width, PanelYUV.Height]);
   PrintDebugMessage(dMsg);

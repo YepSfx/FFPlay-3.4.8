@@ -56,6 +56,7 @@ object frmMain: TfrmMain
     Width = 1024
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clInfoBk
+    DockSite = True
     DoubleBuffered = False
     ParentBackground = False
     ParentColor = False
