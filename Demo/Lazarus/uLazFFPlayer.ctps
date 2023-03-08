@@ -24,8 +24,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="429"/>
-        <CursorPos X="44" Y="436"/>
+        <TopLine Value="518"/>
+        <CursorPos Y="529"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -139,123 +139,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="umain.pas"/>
-        <Caret Line="304" Column="20" TopLine="294"/>
+        <Caret Line="604" Column="20" TopLine="593"/>
       </Position1>
       <Position2>
         <Filename Value="umain.pas"/>
-        <Caret Line="604" Column="20" TopLine="593"/>
+        <Caret Line="303" Column="30" TopLine="293"/>
       </Position2>
       <Position3>
         <Filename Value="umain.pas"/>
-        <Caret Line="303" Column="30" TopLine="293"/>
+        <Caret Line="116" Column="11" TopLine="105"/>
       </Position3>
       <Position4>
         <Filename Value="umain.pas"/>
-        <Caret Line="116" Column="11" TopLine="105"/>
+        <Caret Line="303" Column="20" TopLine="293"/>
       </Position4>
       <Position5>
         <Filename Value="umain.pas"/>
-        <Caret Line="303" Column="20" TopLine="293"/>
+        <Caret Line="475" Column="82" TopLine="464"/>
       </Position5>
       <Position6>
         <Filename Value="umain.pas"/>
-        <Caret Line="475" Column="82" TopLine="464"/>
+        <Caret Line="303" Column="30" TopLine="303"/>
       </Position6>
       <Position7>
         <Filename Value="umain.pas"/>
-        <Caret Line="303" Column="30" TopLine="303"/>
+        <Caret Line="511" Column="3" TopLine="509"/>
       </Position7>
       <Position8>
         <Filename Value="umain.pas"/>
-        <Caret Line="511" Column="3" TopLine="509"/>
+        <Caret Line="121" Column="27" TopLine="112"/>
       </Position8>
       <Position9>
         <Filename Value="umain.pas"/>
-        <Caret Line="121" Column="27" TopLine="112"/>
+        <Caret Line="122" Column="3" TopLine="122"/>
       </Position9>
       <Position10>
         <Filename Value="umain.pas"/>
-        <Caret Line="122" Column="3" TopLine="122"/>
+        <Caret Line="446" Column="14" TopLine="435"/>
       </Position10>
       <Position11>
         <Filename Value="umain.pas"/>
-        <Caret Line="446" Column="14" TopLine="435"/>
+        <Caret Line="445" TopLine="435"/>
       </Position11>
       <Position12>
-        <Filename Value="umain.pas"/>
-        <Caret Line="445" TopLine="435"/>
-      </Position12>
-      <Position13>
         <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\control.inc"/>
         <Caret Line="1658" TopLine="1646"/>
+      </Position12>
+      <Position13>
+        <Filename Value="umain.pas"/>
+        <Caret Line="445" TopLine="435"/>
       </Position13>
       <Position14>
         <Filename Value="umain.pas"/>
-        <Caret Line="445" TopLine="435"/>
+        <Caret Line="446" Column="28" TopLine="439"/>
       </Position14>
       <Position15>
         <Filename Value="umain.pas"/>
-        <Caret Line="446" Column="28" TopLine="439"/>
+        <Caret Line="527" TopLine="518"/>
       </Position15>
       <Position16>
         <Filename Value="umain.pas"/>
-        <Caret Line="527" TopLine="518"/>
+        <Caret Line="532" TopLine="518"/>
       </Position16>
       <Position17>
         <Filename Value="umain.pas"/>
-        <Caret Line="532" TopLine="518"/>
+        <Caret Line="533" TopLine="518"/>
       </Position17>
       <Position18>
         <Filename Value="umain.pas"/>
-        <Caret Line="533" TopLine="518"/>
+        <Caret Line="534" TopLine="518"/>
       </Position18>
       <Position19>
         <Filename Value="umain.pas"/>
-        <Caret Line="534" TopLine="518"/>
+        <Caret Line="535" TopLine="518"/>
       </Position19>
       <Position20>
         <Filename Value="umain.pas"/>
-        <Caret Line="535" TopLine="518"/>
+        <Caret Line="537" TopLine="519"/>
       </Position20>
       <Position21>
         <Filename Value="umain.pas"/>
-        <Caret Line="537" TopLine="519"/>
+        <Caret Line="538" TopLine="521"/>
       </Position21>
       <Position22>
         <Filename Value="umain.pas"/>
-        <Caret Line="538" TopLine="521"/>
+        <Caret Line="539" TopLine="522"/>
       </Position22>
       <Position23>
         <Filename Value="umain.pas"/>
-        <Caret Line="539" TopLine="522"/>
+        <Caret Line="540" TopLine="523"/>
       </Position23>
       <Position24>
         <Filename Value="umain.pas"/>
-        <Caret Line="540" TopLine="523"/>
+        <Caret Line="541" TopLine="524"/>
       </Position24>
       <Position25>
         <Filename Value="umain.pas"/>
-        <Caret Line="541" TopLine="524"/>
+        <Caret Line="542" TopLine="525"/>
       </Position25>
       <Position26>
         <Filename Value="umain.pas"/>
-        <Caret Line="542" TopLine="525"/>
+        <Caret Line="543" TopLine="526"/>
       </Position26>
       <Position27>
         <Filename Value="umain.pas"/>
-        <Caret Line="543" TopLine="526"/>
+        <Caret Line="555" TopLine="545"/>
       </Position27>
       <Position28>
         <Filename Value="umain.pas"/>
-        <Caret Line="555" TopLine="545"/>
+        <Caret Line="556" TopLine="545"/>
       </Position28>
       <Position29>
         <Filename Value="umain.pas"/>
-        <Caret Line="556" TopLine="545"/>
+        <Caret Line="557" TopLine="545"/>
       </Position29>
       <Position30>
         <Filename Value="umain.pas"/>
-        <Caret Line="557" TopLine="545"/>
+        <Caret Line="434" Column="67" TopLine="429"/>
       </Position30>
     </JumpHistory>
     <RunParams>
@@ -263,15 +263,4 @@
       <Modes ActiveMode="default"/>
     </RunParams>
   </ProjectSession>
-  <Debugging>
-    <BreakPoints>
-      <Item>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="umain.pas"/>
-        <Line Value="529"/>
-      </Item>
-    </BreakPoints>
-  </Debugging>
 </CONFIG>

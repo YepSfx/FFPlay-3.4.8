@@ -9,6 +9,7 @@
         <Filename Value="uLazFFPlayer.ppr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
+        <WindowIndex Value="0"/>
         <CursorPos X="75" Y="8"/>
         <UsageCount Value="160"/>
         <Loaded Value="True"/>
@@ -21,6 +22,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
+        <EditorIndex Value="0"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="61"/>
         <CursorPos Y="5"/>
         <UsageCount Value="160"/>
         <Loaded Value="True"/>
@@ -30,6 +34,7 @@
         <Filename Value="FFPlay.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="5"/>
         <CursorPos X="19" Y="41"/>
         <UsageCount Value="70"/>
@@ -38,6 +43,7 @@
       <Unit3>
         <Filename Value="STImultimedia.pas"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="83"/>
         <CursorPos X="35" Y="91"/>
         <UsageCount Value="105"/>
@@ -45,6 +51,7 @@
       <Unit4>
         <Filename Value="C:\codetyphon\fpcsrc\packages\gtk2\src\gtk+\gtk\gtkwidget.inc"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="322"/>
         <CursorPos X="10" Y="288"/>
         <UsageCount Value="4"/>
@@ -53,6 +60,7 @@
         <Filename Value="C:\codetyphon\typhon\lcl\interfaces\gtk2\gtk2proc.pp"/>
         <UnitName Value="Gtk2Proc"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="962"/>
         <CursorPos X="9" Y="974"/>
         <UsageCount Value="5"/>
@@ -60,6 +68,7 @@
       <Unit6>
         <Filename Value="C:\codetyphon\fpcsrc\packages\gtk2\src\gtk+\gdk\gdkdrawable.inc"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="178"/>
         <CursorPos X="139" Y="193"/>
         <UsageCount Value="6"/>
@@ -67,6 +76,7 @@
       <Unit7>
         <Filename Value="..\..\..\usr\local\codetyphon\fpcsrc\rtl\inc\thread.inc"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="133"/>
         <CursorPos X="14" Y="111"/>
         <UsageCount Value="5"/>
@@ -74,6 +84,7 @@
       <Unit8>
         <Filename Value="..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\custombitmap.inc"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="310"/>
         <CursorPos Y="320"/>
         <UsageCount Value="5"/>
@@ -81,6 +92,7 @@
       <Unit9>
         <Filename Value="..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\rasterimage.inc"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <TopLine Value="251"/>
         <CursorPos Y="255"/>
         <UsageCount Value="5"/>
@@ -88,6 +100,7 @@
       <Unit10>
         <Filename Value="..\..\..\..\..\home\cjeon\.config\gnome-panel\launchers\gnome-system-monitor.desktop"/>
         <EditorIndex Value="-1"/>
+        <WindowIndex Value="0"/>
         <CursorPos X="18" Y="4"/>
         <UsageCount Value="5"/>
         <DefaultSyntaxHighlighter Value="None"/>
