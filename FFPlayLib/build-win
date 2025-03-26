@@ -12,6 +12,8 @@ strip FFPlay.exe
 cp ./FFPlayLib.dll ../Demo/Bin
 cp ./FFPlay.exe  ../Demo/Bin
 
+rm ./FFPlayLib.dll
+rm ./FFPlay.exe
 rm *.o
 rm ./config.h
 
