@@ -1,7 +1,7 @@
 cp ./configs/config-ubuntu.h ./config.h
 
 gcc -fPIC -I. -I./ -g -c -o cmdutils.o cmdutils.c
-gcc -fPIC -I. -I./ -I/usr/include/SDL2 -D_REENTRANT -g -c -o FFPlayLib.o FFPlayLib.c
+gcc -fPIC -I. -I./ -I/usr/local/include/SDL2 -D_REENTRANT -g -c -o FFPlayLib.o FFPlayLib.c
 #gcc -shared -o libFFPlay.so FFPlayLib.o cmdutils.o -L/usr/local/lib -lavdevice -lavfilter -lavformat -lavcodec -lswresample -lswscale -lavutil -lXv -lX11 -lXext -lxcb -lxcb-shm -#lxcb-xfixes -lxcb-shape -lsndio -lasound -lSDL2 -lm -ldl -lz -pthread
 
 gcc -shared -o libFFPlay.so FFPlayLib.o cmdutils.o -L/usr/local/lib -lavdevice -lavfilter -lavformat -lavcodec -lswresample -lswscale -lavutil -lXv -lX11 -lXext -lsndio -lasound -lSDL2 -lm -ldl -lz -pthread
@@ -15,4 +15,3 @@ strip FFPlay
 
 rm *.o
 rm ./config.h
-

@@ -2,7 +2,7 @@ unit umain;
 
 {$mode objfpc}{$H+}
 
-//{$DEFINE DEF_RGB}
+{$DEFINE DEF_RGB}
 
 interface
 
@@ -166,7 +166,7 @@ procedure EventVideo( sender : pointer ; videoData : Pointer ; isRGB : Integer )
       pSrc, pDst : PByte;
       size,w,h   : Integer;
 begin
-{$IF 1}
+{$IF 0}
 {$IFDEF DEF_RGB}
      if isRGB = 0 then
      begin
@@ -324,7 +324,7 @@ begin
   if isRGB = 2 then
      FresImage.PixelFormat := pf24Bit
   else
-     FresImage.PixelFormat := pf32Bit;
+     FresImage.PixelFormat := pf24Bit;
 {$ENDIF}
 
   pPlay := PPlayData(Msg.WParam);
@@ -411,8 +411,8 @@ begin
   Self.DoubleBuffered := True;
   {$ELSE}
   Self.Caption := 'Linux lazPlayer';
-  ImageRGB.Picture.Bitmap.PixelFormat := pf32Bit;
-  FresImage.PixelFormat := pf32Bit;
+  ImageRGB.Picture.Bitmap.PixelFormat := pf24bit;//pf32Bit;
+  FresImage.PixelFormat := pf24bit;//pf32Bit;
   {$ENDIF}
   PanelYUV.Visible := False;
   ImageRGB.Visible := False;
