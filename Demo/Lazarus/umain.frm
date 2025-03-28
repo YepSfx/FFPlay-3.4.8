@@ -6,16 +6,16 @@ object frmMain: TfrmMain
   Caption = 'lazPlayer'
   ClientHeight = 569
   ClientWidth = 1048
+  Position = poScreenCenter
+  LCLVersion = '8.6'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
-  Position = poScreenCenter
-  LCLVersion = '7.8'
   object ScrollBar1: TScrollBar
     Left = 8
-    Height = 13
-    Top = 498
+    Height = 10
+    Top = 501
     Width = 1040
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
@@ -28,8 +28,8 @@ object frmMain: TfrmMain
     Width = 131
     Anchors = [akRight, akBottom]
     Caption = 'Play'
-    OnClick = ButtonPlayClick
     TabOrder = 1
+    OnClick = ButtonPlayClick
   end
   object ButtonStop: TButton
     Left = 904
@@ -38,8 +38,8 @@ object frmMain: TfrmMain
     Width = 134
     Anchors = [akRight, akBottom]
     Caption = 'Stop'
-    OnClick = ButtonStopClick
     TabOrder = 2
+    OnClick = ButtonStopClick
   end
   object Label1: TLabel
     Left = 9
@@ -47,7 +47,6 @@ object frmMain: TfrmMain
     Top = 547
     Width = 1
     Anchors = [akLeft, akBottom]
-    Color = clDefault
     ParentColor = False
   end
   object PanelYUV: TGroupBox
@@ -76,11 +75,11 @@ object frmMain: TfrmMain
     AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]
     Center = True
-    OnDblClick = ImageRGBDblClick
-    OnResize = ImageRGBResize
     Proportional = True
     Stretch = True
     StretchInEnabled = False
+    OnDblClick = ImageRGBDblClick
+    OnResize = ImageRGBResize
   end
   object ButtonPause: TButton
     Left = 760
@@ -89,8 +88,8 @@ object frmMain: TfrmMain
     Width = 129
     Anchors = [akRight, akBottom]
     Caption = 'Pause'
-    OnClick = ButtonPauseClick
     TabOrder = 4
+    OnClick = ButtonPauseClick
   end
   object Memo1: TMemo
     Left = 8
