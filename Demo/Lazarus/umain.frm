@@ -13,10 +13,10 @@ object frmMain: TfrmMain
   OnDestroy = FormDestroy
   OnResize = FormResize
   object ScrollBar1: TScrollBar
-    Left = 8
+    Left = 9
     Height = 10
-    Top = 501
-    Width = 1040
+    Top = 504
+    Width = 1029
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 0
@@ -50,12 +50,11 @@ object frmMain: TfrmMain
     ParentColor = False
   end
   object PanelYUV: TGroupBox
-    Left = 8
+    Left = 9
     Height = 493
     Top = 8
-    Width = 1024
+    Width = 1029
     Anchors = [akTop, akLeft, akRight, akBottom]
-    Color = clInfoBk
     DockSite = True
     DoubleBuffered = False
     ParentBackground = False
@@ -65,7 +64,6 @@ object frmMain: TfrmMain
     OnDblClick = PanelYUVDblClick
     OnMouseDown = PanelYUVMouseDown
     OnMouseMove = PanelYUVMouseMove
-    OnResize = PanelYUVResize
   end
   object ImageRGB: TImage
     Left = 9
@@ -74,10 +72,12 @@ object frmMain: TfrmMain
     Width = 1029
     AntialiasingMode = amOn
     Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = True
     Center = True
     Proportional = True
     Stretch = True
-    StretchInEnabled = False
+    Visible = False
+    OnClick = ImageRGBClick
     OnDblClick = ImageRGBDblClick
     OnResize = ImageRGBResize
   end
@@ -92,18 +92,15 @@ object frmMain: TfrmMain
     OnClick = ButtonPauseClick
   end
   object Memo1: TMemo
-    Left = 8
-    Height = 498
-    Top = 3
+    Left = 16
+    Height = 429
+    Top = 40
     Width = 367
-    Anchors = [akTop, akLeft, akBottom]
+    Anchors = [akTop, akLeft, akRight, akBottom]
     Font.CharSet = ANSI_CHARSET
     Font.Height = -11
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
-    Lines.Strings = (
-      'Memo1'
-    )
     ParentFont = False
     ScrollBars = ssBoth
     TabOrder = 5

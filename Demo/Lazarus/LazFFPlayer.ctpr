@@ -79,7 +79,7 @@
     </Linking>
     <Other>
       <Verbosity>
-        <ShoLineNum Value="True"/>
+        <ShowLineNum Value="True"/>
         <ShowAll Value="True"/>
         <ShowDebugInfo Value="True"/>
         <ShowUsedFiles Value="True"/>

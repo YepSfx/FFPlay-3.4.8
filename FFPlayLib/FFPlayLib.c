@@ -1498,10 +1498,13 @@ static void do_exit(VideoState *is)
 	    if (renderer)
 	    {
          SDL_RenderClear(renderer);
-		     SDL_DestroyRenderer(renderer);
-      }  
+		 SDL_DestroyRenderer(renderer);
+        }  
 	    if (window)
-		     SDL_DestroyWindow(window);
+        {
+            SDL_SetWindowTitle(window, NULL);
+            SDL_DestroyWindow(window);
+        }
 
 	    av_lockmgr_register(NULL);
 	    uninit_opts();
@@ -1518,8 +1521,8 @@ static void do_exit(VideoState *is)
 	    if (renderer)
 	    {
    	     SDL_RenderClear(renderer);
-	    	 SDL_DestroyRenderer(renderer);
-      }
+	     SDL_DestroyRenderer(renderer);
+        }
 	    if (window)
 	    	SDL_DestroyWindow(window);
 
@@ -1561,7 +1564,11 @@ static int video_open(VideoState *is)
 
     if (!window_title)
         window_title = input_filename;
+#ifdef DEF_WIN
+    SDL_SetWindowTitle(window, NULL);
+#else
     SDL_SetWindowTitle(window, window_title);
+#endif        
 
     SDL_SetWindowSize(window, w, h);
     //SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
