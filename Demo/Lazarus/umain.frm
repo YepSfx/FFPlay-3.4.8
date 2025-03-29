@@ -55,11 +55,13 @@ object frmMain: TfrmMain
     Top = 8
     Width = 1029
     Anchors = [akTop, akLeft, akRight, akBottom]
-    DockSite = True
     DoubleBuffered = False
     ParentBackground = False
+    ParentBidiMode = False
     ParentColor = False
     ParentDoubleBuffered = False
+    ParentFont = False
+    ParentShowHint = False
     TabOrder = 3
     OnDblClick = PanelYUVDblClick
     OnMouseDown = PanelYUVMouseDown

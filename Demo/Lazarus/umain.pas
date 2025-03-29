@@ -372,7 +372,7 @@ begin
   Self.Caption := 'Win32 LazFFPlayer';
   ImageRGB.Picture.Bitmap.PixelFormat := pf32Bit;
   FresImage.PixelFormat := pf32Bit;
-  Self.DoubleBuffered := True;
+  //Self.DoubleBuffered := True;
   {$ELSE}
   Self.Caption := 'Linux lazPlayer';
   ImageRGB.Picture.Bitmap.PixelFormat := pf24Bit;
