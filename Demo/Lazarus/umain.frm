@@ -96,7 +96,7 @@ object frmMain: TfrmMain
     Left = 16
     Height = 429
     Top = 40
-    Width = 367
+    Width = 552
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.CharSet = ANSI_CHARSET
     Font.Height = -11

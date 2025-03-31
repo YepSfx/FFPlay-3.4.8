@@ -113,23 +113,31 @@ interface
        procedure SaveFramebufferAsPPM( buff : pointer ; w, h, bpp : Integer ); cdecl ; external LIBNAME;
        procedure multimedia_toggle_fullscreen(); cdecl ; external LIBNAME;
 
-       procedure DuplicateArguments(var argc : Integer ; var args : PPFFP_CHAR ; newArg : String);
+       procedure DuplicateArguments(var argc : Integer ; var args : PPFFP_CHAR ; newArg : String ; isAdding : Boolean = False);
 implementation
 
 uses
   SysUtils;
 
-procedure DuplicateArguments(var argc : Integer ; var args : PPFFP_CHAR ; newArg : AnsiString);
+procedure DuplicateArguments(var argc : Integer ; var args : PPFFP_CHAR ; newArg : AnsiString ; isAdding : Boolean );
   var i : Integer;
 begin
 
-  argc := ParamCount + 2;
-  SetLength( args, argc );
-  for i := 0 to ParamCount do
+  if isAdding = False then
   begin
-    args[i] := PFFP_CHAR( (ParamStr(i)) );
+    argc := ParamCount + 2;
+    SetLength( args, argc );
+    for i := 0 to ParamCount do
+    begin
+      args[i] := PFFP_CHAR( (ParamStr(i)) );
+    end;
+    args[i+1] := PFFP_CHAR(newArg);
+  end
+  else begin
+    Inc(argc);
+    SetLength( args, argc );
+    args[argc-1] := PFFP_CHAR(newArg);
   end;
-  args[i+1] := PFFP_CHAR(newArg);
 
 end;
 
