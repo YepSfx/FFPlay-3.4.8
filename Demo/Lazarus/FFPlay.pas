@@ -26,6 +26,7 @@ interface
                                  FFP_RESUMED = 3 );
        type TFFP_CHAR = AnsiChar;
        type PFFP_CHAR = ^TFFP_CHAR;
+       type PPFFP_CHAR = array of PFFP_CHAR;
 
        type TFFP_AUD_PARAMS = record
             Freq           : Integer;
@@ -108,9 +109,29 @@ interface
        procedure multimedia_test_screen( XwinID, latency : Integer ) ; cdecl ; external LIBNAME;
        function  multimedia_setup_gui_player( events : PFFP_EVENTS ):Integer; cdecl ; external LIBNAME;
        function  multimedia_start_gui_player( filename : PFFP_CHAR ; events : PFFP_EVENTS) : Integer ; cdecl ; external LIBNAME;
+       function  multimedia_start_gui_player_with_arguments( argc : Integer ; args : PPFFP_CHAR ; events : PFFP_EVENTS) : Integer ; cdecl ; external LIBNAME;
        procedure SaveFramebufferAsPPM( buff : pointer ; w, h, bpp : Integer ); cdecl ; external LIBNAME;
        procedure multimedia_toggle_fullscreen(); cdecl ; external LIBNAME;
+
+       procedure DuplicateArguments(var argc : Integer ; var args : PPFFP_CHAR ; newArg : String);
 implementation
+
+uses
+  SysUtils;
+
+procedure DuplicateArguments(var argc : Integer ; var args : PPFFP_CHAR ; newArg : AnsiString);
+  var i : Integer;
+begin
+
+  argc := ParamCount + 2;
+  SetLength( args, argc );
+  for i := 0 to ParamCount do
+  begin
+    args[i] := PFFP_CHAR( (ParamStr(i)) );
+  end;
+  args[i+1] := PFFP_CHAR(newArg);
+
+end;
 
 initialization
 

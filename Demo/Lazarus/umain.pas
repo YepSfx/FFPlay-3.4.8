@@ -2,8 +2,7 @@ unit umain;
 
 {$mode objfpc}{$H+}
 
-//{$DEFINE DEF_RGB}
-
+{$DEFINE DEF_RGB}
 interface
 
 uses
@@ -38,7 +37,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure ImageRGBClick(Sender: TObject);
     procedure ImageRGBDblClick(Sender: TObject);
     procedure ImageRGBResize(Sender: TObject);
     procedure PanelYUVDblClick(Sender: TObject);
@@ -55,6 +53,8 @@ type
     sti_events         : TFFP_EVENTS;
     FInitPanelWidth    : Integer;
     FInitPanelHeight   : Integer;
+    FArgc              : Integer;
+    FArgs              : PPFFP_CHAR;
   public
     { public declarations }
     procedure OnResizeScreen(var Msg : TLMessage); message WM_USER_RESIZE;
@@ -256,12 +256,21 @@ begin
                    PrintDebugMessage( dMsg );
               end;
   FFP_STOP:   begin
-                   PanelYUV.Visible:= True;
-                   ImageRGB.Visible:= False;
+{$IFDEF DEF_RGB}
                    StopPlaying();
                    dMsg := '[Stop Status]';
                    PrintDebugMessage( dMsg );
+                   ImageRGB.Picture.Clear();
+                   PanelYUV.Visible:= False;
+                   ImageRGB.Visible:= True;
+{$ELSE}
+                   StopPlaying();
+                   dMsg := '[Stop Status]';
+                   PrintDebugMessage( dMsg );
+                   PanelYUV.Visible:= True;
+                   ImageRGB.Visible:= False;
                    PanelYUV.Invalidate();
+{$ENDIF}
               end;
   FFP_PLAY:   begin
                    Timer1.Enabled     := True;
@@ -306,8 +315,8 @@ end;
 procedure TfrmMain.UpdateScreen(Buffer : pointer ; w, h, BPP : Integer);
   var
     pSrc, pDst : PByte;
-    size : Integer;
-    dMsg : String;
+    size       : Integer;
+    dMsg       : String;
 begin
   {$IFDEF  DEF_OUTPUT_WIN}
   multimedia_rgb_swap(Buffer, w, h, Bpp, 16, 8, 0);
@@ -323,7 +332,6 @@ begin
 
   ImageRGB.Picture.Assign(FresImage);
 
-  Application.ProcessMessages();
 end;
 
 procedure TfrmMain.OnResizeScreen(var Msg: TLMessage);
@@ -404,11 +412,6 @@ begin
 {$ENDIF}
   FInitPanelWidth := PanelYUV.Width;
   FInitPanelHeight:= PanelYUV.Height;
-end;
-
-procedure TfrmMain.ImageRGBClick(Sender: TObject);
-begin
-
 end;
 
 procedure TfrmMain.PanelYUVMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -497,10 +500,10 @@ begin
   sti_events.eventVideo       := @EventVideo;
   PanelYUV.Enabled            := False;
   PanelYUV.Visible            := False;
-  {$IFDEF  DEF_OUTPUT_WIN}
+  //{$IFDEF  DEF_OUTPUT_WIN}
   PanelYUV.Top :=             -8172*4;//Height +100;
   PanelYUV.Left:=             -8172*4;//Width +100;
-  {$ENDIF}
+  //{$ENDIF}
   ImageRGB.Visible            := True;
 {$ELSE}
   sti_events.bRendererRGB     := 0;
@@ -525,7 +528,9 @@ begin
          Application.ProcessMessages();
          mediaFile := AnsiString(OpenDialog.FileName);
          try
-           multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
+           //multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
+           DuplicateArguments( FArgc, FArgs, mediaFile);
+           multimedia_start_gui_player_with_arguments( FArgc, @FArgs[0], @sti_events);
          except
            ShowMessage('Have a problem to play!');
          end;
@@ -542,6 +547,7 @@ procedure TfrmMain.ButtonStopClick(Sender: TObject);
 begin
   ButtonStop.Enabled  := False;
   ButtonPause.Enabled := False;
+
   multimedia_stream_stop();
 end;
 

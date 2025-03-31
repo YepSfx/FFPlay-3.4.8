@@ -115,6 +115,8 @@ void 		         EXPORTDLL multimedia_rgb_swap(void *pRGB, int width, int height,
 
 void             EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events);
 int              EXPORTDLL multimedia_start_gui_player(const char* mediaName, FFP_EVENTS *events);
+int              EXPORTDLL multimedia_start_gui_player_with_arguments(int argc, char **argv, FFP_EVENTS *events);
+
 int              EXPORTDLL multimedia_setup_gui_player(FFP_EVENTS *events);
 void             EXPORTDLL multimedia_pause_resume();
 void             EXPORTDLL multimedia_stream_stop();  

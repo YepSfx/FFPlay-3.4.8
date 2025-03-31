@@ -14,8 +14,8 @@ object frmMain: TfrmMain
   OnResize = FormResize
   object ScrollBar1: TScrollBar
     Left = 9
-    Height = 10
-    Top = 504
+    Height = 13
+    Top = 501
     Width = 1029
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
@@ -79,7 +79,6 @@ object frmMain: TfrmMain
     Proportional = True
     Stretch = True
     Visible = False
-    OnClick = ImageRGBClick
     OnDblClick = ImageRGBDblClick
     OnResize = ImageRGBResize
   end

@@ -4644,6 +4644,16 @@ int  EXPORTDLL multimedia_start_gui_player(const char* mediaName, FFP_EVENTS *ev
      	return 0;
 }
 
+int  EXPORTDLL multimedia_start_gui_player_with_arguments(int argc, char **argv, FFP_EVENTS *events)
+{
+    multimedia_parse_options(argc, argv);
+     FFPThread = SDL_CreateThread( runPlayThreadWithInit, "GUIThread", events);
+     if (FFPThread == NULL)
+        return 1;
+     else 
+     	return 0;
+}
+
 void EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events)
 {
     int rtnThread;
