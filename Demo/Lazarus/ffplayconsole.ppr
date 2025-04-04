@@ -1,0 +1,65 @@
+program ffplayconsole;
+
+{$mode objfpc}{$H+}
+
+uses
+  {$IFDEF UNIX}
+  cthreads,
+  {$ENDIF}
+  SysUtils,
+  Classes,
+  Windows,
+  FFPlay
+  { you can add units after this };
+
+procedure ExitEvent(sender : pointer ; exitCode : Integer); cdecl;
+begin
+  WriteLn(Format('[Exit - code:%d]',[exitCode]));
+end;
+
+function ConsoleCtrlHandler(CtrlType: DWORD): BOOL ; stdcall;
+begin
+  ExitEvent(nil, CtrlType);
+  Result := True;
+end;
+
+procedure CallbackResize(sender : pointer ; w , h, isOriginal : Integer); cdecl;
+begin
+  if (isOriginal <> 0) then
+  begin
+  end;
+end;
+
+procedure MessageInfo(sender : pointer ; infoCode : Integer ; msg : PFFP_CHAR);cdecl;
+begin
+   WriteLn(Format('% FFPlayLib message: %s, code: %d',[msg, infoCode]));
+end;
+
+  var theID : Integer = 123;
+      FFP_events : TFFP_EVENTS;
+      FArgc : Integer;
+      FArgv : PPFFP_CHAR;
+begin
+
+  if not SetConsoleCtrlHandler(@ConsoleCtrlHandler, True) then
+     WriteLn('Failed to set console control handler');
+    // Your main program code here
+
+    FillChar(FFP_events, sizeof(TFFP_EVENTS), #0);
+
+    FFP_events.sender       := @theID;
+    FFP_events.uiType       := FFP_CLI;
+    FFP_events.bRendererRGB := 0;
+    FFP_events.eventExit    := @ExitEvent;
+    FFP_events.eventInfo    := @MessageInfo;
+    FFP_events.eventAudio   := nil;
+    FFP_events.eventVideo   := nil;
+    FFP_events.eventRefresh := nil;
+    FFP_events.eventResize  := @CallbackResize;
+    FFP_events.playstatus   := FFP_STOP;
+
+    DuplicateArguments( FArgc, FArgv, '');
+
+    multimedia_start_cli_player( FArgc, @FArgv[0], @FFP_events);
+end.
+

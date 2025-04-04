@@ -23,8 +23,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="525"/>
-        <CursorPos X="54" Y="534"/>
+        <TopLine Value="526"/>
+        <CursorPos X="3" Y="481"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -112,7 +112,7 @@
         <UsageCount Value="8"/>
       </Unit11>
       <Unit12>
-        <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\fpcsrc\packages\gtk2\src\gtk2x11\include\gdkx.inc"/>
+        <Filename Value="..\..\..\..\..\..\usr\local\codetyphon\fpcsrc\packages\gtk2\src\gtk2x11\include\gdkx.inc"/>
         <FRMtype Value="0"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="0"/>
@@ -121,7 +121,7 @@
         <UsageCount Value="10"/>
       </Unit12>
       <Unit13>
-        <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\control.inc"/>
+        <Filename Value="..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\control.inc"/>
         <FRMtype Value="0"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="0"/>
@@ -130,7 +130,7 @@
         <UsageCount Value="10"/>
       </Unit13>
       <Unit14>
-        <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\application.inc"/>
+        <Filename Value="..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\application.inc"/>
         <FRMtype Value="0"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="0"/>
@@ -139,7 +139,7 @@
         <UsageCount Value="10"/>
       </Unit14>
       <Unit15>
-        <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\forms.pp"/>
+        <Filename Value="..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\forms.pp"/>
         <FRMtype Value="0"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="-1"/>
@@ -149,21 +149,21 @@
         <UsageCount Value="10"/>
       </Unit15>
       <Unit16>
-        <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\customform.inc"/>
+        <Filename Value="..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\customform.inc"/>
         <FRMtype Value="0"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="0"/>
         <UsageCount Value="10"/>
       </Unit16>
       <Unit17>
-        <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\scrollingwincontrol.inc"/>
+        <Filename Value="..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\include\scrollingwincontrol.inc"/>
         <FRMtype Value="0"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="0"/>
         <UsageCount Value="10"/>
       </Unit17>
       <Unit18>
-        <Filename Value="..\..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\controls.pp"/>
+        <Filename Value="..\..\..\..\..\..\usr\local\codetyphon\typhon\lcl\controls.pp"/>
         <FRMtype Value="0"/>
         <UnitName Value="Controls"/>
         <EditorIndex Value="-1"/>
@@ -179,123 +179,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="umain.pas"/>
-        <Caret Line="41" TopLine="33"/>
+        <Caret Line="27" Column="13" TopLine="19"/>
       </Position1>
       <Position2>
         <Filename Value="umain.pas"/>
-        <Caret Line="27" Column="13" TopLine="19"/>
+        <Caret Line="322" Column="42" TopLine="313"/>
       </Position2>
       <Position3>
         <Filename Value="umain.pas"/>
-        <Caret Line="322" Column="42" TopLine="313"/>
+        <Caret Line="323" Column="13" TopLine="314"/>
       </Position3>
       <Position4>
         <Filename Value="umain.pas"/>
-        <Caret Line="323" Column="13" TopLine="314"/>
+        <Caret Line="338" Column="20" TopLine="330"/>
       </Position4>
       <Position5>
         <Filename Value="umain.pas"/>
-        <Caret Line="338" Column="20" TopLine="330"/>
+        <Caret Line="267" Column="31" TopLine="253"/>
       </Position5>
       <Position6>
         <Filename Value="umain.pas"/>
-        <Caret Line="267" Column="31" TopLine="253"/>
+        <Caret Line="563" Column="28" TopLine="554"/>
       </Position6>
       <Position7>
         <Filename Value="umain.pas"/>
-        <Caret Line="563" Column="28" TopLine="554"/>
+        <Caret Line="249" Column="71" TopLine="248"/>
       </Position7>
       <Position8>
         <Filename Value="umain.pas"/>
-        <Caret Line="249" Column="71" TopLine="248"/>
+        <Caret Line="260" TopLine="248"/>
       </Position8>
       <Position9>
         <Filename Value="umain.pas"/>
-        <Caret Line="260" TopLine="248"/>
+        <Caret Line="261" TopLine="248"/>
       </Position9>
       <Position10>
         <Filename Value="umain.pas"/>
-        <Caret Line="261" TopLine="248"/>
+        <Caret Line="262" TopLine="248"/>
       </Position10>
       <Position11>
         <Filename Value="umain.pas"/>
-        <Caret Line="262" TopLine="248"/>
+        <Caret Line="260" TopLine="252"/>
       </Position11>
       <Position12>
         <Filename Value="umain.pas"/>
-        <Caret Line="260" TopLine="252"/>
+        <Caret Line="552" TopLine="543"/>
       </Position12>
       <Position13>
         <Filename Value="umain.pas"/>
-        <Caret Line="552" TopLine="543"/>
+        <Caret Line="104" Column="28" TopLine="100"/>
       </Position13>
       <Position14>
         <Filename Value="umain.pas"/>
-        <Caret Line="104" Column="28" TopLine="100"/>
+        <Caret Line="62" Column="54" TopLine="54"/>
       </Position14>
       <Position15>
         <Filename Value="umain.pas"/>
-        <Caret Line="62" Column="54" TopLine="54"/>
+        <Caret Line="17" Column="7"/>
       </Position15>
       <Position16>
         <Filename Value="umain.pas"/>
-        <Caret Line="17" Column="7"/>
+        <Caret Line="121" Column="3" TopLine="112"/>
       </Position16>
       <Position17>
         <Filename Value="umain.pas"/>
-        <Caret Line="121" Column="3" TopLine="112"/>
+        <Caret Line="138" Column="4" TopLine="129"/>
       </Position17>
       <Position18>
         <Filename Value="umain.pas"/>
-        <Caret Line="138" Column="4" TopLine="129"/>
+        <Caret Line="328" Column="91" TopLine="227"/>
       </Position18>
       <Position19>
         <Filename Value="umain.pas"/>
-        <Caret Line="328" Column="91" TopLine="227"/>
+        <Caret Line="533" TopLine="525"/>
       </Position19>
       <Position20>
         <Filename Value="umain.pas"/>
-        <Caret Line="533" TopLine="525"/>
+        <Caret Line="532" Column="55" TopLine="526"/>
       </Position20>
       <Position21>
         <Filename Value="umain.pas"/>
-        <Caret Line="532" Column="55" TopLine="526"/>
+        <Caret Line="533" TopLine="526"/>
       </Position21>
       <Position22>
         <Filename Value="umain.pas"/>
-        <Caret Line="533" TopLine="526"/>
+        <Caret Line="531" TopLine="527"/>
       </Position22>
       <Position23>
-        <Filename Value="umain.pas"/>
-        <Caret Line="531" TopLine="527"/>
+        <Filename Value="FFPlay.pas"/>
+        <Caret Line="62" Column="27" TopLine="55"/>
       </Position23>
       <Position24>
         <Filename Value="FFPlay.pas"/>
-        <Caret Line="62" Column="27" TopLine="55"/>
+        <Caret Line="78" Column="21" TopLine="71"/>
       </Position24>
       <Position25>
-        <Filename Value="FFPlay.pas"/>
-        <Caret Line="78" Column="21" TopLine="71"/>
+        <Filename Value="umain.pas"/>
+        <Caret Line="132" Column="11" TopLine="130"/>
       </Position25>
       <Position26>
         <Filename Value="umain.pas"/>
-        <Caret Line="132" Column="11" TopLine="130"/>
+        <Caret Line="548" Column="3" TopLine="546"/>
       </Position26>
       <Position27>
         <Filename Value="umain.pas"/>
-        <Caret Line="548" Column="3" TopLine="546"/>
+        <Caret Line="5" Column="3"/>
       </Position27>
       <Position28>
-        <Filename Value="umain.pas"/>
-        <Caret Line="5" Column="3"/>
-      </Position28>
-      <Position29>
         <Filename Value="FFPlay.pas"/>
         <Caret Line="122" Column="119" TopLine="119"/>
+      </Position28>
+      <Position29>
+        <Filename Value="umain.pas"/>
+        <Caret Line="535" TopLine="525"/>
       </Position29>
       <Position30>
         <Filename Value="umain.pas"/>
-        <Caret Line="535" TopLine="525"/>
+        <Caret Line="534" Column="54" TopLine="526"/>
       </Position30>
     </JumpHistory>
     <RunParams>

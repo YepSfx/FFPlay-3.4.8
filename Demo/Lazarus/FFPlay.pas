@@ -110,6 +110,8 @@ interface
        function  multimedia_setup_gui_player( events : PFFP_EVENTS ):Integer; cdecl ; external LIBNAME;
        function  multimedia_start_gui_player( filename : PFFP_CHAR ; events : PFFP_EVENTS) : Integer ; cdecl ; external LIBNAME;
        function  multimedia_start_gui_player_with_arguments( argc : Integer ; args : PPFFP_CHAR ; events : PFFP_EVENTS) : Integer ; cdecl ; external LIBNAME;
+       procedure multimedia_start_cli_player(argc : Integer ; argv : PPFFP_CHAR ; events : PFFP_EVENTS); cdecl ; external LIBNAME;
+
        procedure SaveFramebufferAsPPM( buff : pointer ; w, h, bpp : Integer ); cdecl ; external LIBNAME;
        procedure multimedia_toggle_fullscreen(); cdecl ; external LIBNAME;
 
