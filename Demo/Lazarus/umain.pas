@@ -517,7 +517,11 @@ begin
        begin
           mediaFile := AnsiString(OpenDialog.FileName);
           try
-            multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
+            //rtn := multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
+            DuplicateArguments( FArgc, FArgs, mediaFile);
+            DuplicateArguments( FArgc, FArgs, '-vf', True);
+            DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+            rtn := multimedia_start_gui_player_with_arguments( FArgc, @FArgs[0], @sti_events);
           except
             ShowMessage('Have a problem to play!');
           end;
