@@ -1,8 +1,8 @@
-object frmMain: TfrmMain
+object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'FFPlay'
-  ClientHeight = 451
+  ClientHeight = 470
   ClientWidth = 1004
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,103 +12,77 @@ object frmMain: TfrmMain
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  OnResize = FormResize
   DesignSize = (
     1004
-    451)
+    470)
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 8
-    Top = 430
-    Width = 3
-    Height = 13
-    Anchors = [akLeft, akBottom]
-  end
   object PanelBase: TPanel
     Left = 8
     Top = 8
     Width = 988
-    Height = 385
+    Height = 404
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvLowered
     TabOrder = 0
+    ExplicitHeight = 401
     DesignSize = (
       988
-      385)
+      404)
     object PanelYUV: TPanel
       Left = 8
       Top = 8
       Width = 969
-      Height = 368
+      Height = 387
       Anchors = [akLeft, akTop, akRight, akBottom]
       Color = clGreen
       ParentBackground = False
       TabOrder = 0
-      OnDblClick = PanelYUVDblClick
-      DesignSize = (
-        969
-        368)
-      object Memo1: TMemo
-        Left = 8
-        Top = 8
-        Width = 449
-        Height = 350
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        TabOrder = 0
-        Visible = False
-      end
+      ExplicitHeight = 385
     end
   end
-  object ButtonPlay: TButton
+  object buttonPlay: TButton
     Left = 759
-    Top = 422
+    Top = 441
     Width = 75
     Height = 25
-    Anchors = [akRight, akBottom]
+    Anchors = [akTop, akRight, akBottom]
     Caption = 'PLAY'
     TabOrder = 1
-    OnClick = ButtonPlayClick
   end
-  object ButtonPause: TButton
+  object buttonPause: TButton
     Left = 840
-    Top = 422
+    Top = 441
     Width = 75
     Height = 25
-    Anchors = [akRight, akBottom]
+    Anchors = [akTop, akRight, akBottom]
     Caption = 'PAUSE'
     TabOrder = 2
-    OnClick = ButtonPauseClick
   end
-  object ButtonStop: TButton
+  object buttonStop: TButton
     Left = 921
-    Top = 422
+    Top = 441
     Width = 75
     Height = 25
-    Anchors = [akRight, akBottom]
+    Anchors = [akTop, akRight, akBottom]
     Caption = 'STOP'
     TabOrder = 3
-    OnClick = ButtonStopClick
   end
   object ScrollBar1: TScrollBar
     Left = 8
-    Top = 399
+    Top = 418
     Width = 988
-    Height = 17
-    Anchors = [akLeft, akRight, akBottom]
+    Height = 15
+    Anchors = [akLeft, akTop, akRight, akBottom]
     PageSize = 0
     TabOrder = 4
   end
-  object OpenDialog: TOpenDialog
-    Left = 544
-    Top = 352
+  object OpenDialog1: TOpenDialog
+    Left = 536
+    Top = 440
   end
   object Timer1: TTimer
-    OnTimer = Timer1Timer
-    Left = 656
-    Top = 352
+    Left = 616
+    Top = 440
   end
 end

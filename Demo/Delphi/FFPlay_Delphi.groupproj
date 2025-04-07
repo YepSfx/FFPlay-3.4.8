@@ -1,0 +1,36 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{8F1F96D9-06A2-4916-BC4C-67CD07DA6B5C}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="FFPlay_Delphi_2010.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="FFPlay_Delphi_2010">
+			<MSBuild Projects="FFPlay_Delphi_2010.dproj"/>
+		</Target>
+		<Target Name="FFPlay_Delphi_2010:Clean">
+			<MSBuild Targets="Clean" Projects="FFPlay_Delphi_2010.dproj"/>
+		</Target>
+		<Target Name="FFPlay_Delphi_2010:Make">
+			<MSBuild Targets="Make" Projects="FFPlay_Delphi_2010.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="FFPlay_Delphi_2010"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="FFPlay_Delphi_2010:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="FFPlay_Delphi_2010:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>
