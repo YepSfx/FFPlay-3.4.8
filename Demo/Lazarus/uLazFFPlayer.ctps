@@ -23,7 +23,7 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="526"/>
+        <TopLine Value="518"/>
         <CursorPos X="3" Y="481"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
@@ -34,7 +34,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="128"/>
+        <TopLine Value="109"/>
         <CursorPos X="5" Y="137"/>
         <UsageCount Value="132"/>
         <Loaded Value="True"/>

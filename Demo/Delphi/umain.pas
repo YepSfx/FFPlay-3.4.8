@@ -230,7 +230,7 @@ begin
 end;
 
 procedure TfrmMain.ButtonPlayClick(Sender: TObject);
-  var mediaFile : AnsiString;
+  var mediaFile : String;
       rtn       : Integer;
       msg       : String;
 {$IFNDEF DEF_OUTPUT_WIN}
@@ -274,13 +274,13 @@ begin
 {$IFDEF  DEF_OUTPUT_WIN}
        if OpenDialog.Execute() then
        begin
-          mediaFile := UTF8Encode(OpenDialog.FileName);
+          mediaFile := OpenDialog.FileName;
           try
-            rtn := multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
-            //DuplicateArguments( FArgc, FArgs, mediaFile, False);
-            //DuplicateArguments( FArgc, FArgs, UTF8Encode('-vf'), True);
-            //DuplicateArguments( FArgc, FArgs, UTF8Encode('yadif=1'), True);
-            //rtn := multimedia_start_gui_player_with_arguments( FArgc, @FArgs[0], @sti_events);
+            //rtn := multimedia_start_gui_player( PFFP_CHAR(UTF8Encode(mediaFile)), @sti_events);
+            DuplicateArguments( FArgc, FArgs, mediaFile, False);
+            DuplicateArguments( FArgc, FArgs, '-vf', True);
+            DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+            rtn := multimedia_start_gui_player_with_arguments( FArgc, FArgs, @sti_events);
           except
             ShowMessage('Have a problem to play!');
           end;
@@ -332,7 +332,7 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-//  ReportMemoryLeaksOnShutdown := True;
+  ReportMemoryLeaksOnShutdown := True;
 
   GetMem(RGBBuffer, (1920*1080*4*4));
   FCurrentTime_Sec := 0;

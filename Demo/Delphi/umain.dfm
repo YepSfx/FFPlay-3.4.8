@@ -10,7 +10,6 @@ object frmMain: TfrmMain
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -19,7 +18,6 @@ object frmMain: TfrmMain
   DesignSize = (
     1004
     451)
-  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 8
