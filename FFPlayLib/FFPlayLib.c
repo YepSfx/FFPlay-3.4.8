@@ -1510,6 +1510,7 @@ static void do_exit(VideoState *is)
 	    uninit_opts();
 	#if CONFIG_AVFILTER
 	    av_freep(&vfilters_list);
+        nb_vfilters = 0;
 	#endif
 	    avformat_network_deinit();
 	    if (show_status)
@@ -1530,6 +1531,7 @@ static void do_exit(VideoState *is)
 	    uninit_opts();
 	#if CONFIG_AVFILTER
 	    av_freep(&vfilters_list);
+        nb_vfilters = 0;
 	#endif
 	    avformat_network_deinit();
 	    if (show_status)

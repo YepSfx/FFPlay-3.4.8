@@ -3,3 +3,5 @@
 *.res
 *.dcu
 Demo/Delphi/FFPlay.dcu
+FFPlayLib/FFPlay
+FFPlayLib/libFFPlay.so
