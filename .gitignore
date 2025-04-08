@@ -1,4 +1,4 @@
 /Demo/Lazarus/lib
+/Demo/Delphi/__history
 *.res
-/Demo/Delphi/__history
-/Demo/Delphi/__history
+*.dcu

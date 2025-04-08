@@ -274,13 +274,13 @@ begin
 {$IFDEF  DEF_OUTPUT_WIN}
        if OpenDialog.Execute() then
        begin
-          mediaFile := AnsiString(OpenDialog.FileName);
+          mediaFile := UTF8Encode(OpenDialog.FileName);
           try
-            //rtn := multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
-            DuplicateArguments( FArgc, FArgs, mediaFile, False);
-            //DuplicateArguments( FArgc, FArgs, '-vf', True);
-            //DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
-            rtn := multimedia_start_gui_player_with_arguments( FArgc, @FArgs[0], @sti_events);
+            rtn := multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
+            //DuplicateArguments( FArgc, FArgs, mediaFile, False);
+            //DuplicateArguments( FArgc, FArgs, UTF8Encode('-vf'), True);
+            //DuplicateArguments( FArgc, FArgs, UTF8Encode('yadif=1'), True);
+            //rtn := multimedia_start_gui_player_with_arguments( FArgc, @FArgs[0], @sti_events);
           except
             ShowMessage('Have a problem to play!');
           end;
@@ -332,6 +332,8 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+//  ReportMemoryLeaksOnShutdown := True;
+
   GetMem(RGBBuffer, (1920*1080*4*4));
   FCurrentTime_Sec := 0;
   FDurationTime_mSec:= 0;
@@ -366,6 +368,7 @@ procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   FresImage.Free();
   FreeMem(RGBBuffer);
+  SetLength(FArgs, 0);
   PrintDebugMessage('Application Terminated safely!');
 end;
 
