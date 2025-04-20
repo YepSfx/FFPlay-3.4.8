@@ -1211,11 +1211,6 @@ static void video_image_display(VideoState *is)
         }
 #endif
     }
-    
-    if (FFP_events->event_refresh)
-    {
-        FFP_events->event_refresh(FFP_events->sender);
-    }
 }
 
 static inline int compute_mod(int a, int b)
@@ -3524,7 +3519,6 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
     double remaining_time = 0.0;
     double  currentTimeinMilliSecond = 0;
 
-
     SDL_PumpEvents();
     while (!SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) 
     {
@@ -3543,6 +3537,12 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
             av_usleep((int64_t)(remaining_time * 1000000.0));
 #endif
         }
+
+        if (FFP_events->event_refresh)
+        {
+            FFP_events->event_refresh(FFP_events->sender);
+        }
+
         remaining_time = REFRESH_RATE;
         if (is->show_mode != SHOW_MODE_NONE && (!is->paused || is->force_refresh))
         {
@@ -3556,13 +3556,13 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
                 FFP_events->duration_in_us = duration;
             }
             #else
-	          currentTimeinMilliSecond = get_master_clock(is);
+	        currentTimeinMilliSecond = get_master_clock(is);
             FFP_events->current_in_s = currentTimeinMilliSecond;
             FFP_events->duration_in_us = duration;
             #endif
         }
         SDL_PumpEvents();
-      }
+    }
 }
 
 static void seek_chapter(VideoState *is, int incr)
@@ -4633,6 +4633,12 @@ int EXPORTDLL multimedia_setup_gui_player(FFP_EVENTS *events)
     }
     return 0;
 }  
+
+int  EXPORTDLL multimedia_setup_gui_player_with_arguments(int argc, char **argv,FFP_EVENTS *events)
+{
+    multimedia_parse_options(argc, argv);
+    return multimedia_setup_gui_player(events);
+}
 
 int  EXPORTDLL multimedia_start_gui_player(const char* mediaName, FFP_EVENTS *events)
 {
