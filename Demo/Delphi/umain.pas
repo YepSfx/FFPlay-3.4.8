@@ -332,7 +332,7 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  ReportMemoryLeaksOnShutdown := True;
+//  ReportMemoryLeaksOnShutdown := True;
 
   GetMem(RGBBuffer, (1920*1080*4*4));
   FCurrentTime_Sec := 0;
@@ -369,7 +369,7 @@ begin
   FresImage.Free();
   FreeMem(RGBBuffer);
   SetLength(FArgs, 0);
-  PrintDebugMessage('Application Terminated safely!');
+  //PrintDebugMessage('Application Terminated safely!');
 end;
 
 procedure TfrmMain.FormResize(Sender: TObject);

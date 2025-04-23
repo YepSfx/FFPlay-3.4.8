@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>2025/04/06 13:43:01.122.dfm,C:\Users\vbox\Documents\RAD Studio\Projects\Unit1.dfm=X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.dfm</Transaction>
-    <Transaction>2025/04/06 13:43:01.122.pas,C:\Users\vbox\Documents\RAD Studio\Projects\Unit1.pas=X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.pas</Transaction>
-    <Transaction>2025/04/06 13:43:23.134.dproj,C:\Users\vbox\Documents\RAD Studio\Projects\Project1.dproj=X:\projects\github\FFPlay-3.4.8\Demo\Delphi\FFPlay_Delphi_2010.dproj</Transaction>
-    <Transaction>2025/04/06 15:16:45.652.pas,X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.pas=X:\projects\github\FFPlay-3.4.8\Demo\Delphi\uMain.pas</Transaction>
-    <Transaction>2025/04/06 15:16:45.652.dfm,X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.dfm=X:\projects\github\FFPlay-3.4.8\Demo\Delphi\uMain.dfm</Transaction>
+    <Transaction>2025/04/06 13:43:01.122.pas,X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.pas=C:\Users\vbox\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2025/04/06 13:43:01.122.dfm,X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.dfm=C:\Users\vbox\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2025/04/06 13:43:23.134.dproj,X:\projects\github\FFPlay-3.4.8\Demo\Delphi\FFPlay_Delphi_2010.dproj=C:\Users\vbox\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2025/04/06 15:16:45.652.dfm,X:\projects\github\FFPlay-3.4.8\Demo\Delphi\uMain.dfm=X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.dfm</Transaction>
+    <Transaction>2025/04/06 15:16:45.652.pas,X:\projects\github\FFPlay-3.4.8\Demo\Delphi\uMain.pas=X:\projects\github\FFPlay-3.4.8\Demo\Delphi\frmMain.pas</Transaction>
   </Transactions>
 </BorlandProject>
