@@ -1,17 +1,19 @@
 cp ./configs/config-win.h ./config.h
 
-gcc -I. -I./ -D_WIN32_WINNT=0x0502 -I/usr/local/include/SDL2 -g -O2 -Dmain=SDL_main -c -o cmdutils.o cmdutils.c
-gcc -I. -I./ -D_WIN32_WINNT=0x0502 -I/usr/local/include/SDL2 -g -O2 -Dmain=SDL_main -DDEF_WIN -c -o FFPlayLib.o FFPlayLib.c
+gcc -I. -I./ -D_WIN32_WINNT=0x0502 -I/mingw32/include/SDL2 -Dmain=SDL_main -g -O2 -c -o cmdutils.o cmdutils.c
+gcc -I. -I./ -D_WIN32_WINNT=0x0502 -I/mingw32/include/SDL2 -Dmain=SDL_main -g -O2 -DDEF_WIN -c -o FFPlayLib.o FFPlayLib.c
 gcc -shared -o FFPlayLib.dll FFPlayLib.o cmdutils.o -L/usr/local/lib -lavdevice -lavfilter -lavformat -lavcodec -lswresample -lswscale -lavutil -lgdi32 -lmingw32 -lSDL2main -lSDL2 -lws2_32 -liconv -lvfw32 -luser32 -lm -lz -lpsapi -ladvapi32 -lshell32 -lole32 
 strip FFPlayLib.dll
 
-gcc -I. -I./ -I/usr/local/include/SDL2 -Dmain=SDL_main -O2 -DDEF_WIN -c -o FFPlay.o FFPlay.c
+gcc -I. -I./ -I/mingw32/include/SDL2 -Dmain=SDL_main -O2 -DDEF_WIN -c -o FFPlay.o FFPlay.c
 gcc -Wl,--large-address-aware -o FFPlay.exe FFPlay.o FFPlayLib.dll
 strip FFPlay.exe 
 
 cp ./FFPlayLib.dll ../Demo/Bin
 cp ./FFPlay.exe  ../Demo/Bin
 
+rm ./FFPlayLib.dll
+rm ./FFPlay.exe
 rm *.o
 rm ./config.h
 

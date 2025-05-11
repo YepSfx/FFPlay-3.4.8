@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="ffplayconsole.ppr"/>
+        <FRMtype Value="0"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="0"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="45"/>
+        <CursorPos X="40" Y="61"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="FFPlay.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="118"/>
+        <CursorPos X="45" Y="113"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="16">
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="23" Column="29" TopLine="11"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="21" Column="51" TopLine="11"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="32" Column="50"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="56" Column="29" TopLine="37"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="59" Column="30" TopLine="39"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="33" Column="54" TopLine="25"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="16" Column="3" TopLine="6"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="19" Column="13" TopLine="7"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="30" Column="13" TopLine="20"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="17" Column="17" TopLine="7"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="61" Column="37" TopLine="44"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="58" TopLine="41"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="60" Column="51" TopLine="44"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="63" TopLine="45"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="44" TopLine="34"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="45" Column="27" TopLine="44"/>
+      </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="61" TopLine="44"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode="default">
+        <Mode Name="default"/>
+      </Modes>
+    </RunParams>
+    <HistoryLists>
+      <List Name="WorkingDirectory" Type="File" Count="1"/>
+      <List Name="LaunchingApplication" Type="File" Count="4">
+        <Item1 Value="C:\WINDOWS\system32\cmd.exe /C ${TargetCmdLine}"/>
+        <Item2 Value="${CmdExe} ${TargetCmdLine}"/>
+        <Item3 Value="&quot;$(Pas2JSBrowser)&quot; &quot;$(Pas2JSProjectURL)&quot;"/>
+        <Item4 Value="$(Pas2JSBrowser) &quot;$(Pas2JSProjectURL)&quot;"/>
+      </List>
+      <List Name="CommandLineParameters" Count="2">
+        <Item2 Value="Z:\1.mp4"/>
+      </List>
+    </HistoryLists>
+  </ProjectSession>
+</CONFIG>

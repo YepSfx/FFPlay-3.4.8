@@ -40,6 +40,7 @@
       </Unit0>
       <Unit1>
         <Filename Value="umain.pas"/>
+        <FRMtype Value="200"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
@@ -78,7 +79,7 @@
     </Linking>
     <Other>
       <Verbosity>
-        <ShoLineNum Value="True"/>
+        <ShowLineNum Value="True"/>
         <ShowAll Value="True"/>
         <ShowDebugInfo Value="True"/>
         <ShowUsedFiles Value="True"/>

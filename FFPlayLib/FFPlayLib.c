@@ -1077,6 +1077,22 @@ static int upload_texture(SDL_Texture **tex, AVFrame *frame, struct SwsContext *
     return ret;
 }
 
+static void set_sdl_yuv_conversion_mode(AVFrame *frame)
+{
+#if SDL_VERSION_ATLEAST(2,0,8)
+    SDL_YUV_CONVERSION_MODE mode = SDL_YUV_CONVERSION_AUTOMATIC;
+    if (frame && (frame->format == AV_PIX_FMT_YUV420P || frame->format == AV_PIX_FMT_YUYV422 || frame->format == AV_PIX_FMT_UYVY422)) {
+        if (frame->color_range == AVCOL_RANGE_JPEG)
+            mode = SDL_YUV_CONVERSION_JPEG;
+        else if (frame->colorspace == AVCOL_SPC_BT709)
+            mode = SDL_YUV_CONVERSION_BT709;
+        else if (frame->colorspace == AVCOL_SPC_BT470BG || frame->colorspace == AVCOL_SPC_SMPTE170M)
+            mode = SDL_YUV_CONVERSION_BT601;
+    }
+    SDL_SetYUVConversionMode(mode); /* FIXME: no support for linear transfer */
+#endif
+}
+
 static void video_image_display(VideoState *is)
 {
     Frame *vp;
@@ -1134,6 +1150,8 @@ static void video_image_display(VideoState *is)
     }
 
     calculate_display_rect(&rect, is->xleft, is->ytop, is->width, is->height, vp->width, vp->height, vp->sar);
+    set_sdl_yuv_conversion_mode(vp->frame);
+    //FFP_LOG( FFP_INFO_DEBUG, "Calc display rect- left:%d, top:%d width:%d, height:%d", is->xleft, is->ytop, is->width, is->height);
 
     if (FFP_events->playstatus != FFP_PLAY)
     {
@@ -1144,7 +1162,10 @@ static void video_image_display(VideoState *is)
 
     if (!vp->uploaded) {
         if (upload_texture(&is->vid_texture, vp->frame, &is->img_convert_ctx) < 0)
+        {
+            set_sdl_yuv_conversion_mode(NULL);
             return;
+        }  
         vp->uploaded = 1;
         vp->flip_v = vp->frame->linesize[0] < 0;
     }
@@ -1170,6 +1191,7 @@ static void video_image_display(VideoState *is)
     else  
     {
         SDL_RenderCopyEx(renderer, is->vid_texture, NULL, &rect, 0, NULL, vp->flip_v ? SDL_FLIP_VERTICAL : 0);  // <--- FFPlayLib Video Callback
+        set_sdl_yuv_conversion_mode(NULL); 
     }
         
     if (sp) {
@@ -1188,11 +1210,6 @@ static void video_image_display(VideoState *is)
             SDL_RenderCopy(renderer, is->sub_texture, sub_rect, &target);
         }
 #endif
-    }
-    
-    if (FFP_events->event_refresh)
-    {
-        FFP_events->event_refresh(FFP_events->sender);
     }
 }
 
@@ -1476,15 +1493,19 @@ static void do_exit(VideoState *is)
 	    if (renderer)
 	    {
          SDL_RenderClear(renderer);
-		     SDL_DestroyRenderer(renderer);
-      }  
+		 SDL_DestroyRenderer(renderer);
+        }  
 	    if (window)
-		     SDL_DestroyWindow(window);
+        {
+            SDL_SetWindowTitle(window, NULL);
+            SDL_DestroyWindow(window);
+        }
 
 	    av_lockmgr_register(NULL);
 	    uninit_opts();
 	#if CONFIG_AVFILTER
 	    av_freep(&vfilters_list);
+        nb_vfilters = 0;
 	#endif
 	    avformat_network_deinit();
 	    if (show_status)
@@ -1496,8 +1517,8 @@ static void do_exit(VideoState *is)
 	    if (renderer)
 	    {
    	     SDL_RenderClear(renderer);
-	    	 SDL_DestroyRenderer(renderer);
-      }
+	     SDL_DestroyRenderer(renderer);
+        }
 	    if (window)
 	    	SDL_DestroyWindow(window);
 
@@ -1505,6 +1526,7 @@ static void do_exit(VideoState *is)
 	    uninit_opts();
 	#if CONFIG_AVFILTER
 	    av_freep(&vfilters_list);
+        nb_vfilters = 0;
 	#endif
 	    avformat_network_deinit();
 	    if (show_status)
@@ -1539,10 +1561,14 @@ static int video_open(VideoState *is)
 
     if (!window_title)
         window_title = input_filename;
+#ifdef DEF_WIN
+    SDL_SetWindowTitle(window, NULL);
+#else
     SDL_SetWindowTitle(window, window_title);
+#endif        
 
     SDL_SetWindowSize(window, w, h);
-    SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    //SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     if (is_full_screen)
         SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     SDL_ShowWindow(window);
@@ -3493,7 +3519,6 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
     double remaining_time = 0.0;
     double  currentTimeinMilliSecond = 0;
 
-
     SDL_PumpEvents();
     while (!SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) 
     {
@@ -3512,6 +3537,12 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
             av_usleep((int64_t)(remaining_time * 1000000.0));
 #endif
         }
+
+        if (FFP_events->event_refresh)
+        {
+            FFP_events->event_refresh(FFP_events->sender);
+        }
+
         remaining_time = REFRESH_RATE;
         if (is->show_mode != SHOW_MODE_NONE && (!is->paused || is->force_refresh))
         {
@@ -3525,13 +3556,13 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
                 FFP_events->duration_in_us = duration;
             }
             #else
-	          currentTimeinMilliSecond = get_master_clock(is);
+	        currentTimeinMilliSecond = get_master_clock(is);
             FFP_events->current_in_s = currentTimeinMilliSecond;
             FFP_events->duration_in_us = duration;
             #endif
         }
         SDL_PumpEvents();
-      }
+    }
 }
 
 static void seek_chapter(VideoState *is, int incr)
@@ -3807,6 +3838,8 @@ static void event_cli_loop(VideoState *cur_stream)
     SDL_Event event;
     double incr, pos, frac;
     int isQuit = 0;
+    SDL_Rect    viewport;	
+
     
     for (;;) {
         double x;
@@ -3984,19 +4017,37 @@ static void event_cli_loop(VideoState *cur_stream)
             break;
         case SDL_WINDOWEVENT:
             switch (event.window.event) {
-                case SDL_WINDOWEVENT_RESIZED:
-                    screen_width  = cur_stream->width  = event.window.data1;
-                    screen_height = cur_stream->height = event.window.data2;
-                    if (cur_stream->vis_texture) {
-                        SDL_DestroyTexture(cur_stream->vis_texture);
-                        cur_stream->vis_texture = NULL;
-                    }
-                    if (FFP_events->event_video_resize)
-                    {
-                        FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height, 0 );
-                    }                    
-                case SDL_WINDOWEVENT_EXPOSED:
-                    cur_stream->force_refresh = 1;
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        screen_width  = cur_stream->width  = event.window.data1;
+                        screen_height = cur_stream->height = event.window.data2;
+                        if (cur_stream->vis_texture) {
+                            SDL_DestroyTexture(cur_stream->vis_texture);
+                            cur_stream->vis_texture = NULL;
+                        }
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_SIZE_CHANGED" );
+                        break;
+                    case SDL_WINDOWEVENT_RESIZED:
+                        screen_width  = cur_stream->width  = event.window.data1;
+                        screen_height = cur_stream->height = event.window.data2;
+                        if (cur_stream->vis_texture) {
+                            SDL_DestroyTexture(cur_stream->vis_texture);
+                            cur_stream->vis_texture = NULL;
+                        }
+                        if (FFP_events->event_video_resize)
+                        {
+                            FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height, 0 );
+                        }                        
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_RESIZED" );
+                        break;
+                    case SDL_WINDOWEVENT_EXPOSED:
+                        cur_stream->force_refresh = 1;
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_EXPOSED" );
+   					    if (renderer)
+						{
+                            SDL_RenderGetViewport(renderer, &viewport);
+                            FFP_LOG(FFP_INFO_DEBUG, "SDL_RenderGetViewport- x:%d, y:%d, w:%d, h:%d", viewport.x, viewport.y, viewport.w, viewport.h ); 
+						}												
+                        break;
             }
             break;
         case SDL_QUIT:
@@ -4027,6 +4078,8 @@ static void event_gui_loop(VideoState *cur_stream)
     SDL_Event event;
     double incr, pos, frac;
     int isQuit = 0;
+    SDL_Rect    viewport;	
+	
     for (;;) {
         double x;
         event_loop_alive = 1;
@@ -4044,6 +4097,15 @@ static void event_gui_loop(VideoState *cur_stream)
                 break;
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        screen_width  = cur_stream->width  = event.window.data1;
+                        screen_height = cur_stream->height = event.window.data2;
+                        if (cur_stream->vis_texture) {
+                            SDL_DestroyTexture(cur_stream->vis_texture);
+                            cur_stream->vis_texture = NULL;
+                        }
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_SIZE_CHANGED" );
+                        break;
                     case SDL_WINDOWEVENT_RESIZED:
                         screen_width  = cur_stream->width  = event.window.data1;
                         screen_height = cur_stream->height = event.window.data2;
@@ -4055,9 +4117,18 @@ static void event_gui_loop(VideoState *cur_stream)
                         {
                             FFP_events->event_video_resize( FFP_events->sender, screen_width, screen_height, 0 );
                         }                        
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_RESIZED" );
+                        break;
                     case SDL_WINDOWEVENT_EXPOSED:
                         cur_stream->force_refresh = 1;
-                }
+                        FFP_LOG( FFP_INFO_DEBUG, "SDL_WINDOWEVENT_EXPOSED" );
+   					    if (renderer)
+						{
+                            SDL_RenderGetViewport(renderer, &viewport);
+                            FFP_LOG(FFP_INFO_DEBUG, "SDL_RenderGetViewport- x:%d, y:%d, w:%d, h:%d", viewport.x, viewport.y, viewport.w, viewport.h ); 
+						}						
+                        break;
+                    }
                 break;
             case SDL_QUIT:
             case FF_QUIT_EVENT:
@@ -4162,14 +4233,14 @@ void EXPORTDLL multimedia_reset_pointer()
 void EXPORTDLL multimedia_resize_screen(int w, int h)
 {
   SDL_Event   event1, event2;
-  
+
   event1.type = SDL_WINDOWEVENT;
   event1.window.event = SDL_WINDOWEVENT_RESIZED;
   event1.window.data1 = w;
   event1.window.data2 = h;
 
   SDL_PushEvent(&event1);
-#if 0  
+#ifndef DEF_WIN
   event2.type = SDL_WINDOWEVENT;
   event2.window.event = SDL_WINDOWEVENT_EXPOSED;
   SDL_PushEvent(&event2);
@@ -4452,7 +4523,7 @@ int EXPORTDLL multimedia_init_device(FFP_EVENTS *ffp_events)
         if (FFP_events->ui_type==FFP_CLI)
             window = SDL_CreateWindow(program_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, default_width, default_height, flags);
         else
-	{    
+	    {    
             window = SDL_CreateWindowFrom((void*)FFP_events->screenID);
             FFP_LOG( FFP_INFO_DEBUG, "SDL Current Display ID: %d ; Index: %d\n", SDL_GetWindowID(window), SDL_GetWindowDisplayIndex(window) );            
         }    
@@ -4539,7 +4610,7 @@ static int runPlayThreadWithInit(void *ptr)
     if ( !multimedia_stream_open() )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to open the stream!\n" );
-	multimedia_exit();        
+	    multimedia_exit();        
 	return 2;
     }
 
@@ -4563,11 +4634,27 @@ int EXPORTDLL multimedia_setup_gui_player(FFP_EVENTS *events)
     return 0;
 }  
 
+int  EXPORTDLL multimedia_setup_gui_player_with_arguments(int argc, char **argv,FFP_EVENTS *events)
+{
+    multimedia_parse_options(argc, argv);
+    return multimedia_setup_gui_player(events);
+}
+
 int  EXPORTDLL multimedia_start_gui_player(const char* mediaName, FFP_EVENTS *events)
 {
      
      multimedia_set_filename( mediaName );
 
+     FFPThread = SDL_CreateThread( runPlayThreadWithInit, "GUIThread", events);
+     if (FFPThread == NULL)
+        return 1;
+     else 
+     	return 0;
+}
+
+int  EXPORTDLL multimedia_start_gui_player_with_arguments(int argc, char **argv, FFP_EVENTS *events)
+{
+    multimedia_parse_options(argc, argv);
      FFPThread = SDL_CreateThread( runPlayThreadWithInit, "GUIThread", events);
      if (FFPThread == NULL)
         return 1;

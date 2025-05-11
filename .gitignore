@@ -1,0 +1,7 @@
+/Demo/Lazarus/lib
+/Demo/Delphi/__history
+*.res
+*.dcu
+Demo/Delphi/FFPlay.dcu
+FFPlayLib/FFPlay
+FFPlayLib/libFFPlay.so

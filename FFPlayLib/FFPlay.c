@@ -10,7 +10,7 @@
 
 void ExitEvent(void *sender, int exitCode)
 {
-   printf("\n\n Exit Event!!!\n\n");
+   printf("\n\n Exit Event - code:%d \n\n", exitCode);
    exit(exitCode);
 }  
 
