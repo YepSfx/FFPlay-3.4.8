@@ -36,6 +36,7 @@ begin
 end;
 
   var theID : Integer = 123;
+      i : Integer;
       FFP_events : TFFP_EVENTS;
       FArgc : Integer;
       FArgv : PPFFP_CHAR;
@@ -58,8 +59,14 @@ begin
     FFP_events.eventResize  := @CallbackResize;
     FFP_events.playstatus   := FFP_STOP;
 
-    DuplicateArguments( FArgc, FArgv, '');
+    DuplicateArguments( FArgc, FArgv);
 
     multimedia_start_cli_player( FArgc, @FArgv[0], @FFP_events);
+
+    for i := 0 to FArgc - 1 do
+    begin
+       StrDispose(FArgv[i]);
+    end;
+
 end.
 

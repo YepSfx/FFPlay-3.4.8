@@ -1,0 +1,66 @@
+program uffplayconsole;
+
+{$mode objfpc}{$H+}
+
+uses
+  {$IFDEF UNIX}
+  cthreads,
+  {$ENDIF}
+  SysUtils,
+  math,
+  FFPlay,
+  Classes
+  { you can add units after this };
+
+procedure ExitEvent(sender : pointer ; exitCode : Integer); cdecl;
+begin
+  WriteLn(Format('[Exit - code:%d]',[exitCode]));
+end;
+
+procedure CallbackResize(sender : pointer ; w , h, isOriginal : Integer); cdecl;
+begin
+  if (isOriginal <> 0) then
+  begin
+  end;
+end;
+
+procedure MessageInfo(sender : pointer ; infoCode : Integer ; msg : PFFP_CHAR);cdecl;
+begin
+   WriteLn(Format('% FFPlayLib message: %s, code: %d',[msg, infoCode]));
+end;
+
+var theID : Integer = 123;
+    i : Integer;
+    FFP_events : TFFP_EVENTS;
+    FArgc : Integer;
+    FArgv : PPFFP_CHAR;
+begin
+  WriteLn('### Start Ubuntu FFPlay console ###');
+  SetExceptionMask(GetExceptionMask()  + [exOverflow, exZeroDivide, exInvalidOp]);
+
+  FillChar(FFP_events, sizeof(TFFP_EVENTS), #0);
+
+  FFP_events.sender       := @theID;
+  FFP_events.uiType       := FFP_CLI;
+  FFP_events.bRendererRGB := 0;
+  FFP_events.eventExit    := @ExitEvent;
+  FFP_events.eventInfo    := @MessageInfo;
+  FFP_events.eventAudio   := nil;
+  FFP_events.eventVideo   := nil;
+  FFP_events.eventRefresh := nil;
+  FFP_events.eventResize  := @CallbackResize;
+  FFP_events.playstatus   := FFP_STOP;
+
+  DuplicateArguments( FArgc, FArgv);
+
+  multimedia_start_cli_player( FArgc, FArgv, @FFP_events);
+
+  for i := 0 to FArgc - 1 do
+  begin
+    StrDispose(FArgv[i]);
+  end;
+
+  WriteLn('### Ubuntu FFPlay console closed###');
+
+end.
+
