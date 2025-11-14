@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "FFPlayLib.h"
 
 // CMFCFFPlayDlg dialog
 class CMFCFFPlayDlg : public CDialogEx
@@ -45,7 +46,14 @@ private:
 
 	void setPlayingMode(enum PLAYINGMODE playmode);
 	
+	FFP_EVENTS m_FFP_events;
+
 public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+	void StartPlaying();
+	void StopPlaying();
+
 	afx_msg void OnBnClickedButtonPlay();
 	afx_msg void OnBnClickedButtonPause();
 	afx_msg void OnBnClickedButtonStop();

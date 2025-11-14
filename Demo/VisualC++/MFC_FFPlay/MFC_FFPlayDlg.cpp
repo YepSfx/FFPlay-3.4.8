@@ -7,15 +7,75 @@
 #include "MFC_FFPlay.h"
 #include "MFC_FFPlayDlg.h"
 #include "afxdialogex.h"
+#include <string>
+#include <atlconv.h> 
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+static void DoProc()
+{
+	MSG		msg;
+
+	while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+}
+void __cdecl EventExit(void* sender, int exitCode)
+{
+	OutputDebugString(_T("Exit Event\n"));
+}
+
+void __cdecl Eventinfo(void* sender, int infoCode, char* pMsg)
+{
+	CString msg = CString(pMsg);
+	CString code;
+	code.Format(_T(" infoCode: %d"), infoCode);
+	msg = CString(_T(">Eventinfo: ")) + msg + code + CString(_T("\n"));
+	OutputDebugString(msg);
+}
+
+void __cdecl EventAudio(void* sender, BYTE** pBuffer, int BufferLenInByte)
+{
+
+}
+
+void __cdecl EventPlayStatus(void* sender, FFP_PLAY_STATUS status)
+{
+	CString msg;
+	msg.Format(_T(">>Play Status Info: %d\n"), (int)status);
+	OutputDebugString(msg);
+}
+
+void __cdecl EventVideo(void* sender, FFP_YUV420P_DATA* pYUVData)
+{
+}
+
+void __cdecl EventResize(void* sender, int width, int height, int isOriginalsize)
+{
+	OutputDebugString(_T("Resize Event\n"));
+}
+
+void __cdecl EventRefresh(void* sender)
+{
+	DoProc();
+}
+
+static void ThreadStreaming(void* pParam)
+{
+	multimedia_stream_start();
+}
 
 // CMFCFFPlayDlg dialog
 
-
+std::string CStringToUTF8(const CString& str)
+{
+	CW2A utf8(str.GetString(), CP_UTF8);
+	return std::string(utf8);
+}
 
 CMFCFFPlayDlg::CMFCFFPlayDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFC_FFPLAY_DIALOG, pParent)
@@ -35,9 +95,9 @@ void CMFCFFPlayDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CMFCFFPlayDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON_PLAY, &CMFCFFPlayDlg::OnBnClickedButtonPlay)
+	ON_BN_CLICKED(IDC_BUTTON_PLAY,  &CMFCFFPlayDlg::OnBnClickedButtonPlay)
 	ON_BN_CLICKED(IDC_BUTTON_PAUSE, &CMFCFFPlayDlg::OnBnClickedButtonPause)
-	ON_BN_CLICKED(IDC_BUTTON_STOP, &CMFCFFPlayDlg::OnBnClickedButtonStop)
+	ON_BN_CLICKED(IDC_BUTTON_STOP,  &CMFCFFPlayDlg::OnBnClickedButtonStop)
 END_MESSAGE_MAP()
 
 
@@ -53,7 +113,7 @@ BOOL CMFCFFPlayDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	this->setPlayingMode(STOP);
+	setPlayingMode(STOP);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -94,6 +154,15 @@ HCURSOR CMFCFFPlayDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+BOOL CMFCFFPlayDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_F4 || pMsg->wParam == VK_ESCAPE)
+		return TRUE;
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
 void CMFCFFPlayDlg::setPlayingMode(enum PLAYINGMODE playmode)
 {
 	switch (playmode)
@@ -126,28 +195,90 @@ void CMFCFFPlayDlg::setPlayingMode(enum PLAYINGMODE playmode)
 	m_currentMode = playmode;
 }
 
-
 void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 {
 	// TODO: Add your control notification handler code here
-	this->setPlayingMode(PLAY);
+
+	CFileDialog openFileDialog(TRUE, _T("mov"), NULL, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
+		_T("Mov (*.mov)|*.mov|AVI (*.avi)|*.avi|MP4 (*.mp4)|*.mp4|All Files (*.*)|*.*||", this));
+	if (openFileDialog.DoModal() == IDOK)
+	{
+		int rtn;
+
+		CString filePath = openFileDialog.GetPathName(); 
+
+		m_FFP_events.sender = this;
+		m_FFP_events.event_info = Eventinfo;
+		m_FFP_events.screenID = (unsigned long)m_Pannel_yuv.m_hWnd;
+		m_FFP_events.ui_type = FFP_GUI;
+		m_FFP_events.event_exit = EventExit;
+		m_FFP_events.event_audio = EventAudio;
+		m_FFP_events.event_video_resize = EventResize;
+		m_FFP_events.event_play_status = EventPlayStatus;
+		m_FFP_events.playstatus = FFP_STOP;
+		m_FFP_events.event_video = NULL;
+		m_FFP_events.event_refresh = EventRefresh;
+
+		const char* pFileName = CStringToUTF8(filePath).c_str();
+		try
+		{
+			multimedia_set_filename(pFileName);
+
+			if (multimedia_init_device(&m_FFP_events) != 0)
+			{
+				multimedia_exit();
+				MessageBox(_T("Fail to Init!"));
+				return;
+			}
+
+			if (multimedia_stream_open() == FFP_FALSE)
+			{
+				multimedia_exit();
+				MessageBox(_T("Fail to open file!"));
+				return;
+			}
+
+			StartPlaying();
+
+			setPlayingMode(PLAY);
+
+		}
+		catch(...)
+		{
+
+		}
+	}
 }
 
 void CMFCFFPlayDlg::OnBnClickedButtonPause()
 {
 	// TODO: Add your control notification handler code here
-	if (this->m_currentMode == PAUSE)
+	if (m_currentMode == PAUSE)
 	{
-		this->setPlayingMode(RESUME);
+		setPlayingMode(RESUME);
 	}
 	else 
 	{
-		this->setPlayingMode(PAUSE);
+		setPlayingMode(PAUSE);
 	}
 }
 
 void CMFCFFPlayDlg::OnBnClickedButtonStop()
 {
 	// TODO: Add your control notification handler code here
-	this->setPlayingMode(STOP);
+	StopPlaying();
+
+	setPlayingMode(STOP);
+}
+
+void CMFCFFPlayDlg::StartPlaying()
+{
+	_beginthread(ThreadStreaming, 0, NULL);
+}
+
+void CMFCFFPlayDlg::StopPlaying()
+{
+	OutputDebugString(_T("Stop playing...\n"));
+	multimedia_stream_stop();
+	OutputDebugString(_T("Playing stopped.\n"));
 }
