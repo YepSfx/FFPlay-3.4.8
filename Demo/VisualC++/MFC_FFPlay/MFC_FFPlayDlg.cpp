@@ -24,6 +24,7 @@ static void DoProc()
 		DispatchMessage(&msg);
 	}
 }
+
 void __cdecl EventExit(void* sender, int exitCode)
 {
 	OutputDebugString(_T("Exit Event\n"));
@@ -75,6 +76,18 @@ std::string CStringToUTF8(const CString& str)
 {
 	CW2A utf8(str.GetString(), CP_UTF8);
 	return std::string(utf8);
+}
+
+std::string utf8_encode(const std::wstring &wstr)
+{
+	if (wstr.empty())
+		return std::string();
+	int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+
+	std::string strTo(size_needed, 0);
+	WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
+
+	return strTo;
 }
 
 CMFCFFPlayDlg::CMFCFFPlayDlg(CWnd* pParent /*=nullptr*/)
@@ -201,11 +214,23 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 
 	CFileDialog openFileDialog(TRUE, _T("mov"), NULL, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
 		_T("Mov (*.mov)|*.mov|AVI (*.avi)|*.avi|MP4 (*.mp4)|*.mp4|All Files (*.*)|*.*||", this));
+
 	if (openFileDialog.DoModal() == IDOK)
 	{
 		int rtn;
 
-		CString filePath = openFileDialog.GetPathName(); 
+		CString fileName = openFileDialog.GetPathName();
+
+		std::wstring wsFileName(fileName);
+		std::string utf8filename = utf8_encode(wsFileName);
+
+		const char* pFileName = utf8filename.c_str();
+
+		char argv[4][256] = { NULL, };
+		strcpy_s(argv[0], "FFPlay");
+		strcpy_s(argv[1], pFileName);
+		strcpy_s(argv[2], "-vf");
+		strcpy_s(argv[3], "yadif=1");
 
 		m_FFP_events.sender = this;
 		m_FFP_events.event_info = Eventinfo;
@@ -219,9 +244,15 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 		m_FFP_events.event_video = NULL;
 		m_FFP_events.event_refresh = EventRefresh;
 
-		const char* pFileName = CStringToUTF8(filePath).c_str();
+		char* argv_ptrs[4] = { NULL, };
+		for (int i = 0; i < 4; i++)
+			argv_ptrs[i] = argv[i];
+		
+		char** args = argv_ptrs;
+
 		try
 		{
+#if 0			
 			multimedia_set_filename(pFileName);
 
 			if (multimedia_init_device(&m_FFP_events) != 0)
@@ -237,10 +268,21 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 				MessageBox(_T("Fail to open file!"));
 				return;
 			}
-
+#else
+			multimedia_set_filename(pFileName);
+			multimedia_setup_gui_player(&m_FFP_events);
+#endif
 			StartPlaying();
 
 			setPlayingMode(PLAY);
+
+			CRect rect;
+			m_Pannel_yuv.GetWindowRect(&rect);
+			
+			int w = rect.Width();
+			int h = rect.Height();
+
+			multimedia_resize_screen(w, h);
 
 		}
 		catch(...)
@@ -261,6 +303,7 @@ void CMFCFFPlayDlg::OnBnClickedButtonPause()
 	{
 		setPlayingMode(PAUSE);
 	}
+	multimedia_pause_resume();
 }
 
 void CMFCFFPlayDlg::OnBnClickedButtonStop()
