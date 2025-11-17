@@ -4725,7 +4725,7 @@ void EXPORTDLL multimedia_test_screen( int xWinID, int latency )
 
    SDL_DestroyRenderer( test_renderer );
    SDL_DestroyWindow ( test_window );
-   SDL_Quit;
+   SDL_Quit();
   	
 }
 
