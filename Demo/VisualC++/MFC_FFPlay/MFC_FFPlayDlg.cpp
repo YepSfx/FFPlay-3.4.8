@@ -49,6 +49,24 @@ void __cdecl EventPlayStatus(void* sender, FFP_PLAY_STATUS status)
 	CString msg;
 	msg.Format(_T(">>Play Status Info: %d\n"), (int)status);
 	OutputDebugString(msg);
+
+	CMFCFFPlayDlg *pPlayer = (CMFCFFPlayDlg*)sender;
+
+	switch (status)
+	{
+		case FFP_STOP:
+			pPlayer->setPlayingMode(CMFCFFPlayDlg::PLAYINGMODE::STOP);
+			break;
+		case FFP_PLAY:
+			pPlayer->setPlayingMode(CMFCFFPlayDlg::PLAYINGMODE::PLAY);
+			break;
+		case FFP_PAUSED:
+			pPlayer->setPlayingMode(CMFCFFPlayDlg::PLAYINGMODE::PAUSE);
+			break;
+		case FFP_RESUMED:
+			pPlayer->setPlayingMode(CMFCFFPlayDlg::PLAYINGMODE::RESUME);
+			break;
+	}
 }
 
 void __cdecl EventVideo(void* sender, FFP_YUV420P_DATA* pYUVData)
@@ -208,7 +226,7 @@ void CMFCFFPlayDlg::setPlayingMode(enum PLAYINGMODE playmode)
 	m_currentMode = playmode;
 }
 
-char argv[4][256] = { NULL, };
+static char argv[4][256] = { NULL, };
 
 void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 {
@@ -276,8 +294,6 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 #endif
 			StartPlaying();
 
-			setPlayingMode(PLAY);
-
 			CRect rect;
 			m_Pannel_yuv.GetWindowRect(&rect);
 			
@@ -287,9 +303,13 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 			multimedia_resize_screen(w, h);
 
 		}
+		catch (const std::exception& e) 
+		{
+			AfxMessageBox(CString(_T("Exception: ")) + CString(e.what()));
+		}
 		catch(...)
 		{
-
+			AfxMessageBox(_T("Unknown exception occurred"));
 		}
 	}
 }
@@ -297,14 +317,6 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 void CMFCFFPlayDlg::OnBnClickedButtonPause()
 {
 	// TODO: Add your control notification handler code here
-	if (m_currentMode == PAUSE)
-	{
-		setPlayingMode(RESUME);
-	}
-	else 
-	{
-		setPlayingMode(PAUSE);
-	}
 	multimedia_pause_resume();
 }
 
@@ -312,8 +324,6 @@ void CMFCFFPlayDlg::OnBnClickedButtonStop()
 {
 	// TODO: Add your control notification handler code here
 	StopPlaying();
-
-	setPlayingMode(STOP);
 }
 
 void CMFCFFPlayDlg::StartPlaying()

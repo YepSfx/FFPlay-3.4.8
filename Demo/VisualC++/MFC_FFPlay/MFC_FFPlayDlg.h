@@ -13,6 +13,13 @@ class CMFCFFPlayDlg : public CDialogEx
 public:
 	CMFCFFPlayDlg(CWnd* pParent = nullptr);	// standard constructor
 
+	enum PLAYINGMODE {
+		STOP = 0,
+		PLAY = 1,
+		PAUSE = 2,
+		RESUME = 3
+	};
+
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_MFC_FFPLAY_DIALOG };
@@ -32,20 +39,12 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 private:
-	enum PLAYINGMODE {
-		STOP = 0, 
-		PLAY = 1,
-		PAUSE = 2,
-		RESUME=3
-	};
 	PLAYINGMODE m_currentMode;
 	CStatic m_Pannel_yuv;
 	CButton m_Button_play;
 	CButton m_Button_pause;
 	CButton m_Button_stop;
 
-	void setPlayingMode(enum PLAYINGMODE playmode);
-	
 	FFP_EVENTS m_FFP_events;
 
 public:
@@ -53,6 +52,7 @@ public:
 
 	void StartPlaying();
 	void StopPlaying();
+	void setPlayingMode(enum PLAYINGMODE playmode);
 
 	afx_msg void OnBnClickedButtonPlay();
 	afx_msg void OnBnClickedButtonPause();
