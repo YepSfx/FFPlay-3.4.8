@@ -208,6 +208,8 @@ void CMFCFFPlayDlg::setPlayingMode(enum PLAYINGMODE playmode)
 	m_currentMode = playmode;
 }
 
+char argv[4][256] = { NULL, };
+
 void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 {
 	// TODO: Add your control notification handler code here
@@ -226,12 +228,6 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 
 		const char* pFileName = utf8filename.c_str();
 
-		char argv[4][256] = { NULL, };
-		strcpy_s(argv[0], "FFPlay");
-		strcpy_s(argv[1], pFileName);
-		strcpy_s(argv[2], "-vf");
-		strcpy_s(argv[3], "yadif=1");
-
 		m_FFP_events.sender = this;
 		m_FFP_events.event_info = Eventinfo;
 		m_FFP_events.screenID = (unsigned long)m_Pannel_yuv.m_hWnd;
@@ -243,6 +239,11 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 		m_FFP_events.playstatus = FFP_STOP;
 		m_FFP_events.event_video = NULL;
 		m_FFP_events.event_refresh = EventRefresh;
+
+		strcpy_s(argv[0], "FFPlay");
+		strcpy_s(argv[1], pFileName);
+		strcpy_s(argv[2], "-vf");
+		strcpy_s(argv[3], "yadif=1");
 
 		char* argv_ptrs[4] = { NULL, };
 		for (int i = 0; i < 4; i++)
@@ -269,8 +270,9 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 				return;
 			}
 #else
-			multimedia_set_filename(pFileName);
-			multimedia_setup_gui_player(&m_FFP_events);
+			//multimedia_set_filename(pFileName);
+			//multimedia_setup_gui_player(&m_FFP_events);
+			multimedia_setup_gui_player_with_arguments(4, args, &m_FFP_events);
 #endif
 			StartPlaying();
 
