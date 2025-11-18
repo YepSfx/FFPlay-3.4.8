@@ -62,6 +62,8 @@
 
 #include <assert.h>
 
+#include <pthread.h>
+
 const char program_name[] = "FFPlay";
 const int program_birth_year = 2020;
 
@@ -4588,6 +4590,7 @@ FFP_VID_PARAMS* EXPORTDLL multimedia_get_videoformat()
 }
 
 static SDL_Thread *FFPThread = NULL;
+static pthread_t PosixFFPThread;
 
 static int runPlayThread(void *ptr)
 {
@@ -4618,6 +4621,36 @@ static int runPlayThreadWithInit(void *ptr)
     return 0;
 }
 
+static int posixThreadReturn = 0;
+
+static void* runPlayPosixThreadWithInit(void *ptr)
+{
+    FFP_EVENTS *events = (FFP_EVENTS*)ptr;	
+    if ( multimedia_init_device( events ) != 0 )
+    {
+        FFP_LOG(FFP_INFO_ERROR, "Failed to initialize the device!\n");
+        multimedia_exit();
+        posixThreadReturn = 1;
+        pthread_exit(&posixThreadReturn);
+    }
+    FFP_LOG(FFP_INFO_NONE, "multimedia_init_device done!\n");
+    
+    if ( !multimedia_stream_open() )
+    {
+        FFP_LOG(FFP_INFO_ERROR, "Failed to open the stream!\n" );
+	    multimedia_exit();        
+	    posixThreadReturn = 2;
+        pthread_exit(&posixThreadReturn);        
+    }
+    FFP_LOG(FFP_INFO_NONE, "multimedia_stream_open done!\n");
+
+    FFP_LOG(FFP_INFO_NONE, "---Starting Posix thread---\n" );
+    multimedia_stream_start();
+    FFP_LOG(FFP_INFO_NONE, "---Finishing Posix thread---\n" );
+    posixThreadReturn = 0;
+    pthread_exit(&posixThreadReturn);    
+}
+
 int EXPORTDLL multimedia_setup_gui_player(FFP_EVENTS *events)
 {
     if ( multimedia_init_device( events ) != 0 )
@@ -4643,28 +4676,59 @@ int  EXPORTDLL multimedia_setup_gui_player_with_arguments(int argc, char **argv,
 int  EXPORTDLL multimedia_start_gui_player(const char* mediaName, FFP_EVENTS *events)
 {
      
-     multimedia_set_filename( mediaName );
-
-     FFPThread = SDL_CreateThread( runPlayThreadWithInit, "GUIThread", events);
-     if (FFPThread == NULL)
+    multimedia_set_filename( mediaName );
+#if 0
+    FFPThread = SDL_CreateThread( runPlayThreadWithInit, "GUIThread", events);
+    if (FFPThread == NULL)
         return 1;
-     else 
+    else 
      	return 0;
+#else    
+    int rc = 0;
+    rc = pthread_create(&PosixFFPThread, NULL, runPlayPosixThreadWithInit, (void*)events);
+    if (rc != 0)
+    {
+        FFP_LOG(FFP_INFO_DEBUG, "--- pthread_create returns %d ---\n", rc );
+        return 1;
+    }
+    else
+    {
+        FFP_LOG(FFP_INFO_DEBUG, "--- Posix thread created ---\n" );
+        return 0;
+    }
+#endif
 }
+
 
 int  EXPORTDLL multimedia_start_gui_player_with_arguments(int argc, char **argv, FFP_EVENTS *events)
 {
+#if 0    
     multimedia_parse_options(argc, argv);
-     FFPThread = SDL_CreateThread( runPlayThreadWithInit, "GUIThread", events);
-     if (FFPThread == NULL)
+    FFPThread = SDL_CreateThread( runPlayThreadWithInit, "GUIThread", events);
+    if (FFPThread == NULL)
         return 1;
-     else 
+    else 
      	return 0;
+#else 
+    int rc = 0;
+    multimedia_parse_options(argc, argv);
+    rc = pthread_create(&PosixFFPThread, NULL, runPlayPosixThreadWithInit, (void*)events);
+    if (rc != 0)
+    {
+        FFP_LOG(FFP_INFO_DEBUG, "--- pthread_create returns %d ---\n", rc );
+        return 1;
+    }
+    else
+    {
+        FFP_LOG(FFP_INFO_DEBUG, "--- Posix thread create ---\n" );
+        return 0;
+    }
+#endif   
 }
 
 void EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events)
 {
-    int rtnThread;
+    void* rtnThread;
     
     FFP_events = events;
         
@@ -4678,11 +4742,13 @@ void EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *ev
         __exit(1);
     }
 
-    FFPThread = SDL_CreateThread(runPlayThreadWithInit, "PlayThread", events);
-    SDL_WaitThread(FFPThread, &rtnThread);
-    
-    if (rtnThread != 0)
-          multimedia_exit();    
+    pthread_create(&PosixFFPThread, NULL, runPlayPosixThreadWithInit, (void*)events);
+    pthread_join(PosixFFPThread, &rtnThread);
+    FFP_LOG(FFP_INFO_DEBUG, "--- Posix Thread Joined ---\n");
+    if (*(int*)rtnThread != 0)
+    {
+        __exit(1);
+    }
 }
 
 void EXPORTDLL multimedia_rgb_swap(void *pRGB, int width, int height, int bpp, int shiftR, int shiftG, int shitB)
