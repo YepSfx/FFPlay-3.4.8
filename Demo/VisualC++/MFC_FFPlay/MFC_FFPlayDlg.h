@@ -53,6 +53,7 @@ public:
 	void StartPlaying();
 	void StopPlaying();
 	void setPlayingMode(enum PLAYINGMODE playmode);
+	void setScreenSize();
 
 	afx_msg void OnBnClickedButtonPlay();
 	afx_msg void OnBnClickedButtonPause();

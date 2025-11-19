@@ -75,7 +75,9 @@ void __cdecl EventVideo(void* sender, FFP_YUV420P_DATA* pYUVData)
 
 void __cdecl EventResize(void* sender, int width, int height, int isOriginalsize)
 {
-	OutputDebugString(_T("Resize Event\n"));
+	CString msg;
+	msg.Format(_T(">>Resize Event: %d %d \n"), width, height);
+	OutputDebugString(msg);
 }
 
 void __cdecl EventRefresh(void* sender)
@@ -288,19 +290,18 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 				return;
 			}
 #else
-			//multimedia_set_filename(pFileName);
-			//multimedia_setup_gui_player(&m_FFP_events);
-			multimedia_setup_gui_player_with_arguments(4, args, &m_FFP_events);
+			//multimedia_setup_gui_player_with_arguments(4, args, &m_FFP_events);
+			//setScreenSize();
+			//StartPlaying();
+
+			multimedia_start_gui_player_with_arguments(4, args, &m_FFP_events);
+			while (m_FFP_events.playstatus != FFP_PLAY)
+			{
+				DoProc();
+				Sleep(10);
+			}
+			setScreenSize();
 #endif
-			StartPlaying();
-
-			CRect rect;
-			m_Pannel_yuv.GetWindowRect(&rect);
-			
-			int w = rect.Width();
-			int h = rect.Height();
-
-			multimedia_resize_screen(w, h);
 
 		}
 		catch (const std::exception& e) 
@@ -336,4 +337,15 @@ void CMFCFFPlayDlg::StopPlaying()
 	OutputDebugString(_T("Stop playing...\n"));
 	multimedia_stream_stop();
 	OutputDebugString(_T("Playing stopped.\n"));
+}
+
+void CMFCFFPlayDlg::setScreenSize()
+{
+	CRect rect;
+	m_Pannel_yuv.GetWindowRect(&rect);
+
+	int w = rect.Width();
+	int h = rect.Height();
+
+	multimedia_resize_screen(w, h);
 }
