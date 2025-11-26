@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinformPlay", "WinformPlay\WinformPlay.csproj", "{28CE5DF9-ACC9-4CD5-A2C6-6BDE59AA813A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{187CEC94-88D1-4530-8E8C-1EA5201EA121}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Bin\FFPlayLibWrapper.dll = ..\..\Bin\FFPlayLibWrapper.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28CE5DF9-ACC9-4CD5-A2C6-6BDE59AA813A}.Debug|x86.ActiveCfg = Debug|x86
+		{28CE5DF9-ACC9-4CD5-A2C6-6BDE59AA813A}.Debug|x86.Build.0 = Debug|x86
+		{28CE5DF9-ACC9-4CD5-A2C6-6BDE59AA813A}.Release|x86.ActiveCfg = Release|x86
+		{28CE5DF9-ACC9-4CD5-A2C6-6BDE59AA813A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
