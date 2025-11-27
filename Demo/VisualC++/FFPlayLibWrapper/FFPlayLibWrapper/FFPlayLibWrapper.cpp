@@ -81,6 +81,7 @@ extern "C"
 {
 	__declspec(dllexport) int  Start_CLI_FFPlayer(int argc, char **argv, FFPLAY_ELEMENTS* playElements);
 	__declspec(dllexport) int  Setup_GUI_FFPlayer(int argc, char **argv, FFPLAY_ELEMENTS* playElements);
+	__declspec(dllexport) int  SetupAndStart_GUI_FFPlayer(int argc, char** argv, FFPLAY_ELEMENTS* playElements);
 	__declspec(dllexport) void PauseResume_FFPlayer();
 	__declspec(dllexport) void Start_FFPlayer();
 	__declspec(dllexport) void Stop_FFPlayer();
@@ -173,6 +174,41 @@ int  Setup_GUI_FFPlayer(int argc, char **argv, FFPLAY_ELEMENTS* playElements)
 	int rtn = multimedia_setup_gui_player_with_arguments(argc, argv, &FFP_events);
 
 	return rtn;
+}
+
+int  SetupAndStart_GUI_FFPlayer(int argc, char** argv, FFPLAY_ELEMENTS* playElements)
+{
+	FFP_events.sender = playElements->sender;
+	FFP_events.current_in_s = 0;
+	FFP_events.duration_in_us = 0;
+	FFP_events.event_exit = OnEventExit;
+	FFP_events.event_play_status = OnEventStatus;
+	FFP_events.event_info = OnEventInfo;
+	FFP_events.event_video_resize = OnEventResize;
+	FFP_events.event_refresh = OnEventRefresh;
+	FFP_events.screenID = playElements->yuvHandle;
+	FFP_events.ui_type = FFP_GUI;
+	FFP_events.playstatus = FFP_STOP;
+
+	OnExit = (FFP_EVENT_EXIT)playElements->eventExit;
+	OnInfo = (FFP_EVENT_INFO)playElements->eventInfo;
+	OnAudio = (FFP_EVENT_AUDIO)playElements->eventAudio;
+	OnVideo = (FFP_EVENT_VIDEO)playElements->eventVideo;
+	OnResize = (FFP_EVENT_VIDEORESIZE)playElements->eventResize;
+	OnStatus = (FFP_EVENT_PLAYSTATUS)playElements->eventStatus;
+	OnRefresh = (FFP_EVENT_REFRESH)playElements->eventRefresh;
+
+	if (playElements->eventVideo == NULL)
+	{
+		FFP_events.event_video = NULL;
+	}
+
+	if (playElements->eventAudio == NULL)
+	{
+		FFP_events.event_audio = NULL;
+	}
+
+	return multimedia_start_gui_player_with_arguments(argc, argv, &FFP_events);
 }
 
 void PauseResume_FFPlayer()

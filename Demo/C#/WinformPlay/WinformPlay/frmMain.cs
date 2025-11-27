@@ -34,12 +34,12 @@ namespace WinformPlay
 
         static public void OnAudio(IntPtr sender, IntPtr AudioBuffer, int BufferLengthInByte)
         {
-            //Trace.WriteLine(@"->> Audio event");
+            Trace.WriteLine(@"->> Audio event");
         }
 
         static public void OnVideo(IntPtr sender, IntPtr rgbData, int isRGB)
         {
-            //Trace.WriteLine(@"->> Video event");
+            Trace.WriteLine(@"->> Video event");
         }
 
         static public void OnVideoResize(IntPtr sender, int width, int height, int isOriginalsize)
@@ -194,7 +194,7 @@ namespace WinformPlay
                     playElements.eventResize = OnVideoResize;
                     playElements.eventStatus = OnPlayStatus;
                     playElements.eventRefresh = OnRefresh;
-                    
+
                     int rtn = FFPlayLibWrapper.Setup_GUI_FFPlayer(argv.Length, argvPtr, ref playElements);
 
                     if (rtn == 0)
@@ -203,7 +203,6 @@ namespace WinformPlay
                         frmMain_ResizeEnd(null, null);
                         FFPlayLibWrapper.Start_FFPlayer(); 
                     }
-
                 }
                 catch
                 {
