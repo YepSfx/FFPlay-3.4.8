@@ -141,6 +141,7 @@ namespace WinformPlay
             else
             {
                 mPanelYUV.Invalidate();
+                SetPlayingMode(PLAYINGMODE.STOP);
             }
         }
         
