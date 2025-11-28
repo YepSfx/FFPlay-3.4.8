@@ -12,8 +12,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="45"/>
-        <CursorPos X="40" Y="61"/>
+        <TopLine Value="49"/>
+        <CursorPos X="36" Y="57"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit>
@@ -105,15 +105,14 @@
       </Modes>
     </RunParams>
     <HistoryLists>
-      <List Name="WorkingDirectory" Type="File" Count="1"/>
       <List Name="LaunchingApplication" Type="File" Count="4">
         <Item1 Value="C:\WINDOWS\system32\cmd.exe /C ${TargetCmdLine}"/>
         <Item2 Value="${CmdExe} ${TargetCmdLine}"/>
         <Item3 Value="&quot;$(Pas2JSBrowser)&quot; &quot;$(Pas2JSProjectURL)&quot;"/>
         <Item4 Value="$(Pas2JSBrowser) &quot;$(Pas2JSProjectURL)&quot;"/>
       </List>
-      <List Name="CommandLineParameters" Count="2">
-        <Item2 Value="Z:\1.mp4"/>
+      <List Name="CommandLineParameters" Count="1">
+        <Item1 Value="Z:\1.mp4"/>
       </List>
     </HistoryLists>
   </ProjectSession>

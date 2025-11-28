@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <CursorPos X="25" Y="7"/>
+        <CursorPos X="12" Y="7"/>
         <UsageCount Value="92"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -21,10 +21,9 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="507"/>
+        <TopLine Value="508"/>
         <CursorPos X="13" Y="524"/>
         <UsageCount Value="92"/>
         <Loaded Value="True"/>
@@ -33,10 +32,11 @@
       <Unit2>
         <Filename Value="FFPlay.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="116"/>
-        <CursorPos X="95" Y="118"/>
+        <TopLine Value="136"/>
+        <CursorPos Y="159"/>
         <UsageCount Value="61"/>
         <Loaded Value="True"/>
       </Unit2>

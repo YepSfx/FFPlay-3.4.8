@@ -1,0 +1,30 @@
+LIBRARY FFPlayLib
+EXPORTS
+	multimedia_event_loop_alive
+	multimedia_exit
+	multimedia_get_audioformat
+	multimedia_get_duration_in_mSec
+	multimedia_get_filename
+	multimedia_get_videoformat
+	multimedia_halt_palying
+	multimedia_init_device
+	multimedia_parse_options
+	multimedia_pause_resume
+	multimedia_reset_pointer
+	multimedia_resize_screen
+	multimedia_rgb_swap
+	multimedia_set_filename
+	multimedia_setup_gui_player
+	multimedia_setup_gui_player_with_arguments
+	multimedia_start_cli_player
+	multimedia_start_gui_player
+	multimedia_start_gui_player_with_arguments
+	multimedia_stream_open
+	multimedia_stream_start
+	multimedia_stream_stop
+	multimedia_test_screen
+	multimedia_toggle_fullscreen
+	multimedia_yuv420p_to_rgb24
+	multimedia_yuv420p_to_rgb32
+	SaveFramebufferAsPPM
+	

@@ -1,0 +1,61 @@
+﻿<Window x:Name="winMainForm" x:Class="WpfPlay.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfPlay"
+        mc:Ignorable="d"
+        Title="Wpf FFPlay" Height="600" Width="1200" WindowStartupLocation="CenterScreen" Loaded="winMainForm_Loaded" Closed="winMainForm_Closed" SizeChanged="winMainForm_SizeChanged">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="259*"/>
+            <ColumnDefinition Width="341*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- Fills remaining space -->
+            <RowDefinition Height="Auto" />
+            <!-- Fits buttons -->
+        </Grid.RowDefinitions>
+        <Grid x:Name="gridYUVPanel" Grid.Row="0" Margin="5,5,5,5" Grid.ColumnSpan="2" Background="Black">
+
+            <WindowsFormsHost x:Name="mHost"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Margin="5"
+                      Background="#FF2A9142"/>
+        </Grid>
+        <Grid x:Name="gridButtons" Grid.Row="1"  Height="80" Margin="5,5,5,5" Grid.ColumnSpan="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <!-- Fills remaining space -->
+                <ColumnDefinition Width="130" />
+                <!-- For Play -->
+                <ColumnDefinition Width="130" />
+                <!-- For Pause/Resume -->
+                <ColumnDefinition Width="130" />
+                <!-- For Stop -->
+            </Grid.ColumnDefinitions>
+            <Button x:Name="mButtonStop" 
+                    Content="STOP" 
+                    Grid.Column="3"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="120" Height="36" Click="mButtonStop_Click"/>
+            <Button x:Name="mButtonPause" 
+                    Content="PAUSE"
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="120" Height="36" Click="mButtonPause_Click"/>
+            <Button x:Name="mButtonPlay" 
+                    Content="PLAY"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="120" Height="36" Click="mButtonPlay_Click"/>
+        </Grid>
+
+    </Grid>
+</Window>
