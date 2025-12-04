@@ -20,6 +20,8 @@ object frmMain: TfrmMain
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 0
+    OnChange = ScrollBar1Change
+    OnScroll = ScrollBar1Scroll
   end
   object ButtonPlay: TButton
     Left = 616

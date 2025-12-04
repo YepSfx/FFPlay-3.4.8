@@ -400,7 +400,9 @@ static const struct TextureFormatEntry {
     static FFP_VID_PARAMS ffp_vid_params;
     static FFP_VID_PARAMS ffp_vidstr_params;
     static VideoState  *FFP_is    = NULL;
-
+    
+    #define FFP_EVENT_SEEK (SDL_USEREVENT + 100)
+    
     static void __ClearVideoState()
     {
         FFP_is = NULL;
@@ -4139,10 +4141,27 @@ static void event_gui_loop(VideoState *cur_stream)
             case FF_PAUSERESME_EVENT:
                 toggle_pause(cur_stream);
                 break;
-	          case FF_FULLSCREEN_EVENT:
-		             toggle_full_screen(cur_stream);
-    		         FFP_is->force_refresh = 1;
-	    	         break; 		
+	        case FF_FULLSCREEN_EVENT:
+		        toggle_full_screen(cur_stream);
+    		    FFP_is->force_refresh = 1;
+	    	    break; 		
+            case FFP_EVENT_SEEK:
+                int dest = *(int*)event.user.data1;    
+                SDL_free(event.user.data1);
+
+                double pos = get_master_clock(cur_stream);
+                double incr = (double)dest - pos;
+
+                if (isnan(pos))
+                    pos = (double)cur_stream->seek_pos / AV_TIME_BASE;
+                
+                pos += incr;
+                
+                if (cur_stream->ic->start_time != AV_NOPTS_VALUE && pos < cur_stream->ic->start_time / (double)AV_TIME_BASE)
+                    pos = cur_stream->ic->start_time / (double)AV_TIME_BASE;
+                
+                stream_seek(cur_stream, (int64_t)(pos * AV_TIME_BASE), (int64_t)(incr * AV_TIME_BASE), 0);
+                break;
             default:
                  break;
         }
@@ -4796,4 +4815,17 @@ void EXPORTDLL SaveFramebufferAsPPM(void* Buff, int w, int h, int Bpp)
 	printf(">> Buffer written %s %d %d\n", FileName, w, h);
 }
 
+void EXPORTDLL multimedia_seek_time(int posInSecond)
+{
+    SDL_Event event;
+    SDL_zero(event);
+
+    int *pos = SDL_malloc(sizeof(int));
+    *pos = posInSecond;
+
+    event.type = FFP_EVENT_SEEK;
+    event.user.data1 = pos;
+
+    SDL_PushEvent(&event);
+}
 //<<----FFPlayLib

@@ -30,6 +30,7 @@ type
     OpenDialog  : TOpenDialog;
     ScrollBar1  : TScrollBar;
     Timer1      : TTimer;
+    procedure Button1Click(Sender: TObject);
     procedure ButtonPauseClick(Sender: TObject);
     procedure ButtonPlayClick(Sender: TObject);
     procedure ButtonStopClick(Sender: TObject);
@@ -44,17 +45,21 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure PanelYUVMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure ScrollBar1Change(Sender: TObject);
+    procedure ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
+      var ScrollPos: Integer);
     procedure Timer1Timer(Sender: TObject);
   private
     { private declarations }
     FCurrentTime_Sec   : double;
-    FDurationTime_mSec : Int64;
+    FDurationTime      : Int64;
     FresImage          : TBitmap;
     sti_events         : TFFP_EVENTS;
     FInitPanelWidth    : Integer;
     FInitPanelHeight   : Integer;
     FArgc              : Integer;
     FArgs              : PPFFP_CHAR;
+    FCanScroll         : Boolean;
   public
     { public declarations }
     procedure OnResizeScreen(var Msg : TLMessage); message WM_USER_RESIZE;
@@ -125,6 +130,7 @@ end;
 procedure EventRefreshHandler( sender : pointer ) ; cdecl;
   var handle : HWND;
 begin
+  Application.ProcessMessages();
   handle := TfrmMain(sender).Handle;
   PostMessage( handle, WM_USER_EVENT_REFRESH, 0, 0 );
 end;
@@ -248,11 +254,13 @@ begin
   FFP_PAUSED: begin
                    ButtonPause.Caption := 'Resume';
                    dMsg := '[Paused Status]';
+                   FCanScroll := True;
                    PrintDebugMessage( dMsg );
               end;
   FFP_RESUMED:begin
                    ButtonPause.Caption := 'Pause';
                    dMsg := '[Resumed Status]';
+                   FCanScroll := True;
                    PrintDebugMessage( dMsg );
               end;
   FFP_STOP:   begin
@@ -270,6 +278,7 @@ begin
                    PanelYUV.Visible:= True;
                    ImageRGB.Visible:= False;
                    PanelYUV.Invalidate();
+                   FCanScroll := False;
 {$ENDIF}
               end;
   FFP_PLAY:   begin
@@ -284,7 +293,7 @@ begin
                    PanelYUV.Height:= FInitPanelHeight;
 {$ELSE}
 {$ENDIF}
-
+                   FCanScroll := True;
                    dMsg := '[Play Status]';
                    PrintDebugMessage( dMsg );
             end
@@ -355,11 +364,11 @@ procedure TfrmMain.Timer1Timer(Sender: TObject);
   var msg : String;
 begin
   FCurrentTime_Sec := sti_events.current_in_s;
-  FDurationTime_mSec := sti_events.duration_in_us div 1000000;
+  FDurationTime := sti_events.duration_in_us div 1000000;
 
-  msg := Format('%f / %d',[FCurrentTime_Sec, FDurationTime_mSec]);
+  msg := Format('%f / %d',[FCurrentTime_Sec, FDurationTime]);
   Label1.Caption := msg;
-  ScrollBar1.Max := FDurationTime_mSec ;
+  ScrollBar1.Max := FDurationTime;
   ScrollBar1.Position := Round(FCurrentTime_Sec);
 end;
 
@@ -367,7 +376,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   GetMem(RGBBuffer, (1920*1080*4*4));
   FCurrentTime_Sec := 0;
-  FDurationTime_mSec:= 0;
+  FDurationTime := 0;
   Timer1.Enabled := False;
   FInitPanelWidth := PanelYUV.Width;
   FInitPanelHeight:= PanelYUV.Height;;
@@ -393,6 +402,8 @@ begin
   ImageRGB.Height:= PanelYUV.Height;
 
   Memo1.Clear();
+
+  FCanScroll := False;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -420,9 +431,25 @@ begin
   multimedia_reset_pointer();
 end;
 
+procedure TfrmMain.ScrollBar1Change(Sender: TObject);
+begin
+end;
+
+procedure TfrmMain.ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
+  var ScrollPos: Integer);
+begin
+  if FCanScroll <> True then
+     Exit();
+
+  Timer1.Enabled := False;
+  if ScrollCode = scEndScroll then
+      multimedia_seek_time(ScrollPos);
+  Timer1.Enabled := True;
+end;
+
 procedure TfrmMain.ImageRGBDblClick(Sender: TObject);
 begin
-    if Memo1.Visible = False then
+  if Memo1.Visible = False then
      Memo1.Visible := True
   else
      Memo1.Visible := False;
@@ -549,6 +576,10 @@ begin
   multimedia_pause_resume();
 end;
 
+procedure TfrmMain.Button1Click(Sender: TObject);
+begin
+end;
+
 procedure TfrmMain.ButtonStopClick(Sender: TObject);
 begin
   ButtonStop.Enabled  := False;
@@ -567,7 +598,7 @@ begin
   end;
 
   FCurrentTime_Sec    := 0;
-  FDurationTime_mSec  := 0;
+  FDurationTime  := 0;
   ScrollBar1.Position := 0;
   Timer1.Enabled      := False;
   ButtonPlay.Enabled  := True;
