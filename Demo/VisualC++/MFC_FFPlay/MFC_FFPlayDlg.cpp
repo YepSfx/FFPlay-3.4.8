@@ -290,17 +290,17 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 				return;
 			}
 #else
-			//multimedia_setup_gui_player_with_arguments(4, args, &m_FFP_events);
-			//setScreenSize();
-			//StartPlaying();
-
-			multimedia_start_gui_player_with_arguments(4, args, &m_FFP_events);
-			while (m_FFP_events.playstatus != FFP_PLAY)
-			{
-				DoProc();
-				Sleep(10);
-			}
+			multimedia_setup_gui_player_with_arguments(4, args, &m_FFP_events);
 			setScreenSize();
+			StartPlaying();
+
+			//multimedia_start_gui_player_with_arguments(4, args, &m_FFP_events);  //Do not use this!
+			//while (m_FFP_events.playstatus != FFP_PLAY)
+			//{
+			//	DoProc();
+			//	Sleep(10);
+			//}
+			//setScreenSize();
 #endif
 
 		}

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mPanelYUV = new System.Windows.Forms.Panel();
             this.mButtonPlay = new System.Windows.Forms.Button();
             this.mButtoonPause = new System.Windows.Forms.Button();
@@ -35,6 +36,9 @@
             this.openMediaFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.mButtonCLI = new System.Windows.Forms.Button();
             this.mButtonTestScreen = new System.Windows.Forms.Button();
+            this.mScrollBar = new System.Windows.Forms.HScrollBar();
+            this.mTimer = new System.Windows.Forms.Timer(this.components);
+            this.mLabelPos = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mPanelYUV
@@ -103,11 +107,38 @@
             this.mButtonTestScreen.UseVisualStyleBackColor = true;
             this.mButtonTestScreen.Click += new System.EventHandler(this.mButtonTestScreen_Click);
             // 
+            // mScrollBar
+            // 
+            this.mScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mScrollBar.Location = new System.Drawing.Point(229, 435);
+            this.mScrollBar.Maximum = 1000;
+            this.mScrollBar.Name = "mScrollBar";
+            this.mScrollBar.Size = new System.Drawing.Size(565, 10);
+            this.mScrollBar.TabIndex = 6;
+            this.mScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.mScrollBar_Scroll);
+            // 
+            // mTimer
+            // 
+            this.mTimer.Interval = 1000;
+            this.mTimer.Tick += new System.EventHandler(this.mTimer_Tick);
+            // 
+            // mLabelPos
+            // 
+            this.mLabelPos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.mLabelPos.AutoSize = true;
+            this.mLabelPos.Location = new System.Drawing.Point(226, 446);
+            this.mLabelPos.Name = "mLabelPos";
+            this.mLabelPos.Size = new System.Drawing.Size(0, 13);
+            this.mLabelPos.TabIndex = 7;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1073, 468);
+            this.Controls.Add(this.mLabelPos);
+            this.Controls.Add(this.mScrollBar);
             this.Controls.Add(this.mButtonTestScreen);
             this.Controls.Add(this.mButtonCLI);
             this.Controls.Add(this.mButtonStop);
@@ -121,6 +152,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.ResizeEnd += new System.EventHandler(this.frmMain_ResizeEnd);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -133,6 +165,9 @@
         private System.Windows.Forms.OpenFileDialog openMediaFileDialog;
         private System.Windows.Forms.Button mButtonCLI;
         private System.Windows.Forms.Button mButtonTestScreen;
+        private System.Windows.Forms.HScrollBar mScrollBar;
+        private System.Windows.Forms.Timer mTimer;
+        private System.Windows.Forms.Label mLabelPos;
     }
 }
 

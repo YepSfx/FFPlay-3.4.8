@@ -77,6 +77,11 @@ struct FFPLAY_ELEMENTS{
 	void *eventRefresh;
 };
 
+struct FFPLAY_POS {
+	unsigned int current_position;
+	unsigned int max_duration;
+};
+
 extern "C"
 {
 	__declspec(dllexport) int  Start_CLI_FFPlayer(int argc, char **argv, FFPLAY_ELEMENTS* playElements);
@@ -87,6 +92,8 @@ extern "C"
 	__declspec(dllexport) void Stop_FFPlayer();
 	__declspec(dllexport) void Resize_GUI_Screen(int w, int h);
 	__declspec(dllexport) void Test_GUI_Screen(int xWinID, int holdTime);
+	__declspec(dllexport) void SeekPositionInSecond_FFPlayer(int posInSec);
+	__declspec(dllexport) void GetPositionInSecond_FFPlayer(FFPLAY_POS* posInfo);
 }
 
 void Set_FFPlayer_FileName(const char *FileName)
@@ -234,4 +241,15 @@ void Resize_GUI_Screen(int w, int h)
 void Test_GUI_Screen(int xWinID, int holdTime)
 {
 	multimedia_test_screen(xWinID, holdTime);
+}
+
+void SeekPositionInSecond_FFPlayer(int posInSec)
+{
+	multimedia_seek_time(posInSec);
+}
+
+void GetPositionInSecond_FFPlayer(FFPLAY_POS *posInfo)
+{
+	posInfo->current_position = (unsigned int)FFP_events.current_in_s;
+	posInfo->max_duration = (unsigned int)(FFP_events.duration_in_us / 1000000);
 }

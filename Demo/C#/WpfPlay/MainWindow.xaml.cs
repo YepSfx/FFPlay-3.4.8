@@ -66,12 +66,17 @@ namespace WpfPlay
             GCHandle mhWnd = GCHandle.FromIntPtr(sender);
             MainWindow win = (MainWindow)mhWnd.Target;
 
+            if (win == null)
+                return;
+
             if (status == FFPlayLib.FFP_PLAY_STATUS.FFP_STOP)
             {
                 win.InvalidateScreen();
             }
 
             win.m_Current_Status = status;
+            
+            win.TriggerTimer(status);
         }
 
         public enum PLAYINGMODE
@@ -86,6 +91,7 @@ namespace WpfPlay
         private System.Windows.Forms.Panel mYuvPanel = null;
         private Microsoft.Win32.OpenFileDialog mOpenFileDialog = new Microsoft.Win32.OpenFileDialog();
         private GCHandle mForm;
+        private readonly DispatcherTimer mTimer = new DispatcherTimer();
 
         public delegate void InvokeMethod(string msg);
 
@@ -93,11 +99,30 @@ namespace WpfPlay
 
         public FFPlayLib.FFP_PLAY_STATUS m_Current_Status = FFPlayLib.FFP_PLAY_STATUS.FFP_STOP;
 
+        public FFPLAY_POS m_PlayPos = new FFPLAY_POS();
+
         public MainWindow()
         {
             InitializeComponent();
             SetPlayingMode(PLAYINGMODE.STOP);
             mOpenFileDialog.Filter = @"Mov (*.mov)|*.mov|AVI (*.avi)|*.avi|MP4 (*.mp4)|*.mp4|All Files (*.*)|*.*";
+            mTimer.Interval = TimeSpan.FromSeconds(1);
+            mTimer.Tick += TimerTick;
+            mScrollLabel.Content = "";
+        }
+
+        void TimerTick(object sender, EventArgs e)
+        {
+            if (m_Current_Status != FFP_PLAY_STATUS.FFP_PLAY)
+                return;
+
+            FFPlayLibWrapper.GetPositionInSecond_FFPlayer(ref m_PlayPos);
+            string pos = m_PlayPos.current_position.ToString() + " / " + m_PlayPos.max_duration.ToString();
+            mScrollLabel.Content = pos;
+            mScrollBar.Minimum = 0;
+            mScrollBar.Maximum = m_PlayPos.max_duration;
+            mScrollBar.Value = m_PlayPos.current_position;
+            Trace.WriteLine("[Current Pos]: " + pos);
         }
 
         public void InvalidateScreen()
@@ -257,6 +282,47 @@ namespace WpfPlay
                 h = mYuvPanel.Height;
                 FFPlayLibWrapper.Resize_GUI_Screen(w, h);
             }
+        }
+
+        private void winMainForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            mButtonStop_Click(null, null);
+        }
+
+        public void TriggerTimer(FFPlayLib.FFP_PLAY_STATUS status)
+        {
+            switch(status)
+            {
+                case FFPlayLib.FFP_PLAY_STATUS.FFP_STOP:
+                    mScrollLabel.Content = "";
+                    mTimer.Stop();
+                    break;
+                case FFPlayLib.FFP_PLAY_STATUS.FFP_PAUSED:
+                    mTimer.Stop();
+                    break;
+                case FFPlayLib.FFP_PLAY_STATUS.FFP_PLAY:
+                case FFPlayLib.FFP_PLAY_STATUS.FFP_RESUMED:
+                    mTimer.Start();
+                    break;
+            }
+        }
+
+        private void mScrollBar_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+        {
+
+            if (e.ScrollEventType == System.Windows.Controls.Primitives.ScrollEventType.EndScroll)
+            {
+                if (m_Current_Status == FFPlayLib.FFP_PLAY_STATUS.FFP_STOP)
+                    return;
+
+                mTimer.Stop();
+                
+                int pos = (int)mScrollBar.Value;
+                FFPlayLibWrapper.SeekPositionInSecond_FFPlayer(pos);
+
+                mTimer.Start();
+            }
+
         }
     }
 }

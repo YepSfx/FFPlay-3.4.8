@@ -7,7 +7,7 @@ object frmMain: TfrmMain
   ClientHeight = 569
   ClientWidth = 1048
   Position = poScreenCenter
-  LCLVersion = '8.6'
+  LCLVersion = '8.7'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy

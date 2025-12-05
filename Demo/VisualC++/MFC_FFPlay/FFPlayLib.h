@@ -125,6 +125,7 @@ extern "C" {
     int              EXPORTDLL multimedia_setup_gui_player(FFP_EVENTS* events);
     int              EXPORTDLL multimedia_setup_gui_player_with_arguments(int argc, char** argv, FFP_EVENTS* events);
 
+	void             EXPORTDLL multimedia_seek_time(int posInSecond);
     void             EXPORTDLL multimedia_pause_resume();
     void             EXPORTDLL multimedia_stream_stop();
     void             EXPORTDLL multimedia_stream_start();

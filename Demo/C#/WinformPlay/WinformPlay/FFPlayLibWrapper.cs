@@ -83,6 +83,15 @@ namespace FFPlayLib
         [MarshalAs(UnmanagedType.FunctionPtr)]
         public FFP_EVENT_REFRESH eventRefresh;
     }
+    [StructLayout(LayoutKind.Sequential)]
+    public struct FFPLAY_POS
+    {
+        [MarshalAs(UnmanagedType.U4)]
+        public UInt32 current_position;
+        
+        [MarshalAs(UnmanagedType.U4)]
+        public UInt32 max_duration;
+    };
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void FFP_EVENT_EXIT(IntPtr sender, int exitCode);
@@ -135,6 +144,12 @@ namespace FFPlayLib
 
         [DllImport(@".\FFPlayLibWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Resize_GUI_Screen(int w, int h);
+
+        [DllImport(@".\FFPlayLibWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SeekPositionInSecond_FFPlayer(int posInSec);
+
+        [DllImport(@".\FFPlayLibWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void GetPositionInSecond_FFPlayer(ref FFPLAY_POS playPos);
 
         [DllImport(@".\FFPlayLibWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Test_GUI_Screen(int xWinID, int holdTime);
