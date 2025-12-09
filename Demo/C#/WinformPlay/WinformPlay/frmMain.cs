@@ -55,6 +55,9 @@ namespace WinformPlay
             GCHandle mhWnd = GCHandle.FromIntPtr(sender);
             frmMain frm = (frmMain)mhWnd.Target;
 
+            if (frm == null)
+                return;
+
             if (status ==FFPlayLib.FFP_PLAY_STATUS.FFP_STOP)
             {
                 frm.InvalidateScreen();
@@ -79,6 +82,8 @@ namespace WinformPlay
 
         public FFPlayLib.FFP_PLAY_STATUS m_Current_Status = FFPlayLib.FFP_PLAY_STATUS.FFP_STOP;
 
+        private FFPLAY_POS m_PlayPos = new FFPLAY_POS();
+
         private void StartPlayingThread()
         {
             m_PlayingThread = new Thread(new ThreadStart(FFPlayLibWrapper.Start_FFPlayer));
@@ -94,24 +99,28 @@ namespace WinformPlay
                     mButtonStop.Enabled = false;
                     mButtoonPause.Enabled = false;
                     mButtoonPause.Text = @"PAUSE";
+                    mTimer.Enabled = false;
                     break;
                 case PLAYINGMODE.PLAY:
                     mButtonPlay.Enabled = false;
                     mButtonStop.Enabled = true;
                     mButtoonPause.Enabled = true;
                     mButtoonPause.Text = @"PAUSE";
+                    mTimer.Enabled = true;
                     break;
                 case PLAYINGMODE.PAUSE:
                     mButtonPlay.Enabled = false;
                     mButtonStop.Enabled = true;
                     mButtoonPause.Enabled = true;
                     mButtoonPause.Text = @"RESUME";
+                    mTimer.Enabled = false;
                     break;
                 case PLAYINGMODE.RESUME:
                     mButtonPlay.Enabled = false;
                     mButtonStop.Enabled = true;
                     mButtoonPause.Enabled = true;
                     mButtoonPause.Text = @"PAUSE";
+                    mTimer.Enabled = true;
                     break;
             }
             m_CurrentMode = playingmode;
@@ -321,6 +330,35 @@ namespace WinformPlay
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             mButtonStop_Click(null, null);
+        }
+
+        private void mTimer_Tick(object sender, EventArgs e)
+        {
+            if (m_Current_Status != FFPlayLib.FFP_PLAY_STATUS.FFP_PLAY)
+                return;
+
+            FFPlayLibWrapper.GetPositionInSecond_FFPlayer(ref m_PlayPos);
+            UInt32 max, curr;
+            max = m_PlayPos.max_duration;
+            curr = m_PlayPos.current_position;
+            mScrollBar.Minimum = 0;
+            mScrollBar.Maximum = (int)max;
+            mScrollBar.Value = (int)curr;
+            mLabelPos.Text = curr.ToString() + " / " + max.ToString();
+        }
+
+        private void mScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (e.Type == ScrollEventType.EndScroll)
+            {
+                if (m_Current_Status == FFPlayLib.FFP_PLAY_STATUS.FFP_STOP)
+                    return;
+
+                mTimer.Enabled = false;
+                int pos = mScrollBar.Value;
+                FFPlayLibWrapper.SeekPositionInSecond_FFPlayer(pos);
+                mTimer.Enabled = true;
+            }
         }
     }
 }

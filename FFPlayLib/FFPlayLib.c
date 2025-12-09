@@ -400,7 +400,9 @@ static const struct TextureFormatEntry {
     static FFP_VID_PARAMS ffp_vid_params;
     static FFP_VID_PARAMS ffp_vidstr_params;
     static VideoState  *FFP_is    = NULL;
-
+    
+    #define FFP_EVENT_SEEK (SDL_USEREVENT + 100)
+    
     static void __ClearVideoState()
     {
         FFP_is = NULL;
@@ -4139,10 +4141,27 @@ static void event_gui_loop(VideoState *cur_stream)
             case FF_PAUSERESME_EVENT:
                 toggle_pause(cur_stream);
                 break;
-	          case FF_FULLSCREEN_EVENT:
-		             toggle_full_screen(cur_stream);
-    		         FFP_is->force_refresh = 1;
-	    	         break; 		
+	        case FF_FULLSCREEN_EVENT:
+		        toggle_full_screen(cur_stream);
+    		    FFP_is->force_refresh = 1;
+	    	    break; 		
+            case FFP_EVENT_SEEK:
+                int dest = *(int*)event.user.data1;    
+                SDL_free(event.user.data1);
+
+                double pos = get_master_clock(cur_stream);
+                double incr = (double)dest - pos;
+
+                if (isnan(pos))
+                    pos = (double)cur_stream->seek_pos / AV_TIME_BASE;
+                
+                pos += incr;
+                
+                if (cur_stream->ic->start_time != AV_NOPTS_VALUE && pos < cur_stream->ic->start_time / (double)AV_TIME_BASE)
+                    pos = cur_stream->ic->start_time / (double)AV_TIME_BASE;
+                
+                stream_seek(cur_stream, (int64_t)(pos * AV_TIME_BASE), (int64_t)(incr * AV_TIME_BASE), 0);
+                break;
             default:
                  break;
         }
@@ -4662,10 +4681,8 @@ int  EXPORTDLL multimedia_start_gui_player_with_arguments(int argc, char **argv,
      	return 0;
 }
 
-void EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events)
+int EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events)
 {
-    int rtnThread;
-    
     FFP_events = events;
         
     multimedia_parse_options(argc, argv);
@@ -4678,15 +4695,7 @@ void EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *ev
         __exit(1);
     }
 
-#ifdef DEF_WIN    
-    FFPThread = SDL_CreateThread(runPlayThreadWithInit, "PlayThread", events);
-    SDL_WaitThread(FFPThread, &rtnThread);
-    
-    if (rtnThread != 0)
-          multimedia_exit();    
-
-#else
-if ( multimedia_init_device( events ) != 0 )
+    if ( multimedia_init_device( events ) != 0 )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to initialize the device!\n");
         multimedia_exit();
@@ -4697,11 +4706,11 @@ if ( multimedia_init_device( events ) != 0 )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to open the stream!\n" );
 	    multimedia_exit();        
-	return 2;
+	    return 2;
     }
 
     multimedia_stream_start();
-#endif    
+    return 0;
 }
 
 void EXPORTDLL multimedia_rgb_swap(void *pRGB, int width, int height, int bpp, int shiftR, int shiftG, int shitB)
@@ -4796,4 +4805,17 @@ void EXPORTDLL SaveFramebufferAsPPM(void* Buff, int w, int h, int Bpp)
 	printf(">> Buffer written %s %d %d\n", FileName, w, h);
 }
 
+void EXPORTDLL multimedia_seek_time(int posInSecond)
+{
+    SDL_Event event;
+    SDL_zero(event);
+
+    int *pos = SDL_malloc(sizeof(int));
+    *pos = posInSecond;
+
+    event.type = FFP_EVENT_SEEK;
+    event.user.data1 = pos;
+
+    SDL_PushEvent(&event);
+}
 //<<----FFPlayLib

@@ -6,12 +6,18 @@ uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
+  {$IFDEF DEF_OUTPUT_WIN}
+  Math,
+  {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, umain;
 
 {$R *.res}
 
 begin
+  {$IFDEF DEF_OUTPUT_WIN}
+  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow, exUnderflow, exPrecision]);
+  {$ENDIF}
   RequireDerivedFormResource:=True;
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);

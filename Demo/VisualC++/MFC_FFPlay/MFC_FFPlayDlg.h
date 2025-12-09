@@ -44,9 +44,14 @@ private:
 	CButton m_Button_play;
 	CButton m_Button_pause;
 	CButton m_Button_stop;
+	CButton m_Button_Seek;
+	CStatic m_Label_Pos;
+	CScrollBar m_ScollBar_Pos;
+	CEdit m_Edit_Seek;
 
 	FFP_EVENTS m_FFP_events;
 
+	UINT_PTR  m_Timer_ID;
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
@@ -54,8 +59,12 @@ public:
 	void StopPlaying();
 	void setPlayingMode(enum PLAYINGMODE playmode);
 	void setScreenSize();
+	bool m_Is_Seek;
 
 	afx_msg void OnBnClickedButtonPlay();
 	afx_msg void OnBnClickedButtonPause();
 	afx_msg void OnBnClickedButtonStop();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnBnClickedButtonSeek();
 };

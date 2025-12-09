@@ -59,6 +59,7 @@ void __cdecl EventPlayStatus(void* sender, FFP_PLAY_STATUS status)
 			break;
 		case FFP_PLAY:
 			pPlayer->setPlayingMode(CMFCFFPlayDlg::PLAYINGMODE::PLAY);
+			pPlayer->m_Is_Seek = false;
 			break;
 		case FFP_PAUSED:
 			pPlayer->setPlayingMode(CMFCFFPlayDlg::PLAYINGMODE::PAUSE);
@@ -123,6 +124,10 @@ void CMFCFFPlayDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_PAUSE, m_Button_pause);
 	DDX_Control(pDX, IDC_BUTTON_STOP, m_Button_stop);
 	DDX_Control(pDX, IDC_STATIC_YUV, m_Pannel_yuv);
+	DDX_Control(pDX, IDC_STATIC_POS, m_Label_Pos);
+	DDX_Control(pDX, IDC_SCROLLBAR_POS, m_ScollBar_Pos);
+	DDX_Control(pDX, IDC_EDIT_SEEK, m_Edit_Seek);
+	DDX_Control(pDX, IDC_BUTTON_SEEK, m_Button_Seek);
 }
 
 BEGIN_MESSAGE_MAP(CMFCFFPlayDlg, CDialogEx)
@@ -131,6 +136,9 @@ BEGIN_MESSAGE_MAP(CMFCFFPlayDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_PLAY,  &CMFCFFPlayDlg::OnBnClickedButtonPlay)
 	ON_BN_CLICKED(IDC_BUTTON_PAUSE, &CMFCFFPlayDlg::OnBnClickedButtonPause)
 	ON_BN_CLICKED(IDC_BUTTON_STOP,  &CMFCFFPlayDlg::OnBnClickedButtonStop)
+	ON_WM_TIMER()
+	ON_WM_HSCROLL()
+	ON_BN_CLICKED(IDC_BUTTON_SEEK, &CMFCFFPlayDlg::OnBnClickedButtonSeek)
 END_MESSAGE_MAP()
 
 
@@ -147,7 +155,10 @@ BOOL CMFCFFPlayDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	setPlayingMode(STOP);
-
+	m_Label_Pos.SetWindowText(CString(""));
+	m_Edit_Seek.SetWindowText(CString(""));
+	m_Timer_ID = 1;
+	m_Is_Seek = false;
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -205,18 +216,27 @@ void CMFCFFPlayDlg::setPlayingMode(enum PLAYINGMODE playmode)
 			m_Button_stop.EnableWindow(FALSE);
 			m_Button_pause.EnableWindow(FALSE);
 			m_Button_pause.SetWindowText(CString("PAUSE"));
+			KillTimer(m_Timer_ID);
+			m_Label_Pos.SetWindowText(CString(""));
+			m_Pannel_yuv.Invalidate();
+			m_Edit_Seek.SetWindowText(CString(""));
 			break;
 		case PLAY:
+			if (m_Is_Seek == true)
+				break;
+
 			m_Button_play.EnableWindow(FALSE);
 			m_Button_stop.EnableWindow(TRUE);
 			m_Button_pause.EnableWindow(TRUE);
 			m_Button_pause.SetWindowText(CString("PAUSE"));
+			SetTimer(m_Timer_ID, 1000, NULL);
 			break;
 		case PAUSE:
 			m_Button_play.EnableWindow(FALSE);
 			m_Button_stop.EnableWindow(TRUE);
 			m_Button_pause.EnableWindow(TRUE);
 			m_Button_pause.SetWindowText(CString("RESUME"));
+			KillTimer(m_Timer_ID);
 			break;
 		case RESUME:
 			m_Button_play.EnableWindow(FALSE);
@@ -290,17 +310,26 @@ void CMFCFFPlayDlg::OnBnClickedButtonPlay()
 				return;
 			}
 #else
-			//multimedia_setup_gui_player_with_arguments(4, args, &m_FFP_events);
-			//setScreenSize();
-			//StartPlaying();
-
-			multimedia_start_gui_player_with_arguments(4, args, &m_FFP_events);
+	#if 1
+			int rtn = multimedia_setup_gui_player_with_arguments(4, args, &m_FFP_events);
+			if (rtn == 0)
+			{
+				setScreenSize();
+				multimedia_stream_start();
+			}
+			else
+			{
+				AfxMessageBox(_T("Fail to set up the player."));
+			}
+	#else
+			multimedia_start_gui_player_with_arguments(4, args, &m_FFP_events);  //Do not use this!
 			while (m_FFP_events.playstatus != FFP_PLAY)
 			{
 				DoProc();
 				Sleep(10);
 			}
 			setScreenSize();
+	#endif
 #endif
 
 		}
@@ -327,6 +356,7 @@ void CMFCFFPlayDlg::OnBnClickedButtonStop()
 	StopPlaying();
 }
 
+
 void CMFCFFPlayDlg::StartPlaying()
 {
 	_beginthread(ThreadStreaming, 0, NULL);
@@ -348,4 +378,71 @@ void CMFCFFPlayDlg::setScreenSize()
 	int h = rect.Height();
 
 	multimedia_resize_screen(w, h);
+}
+
+void CMFCFFPlayDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (nIDEvent == m_Timer_ID)
+	{
+		int curr, dur;
+		curr = (int)m_FFP_events.current_in_s;
+		dur = m_FFP_events.duration_in_us / 1000000;
+		if (curr >= 0)
+		{
+			CString pos;
+			pos.Format(_T("%d / %d"), curr, dur);
+
+			m_Label_Pos.SetWindowText(pos);
+			m_ScollBar_Pos.SetScrollRange(0, dur);
+			m_ScollBar_Pos.SetScrollPos(curr);
+
+		}
+	}
+	
+	CDialogEx::OnTimer(nIDEvent);
+}
+
+void CMFCFFPlayDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (pScrollBar == &m_ScollBar_Pos)
+	{
+		KillTimer(m_Timer_ID);
+
+		if (nSBCode == SB_ENDSCROLL)
+		{
+			CString msg;
+			int pos = m_ScollBar_Pos.GetScrollPos();
+			msg.Format(_T("* Scroll pos: %d\n"), pos);
+			OutputDebugString(msg);
+		}
+		
+		SetTimer(m_Timer_ID, 1000, NULL);
+	}
+
+	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+
+void CMFCFFPlayDlg::OnBnClickedButtonSeek()
+{
+	// TODO: Add your control notification handler code here
+	switch (m_currentMode)
+	{
+		case STOP:
+			break;
+		case RESUME:
+			break;
+		case PLAY:
+		case PAUSE:
+			CString posText;
+			m_Edit_Seek.GetWindowText(posText);
+			if (posText.IsEmpty() != true)
+			{
+				int pos = _ttoi(posText);
+				multimedia_seek_time(pos);
+				m_Is_Seek = true;
+			}
+			break;
+	}
 }

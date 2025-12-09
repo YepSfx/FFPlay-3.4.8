@@ -27,4 +27,4 @@ EXPORTS
 	multimedia_yuv420p_to_rgb24
 	multimedia_yuv420p_to_rgb32
 	SaveFramebufferAsPPM
-	
+	multimedia_seek_time

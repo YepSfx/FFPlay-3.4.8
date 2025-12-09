@@ -113,13 +113,14 @@ void             EXPORTDLL multimedia_yuv420p_to_rgb24(FFP_YUV420P_DATA *yuvData
 void             EXPORTDLL multimedia_yuv420p_to_rgb32(FFP_YUV420P_DATA *yuvData,unsigned char* rgbbuffer);
 void 		         EXPORTDLL multimedia_rgb_swap(void *pRGB, int width, int height, int bpp, int shiftR, int shiftG, int shitB);
 
-void             EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events);
+int              EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events);
 int              EXPORTDLL multimedia_start_gui_player(const char* mediaName, FFP_EVENTS *events);
 int              EXPORTDLL multimedia_start_gui_player_with_arguments(int argc, char **argv, FFP_EVENTS *events);
 
 int              EXPORTDLL multimedia_setup_gui_player(FFP_EVENTS *events);
 int              EXPORTDLL multimedia_setup_gui_player_with_arguments(int argc, char **argv,FFP_EVENTS *events);
 
+void             EXPORTDLL multimedia_seek_time(int posInSecond);
 void             EXPORTDLL multimedia_pause_resume();
 void             EXPORTDLL multimedia_stream_stop();  
 void             EXPORTDLL multimedia_stream_start();

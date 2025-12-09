@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfPlay"
         mc:Ignorable="d"
-        Title="Wpf FFPlay" Height="600" Width="1200" WindowStartupLocation="CenterScreen" Loaded="winMainForm_Loaded" Closed="winMainForm_Closed" SizeChanged="winMainForm_SizeChanged">
+        Title="Wpf FFPlay" Height="600" Width="1200" WindowStartupLocation="CenterScreen" Loaded="winMainForm_Loaded" Closed="winMainForm_Closed" SizeChanged="winMainForm_SizeChanged" Closing="winMainForm_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="259*"/>
@@ -37,6 +37,27 @@
                 <ColumnDefinition Width="130" />
                 <!-- For Stop -->
             </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="0,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+               </Grid.RowDefinitions>
+                <ScrollBar x:Name="mScrollBar" 
+                       Grid.Row="0"       
+                       Orientation="Horizontal"
+                       HorizontalAlignment="Stretch" 
+                       VerticalAlignment="Center"
+                       Margin="5,20,10,5" Scroll="mScrollBar_Scroll"/>
+
+                <Label x:Name="mScrollLabel"
+                       Grid.Row="1"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Center"
+                       Margin="0,5,0,5"
+                       HorizontalContentAlignment="Center"
+                       Content="12345"/>
+            </Grid>
             <Button x:Name="mButtonStop" 
                     Content="STOP" 
                     Grid.Column="3"
@@ -54,8 +75,7 @@
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Width="120" Height="36" Click="mButtonPlay_Click"/>
+                    Width="120" Height="36" Click="mButtonPlay_Click"/>          
         </Grid>
-
     </Grid>
 </Window>

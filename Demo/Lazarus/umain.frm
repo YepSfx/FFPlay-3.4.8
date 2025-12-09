@@ -7,7 +7,7 @@ object frmMain: TfrmMain
   ClientHeight = 569
   ClientWidth = 1048
   Position = poScreenCenter
-  LCLVersion = '8.6'
+  LCLVersion = '8.7'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -20,6 +20,8 @@ object frmMain: TfrmMain
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 0
+    OnChange = ScrollBar1Change
+    OnScroll = ScrollBar1Scroll
   end
   object ButtonPlay: TButton
     Left = 616
