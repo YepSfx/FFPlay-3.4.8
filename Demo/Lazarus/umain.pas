@@ -568,6 +568,8 @@ begin
            DuplicateArguments( FArgc, FArgs, mediaFile);
            DuplicateArguments( FArgc, FArgs, '-vf', True);
            DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+           //rtn := multimedia_start_gui_player_with_arguments( FArgc, FArgs, @sti_events);  //Don't use this
+           rtn := multimedia_setup_gui_player_with_arguments( FArgc, FArgs, @sti_events);
            if rtn = 0 then
               multimedia_stream_start()
            else

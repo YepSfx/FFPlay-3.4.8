@@ -128,7 +128,7 @@ namespace FFPlayLib
     class FFPlayLibWrapper
     {
         [DllImport(@".\FFPlayLibWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Start_CLI_FFPlayer(int argv, IntPtr args, ref FFPLAY_ELEMENTS playelements);
+        public static extern int Start_CLI_FFPlayer(int argv, IntPtr args, ref FFPLAY_ELEMENTS playelements);
 
         [DllImport(@".\FFPlayLibWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int Setup_GUI_FFPlayer(int argv, IntPtr args, ref FFPLAY_ELEMENTS playelements);
