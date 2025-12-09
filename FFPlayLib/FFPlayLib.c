@@ -4681,10 +4681,8 @@ int  EXPORTDLL multimedia_start_gui_player_with_arguments(int argc, char **argv,
      	return 0;
 }
 
-void EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events)
+int EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *events)
 {
-    int rtnThread;
-    
     FFP_events = events;
         
     multimedia_parse_options(argc, argv);
@@ -4697,15 +4695,7 @@ void EXPORTDLL multimedia_start_cli_player(int argc, char **argv, FFP_EVENTS *ev
         __exit(1);
     }
 
-#ifdef DEF_WIN    
-    FFPThread = SDL_CreateThread(runPlayThreadWithInit, "PlayThread", events);
-    SDL_WaitThread(FFPThread, &rtnThread);
-    
-    if (rtnThread != 0)
-          multimedia_exit();    
-
-#else
-if ( multimedia_init_device( events ) != 0 )
+    if ( multimedia_init_device( events ) != 0 )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to initialize the device!\n");
         multimedia_exit();
@@ -4716,11 +4706,11 @@ if ( multimedia_init_device( events ) != 0 )
     {
         FFP_LOG(FFP_INFO_ERROR, "Failed to open the stream!\n" );
 	    multimedia_exit();        
-	return 2;
+	    return 2;
     }
 
     multimedia_stream_start();
-#endif    
+    return 0;
 }
 
 void EXPORTDLL multimedia_rgb_swap(void *pRGB, int width, int height, int bpp, int shiftR, int shiftG, int shitB)
