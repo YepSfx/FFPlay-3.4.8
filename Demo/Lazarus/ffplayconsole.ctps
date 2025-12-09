@@ -12,8 +12,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="49"/>
-        <CursorPos X="36" Y="57"/>
+        <TopLine Value="40"/>
+        <CursorPos X="3" Y="46"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit>
@@ -22,13 +22,13 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="118"/>
-        <CursorPos X="45" Y="113"/>
+        <TopLine Value="147"/>
+        <CursorPos X="15" Y="163"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="16">
+    <JumpHistory HistoryIndex="17">
       <Position>
         <Filename Value="ffplayconsole.ppr"/>
         <Caret Line="23" Column="29" TopLine="11"/>
@@ -97,11 +97,20 @@
         <Filename Value="ffplayconsole.ppr"/>
         <Caret Line="61" TopLine="44"/>
       </Position>
+      <Position>
+        <Filename Value="ffplayconsole.ppr"/>
+        <Caret Line="62" TopLine="49"/>
+      </Position>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes ActiveMode="default">
-        <Mode Name="default"/>
+        <Mode Name="default">
+          <local>
+            <CommandLineParams Value="X:\projects\test_sample\multimedia\1.asf"/>
+            <LaunchingApplication PathPlusParams="C:\WINDOWS\system32\cmd.exe /C ${TargetCmdLine}"/>
+          </local>
+        </Mode>
       </Modes>
     </RunParams>
     <HistoryLists>
@@ -111,9 +120,11 @@
         <Item3 Value="&quot;$(Pas2JSBrowser)&quot; &quot;$(Pas2JSProjectURL)&quot;"/>
         <Item4 Value="$(Pas2JSBrowser) &quot;$(Pas2JSProjectURL)&quot;"/>
       </List>
-      <List Name="CommandLineParameters" Count="1">
-        <Item1 Value="Z:\1.mp4"/>
+      <List Name="CommandLineParameters" Count="3">
+        <Item1 Value="X:\projects\test_sample\multimedia\1.asf"/>
+        <Item2 Value="Z:\1.mp4"/>
       </List>
+      <List Name="WorkingDirectory" Type="File" Count="1"/>
     </HistoryLists>
   </ProjectSession>
 </CONFIG>

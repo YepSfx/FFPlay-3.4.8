@@ -10,6 +10,7 @@ object frmMain: TfrmMain
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poScreenCenter
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -18,6 +19,7 @@ object frmMain: TfrmMain
   DesignSize = (
     1004
     451)
+  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 8
@@ -99,6 +101,26 @@ object frmMain: TfrmMain
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 4
+  end
+  object ButtonTestScreen: TButton
+    Left = 8
+    Top = 422
+    Width = 75
+    Height = 25
+    Anchors = [akLeft, akBottom]
+    Caption = 'Test Screen'
+    TabOrder = 5
+    OnClick = ButtonTestScreenClick
+  end
+  object ButtonCLI: TButton
+    Left = 89
+    Top = 422
+    Width = 75
+    Height = 25
+    Anchors = [akLeft, akBottom]
+    Caption = 'Run CLI'
+    TabOrder = 6
+    OnClick = ButtonCLIClick
   end
   object OpenDialog: TOpenDialog
     Left = 544

@@ -9,6 +9,7 @@ uses
   SysUtils,
   Classes,
   Windows,
+  Math,
   FFPlay
   { you can add units after this };
 
@@ -41,6 +42,7 @@ end;
       FArgc : Integer;
       FArgv : PPFFP_CHAR;
 begin
+  SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide, exOverflow, exUnderflow, exPrecision]);
 
   if not SetConsoleCtrlHandler(@ConsoleCtrlHandler, True) then
      WriteLn('Failed to set console control handler');

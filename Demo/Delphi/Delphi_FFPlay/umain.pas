@@ -24,6 +24,8 @@ type
     ScrollBar1  : TScrollBar;
     Memo1: TMemo;
     Label1: TLabel;
+    ButtonTestScreen: TButton;
+    ButtonCLI: TButton;
     procedure FormResize(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
@@ -33,6 +35,8 @@ type
     procedure ButtonPauseClick(Sender: TObject);
     procedure ButtonStopClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure ButtonTestScreenClick(Sender: TObject);
+    procedure ButtonCLIClick(Sender: TObject);
   private
     { Private declarations }
     FCurrentTime_Sec   : double;
@@ -104,6 +108,7 @@ end;
 procedure EventRefreshHandler( sender : pointer ) ; cdecl;
   var handle : HWND;
 begin
+  Application.ProcessMessages();
   handle := TfrmMain(sender).Handle;
   PostMessage( handle, WM_USER_EVENT_REFRESH, 0, 0 );
 end;
@@ -188,7 +193,7 @@ end;
 
 procedure TfrmMain.OnRefreshEvent(var Msg: TMessage);
 begin
-  //Application.ProcessMessages();
+  Application.ProcessMessages();
 end;
 
 procedure EventPlayStatus( sender : pointer ; status : TFFP_PLAY_STATUS ) ; cdecl;
@@ -224,6 +229,41 @@ begin
 
 end;
 
+procedure TfrmMain.ButtonCLIClick(Sender: TObject);
+  var mediaFile : String;
+      rtn       : Integer;
+      msg       : String;
+begin
+  sti_events.sender           := self;
+  sti_events.screenID         := 0;
+  sti_events.uiType           := FFP_CLI;
+  sti_events.eventInfo        := @EventInfo;
+  sti_events.eventExit        := @EventExit;
+  sti_events.eventAudio       := @EventAudio;
+  sti_events.eventResize      := @EventResize;
+  sti_events.eventStatus      := @EventPlayStatus;
+  sti_events.eventRefresh     := @EventRefreshHandler;
+  sti_events.playStatus       := FFP_STOP;
+  sti_events.bRendererRGB     := 0;
+  sti_events.eventVideo       := nil;
+  PanelYUV.Visible            := True;
+
+
+       if OpenDialog.Execute() then
+       begin
+          mediaFile := OpenDialog.FileName;
+          try
+            //rtn := multimedia_start_gui_player( PFFP_CHAR(UTF8Encode(mediaFile)), @sti_events);
+            DuplicateArguments( FArgc, FArgs, mediaFile, False);
+            DuplicateArguments( FArgc, FArgs, '-vf', True);
+            DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+            rtn := multimedia_start_cli_player( FArgc, FArgs, @sti_events);
+          except
+            ShowMessage('Have a problem to play!');
+          end;
+       end;
+end;
+
 procedure TfrmMain.ButtonPauseClick(Sender: TObject);
 begin
   multimedia_pause_resume();
@@ -233,20 +273,10 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
   var mediaFile : String;
       rtn       : Integer;
       msg       : String;
-{$IFNDEF DEF_OUTPUT_WIN}
-      XWinID    : TXID;
-{$ENDIF}
 begin
   sti_events.sender           := self;
-{$IFDEF DEF_OUTPUT_WIN}
   sti_events.screenID         := PanelYUV.Handle;
   sti_events.uiType           := FFP_GUI;
-{$ELSE}
-  XWinID                      := 0;
-  XWinID := GDK_WINDOW_XWINDOW(PGtkWidget(PtrUInt(PanelYUV.Handle))^.window);
-  sti_events.screenID         := XWinID;
-  sti_events.uiType           := FFP_GUI;
-{$ENDIF}
   sti_events.eventInfo        := @EventInfo;
   sti_events.eventExit        := @EventExit;
   sti_events.eventAudio       := @EventAudio;
@@ -254,24 +284,11 @@ begin
   sti_events.eventStatus      := @EventPlayStatus;
   sti_events.eventRefresh     := @EventRefreshHandler;
   sti_events.playStatus       := FFP_STOP;
-{$IFDEF DEF_RGB}
-  sti_events.bRendererRGB     := 1;
-  sti_events.eventVideo       := @EventVideo;
-  PanelYUV.Enabled            := False;
-  PanelYUV.Visible            := False;
-  //{$IFDEF  DEF_OUTPUT_WIN}
-  PanelYUV.Top :=             -8172*4;//Height +100;
-  PanelYUV.Left:=             -8172*4;//Width +100;
-  //{$ENDIF}
-  ImageRGB.Visible            := True;
-{$ELSE}
   sti_events.bRendererRGB     := 0;
   sti_events.eventVideo       := nil;
   PanelYUV.Visible            := True;
-  //ImageRGB.Visible            := False;
-{$ENDIF}
 
-{$IFDEF  DEF_OUTPUT_WIN}
+
        if OpenDialog.Execute() then
        begin
           mediaFile := OpenDialog.FileName;
@@ -285,22 +302,6 @@ begin
             ShowMessage('Have a problem to play!');
           end;
        end;
-{$ELSE}
-       if OpenDialog.Execute() then
-       begin
-         Application.ProcessMessages();
-         mediaFile := AnsiString(OpenDialog.FileName);
-         try
-           //rtn := multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
-           DuplicateArguments( FArgc, FArgs, mediaFile);
-           DuplicateArguments( FArgc, FArgs, '-vf', True);
-           DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
-           rtn := multimedia_start_gui_player_with_arguments( FArgc, @FArgs[0], @sti_events);
-         except
-           ShowMessage('Have a problem to play!');
-         end;
-       end;
-{$ENDIF}
 end;
 
 procedure TfrmMain.ButtonStopClick(Sender: TObject);
@@ -311,28 +312,25 @@ begin
   multimedia_stream_stop();
 end;
 
+procedure TfrmMain.ButtonTestScreenClick(Sender: TObject);
+begin
+   multimedia_test_screen(PanelYUV.Handle, 3000);
+   PanelYUV.Invalidate();
+end;
+
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-    {$IFDEF  DEF_OUTPUT_WIN}
     if multimedia_event_loop_alive() = 1 then
     begin
       multimedia_stream_stop();
       Sleep(500);
       CanClose := True;
     end;
-    {$ELSE}
-    if multimedia_event_loop_alive() = 1 then
-    begin
-      multimedia_stream_stop();
-      Sleep(500);
-      CanClose := True;
-    end;
-    {$ENDIF}
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-//  ReportMemoryLeaksOnShutdown := True;
+  //ReportMemoryLeaksOnShutdown := True;
 
   GetMem(RGBBuffer, (1920*1080*4*4));
   FCurrentTime_Sec := 0;
@@ -345,22 +343,9 @@ begin
   ButtonPause.Enabled:= False;
 
   FresImage := TBitmap.Create();
-  {$IFDEF DEF_OUTPUT_WIN}
-  Self.Caption := 'Win32 LazFFPlayer';
-  //ImageRGB.Picture.Bitmap.PixelFormat := pf32Bit;
+  Self.Caption := 'Delphi FFPlayer';
   FresImage.PixelFormat := pf32Bit;
-  //Self.DoubleBuffered := True;
-  {$ELSE}
-  Self.Caption := 'Linux lazPlayer';
-  ImageRGB.Picture.Bitmap.PixelFormat := pf24Bit;
-  FresImage.PixelFormat := pf24Bit;
-  {$ENDIF}
   PanelYUV.Visible := True;
-  //ImageRGB.Visible := False;
-
-  //ImageRGB.Width := PanelYUV.Width;
-  //ImageRGB.Height:= PanelYUV.Height;
-
   Memo1.Clear();
 end;
 
@@ -375,11 +360,6 @@ end;
 procedure TfrmMain.FormResize(Sender: TObject);
   var dMsg : String;
 begin
-{$IFNDEF DEF_OUTPUT_WIN}
-  dMsg := Format('[Form size: %d, %d]',[Width, Height]);
-  PrintDebugMessage(dMsg);
-  SendResize(PanelYUV.Width,PanelYUV.Height,'PanelYUVResize');
-{$ENDIF}
   FInitPanelWidth := PanelYUV.Width;
   FInitPanelHeight:= PanelYUV.Height;
 end;
@@ -404,32 +384,21 @@ begin
                    PrintDebugMessage( dMsg );
               end;
   FFP_STOP:   begin
-{$IFDEF DEF_RGB}
-                   StopPlaying();
-                   dMsg := '[Stop Status]';
-                   PrintDebugMessage( dMsg );
-                   PanelYUV.Visible:= False;
-{$ELSE}
                    StopPlaying();
                    dMsg := '[Stop Status]';
                    PrintDebugMessage( dMsg );
                    PanelYUV.Visible:= True;
                    PanelYUV.Invalidate();
-{$ENDIF}
               end;
   FFP_PLAY:   begin
                    Timer1.Enabled     := True;
                    ButtonPlay.Enabled := False;
                    ButtonStop.Enabled := True;
                    ButtonPause.Enabled:= True;
-{$IFNDEF DEF_RGB}
                    PanelYUV.Width := 0;
                    PanelYUV.Height:= 0;
                    PanelYUV.Width := FInitPanelWidth;
                    PanelYUV.Height:= FInitPanelHeight;
-{$ELSE}
-{$ENDIF}
-
                    dMsg := '[Play Status]';
                    PrintDebugMessage( dMsg );
             end
@@ -445,11 +414,6 @@ procedure TfrmMain.OnRefreshScreen(var Msg : TMessage);
       dMsg   : String;
       w, h, bpp, isRGB : Integer;
 begin
-{$IFNDEF DEF_OUTPUT_WIN}
-  isRGB := Msg.LParam;
-  FresImage.PixelFormat := pf24Bit;
-{$ENDIF}
-
   pPlay := PPlayData(Msg.WParam);
 
   updateScreen(RGBBuffer, pPlay^.w, pPlay^.h, pPlay^.Bpp);
@@ -517,6 +481,5 @@ procedure TfrmMain.updateTime(Current : double);
 begin
   FCurrentTime_Sec := Current;
 end;
-
 
 end.
