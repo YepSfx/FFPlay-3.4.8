@@ -37,6 +37,8 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure ButtonTestScreenClick(Sender: TObject);
     procedure ButtonCLIClick(Sender: TObject);
+    procedure ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
+      var ScrollPos: Integer);
   private
     { Private declarations }
     FCurrentTime_Sec   : double;
@@ -229,11 +231,24 @@ begin
 
 end;
 
+procedure TfrmMain.ScrollBar1Scroll(Sender: TObject; ScrollCode: TScrollCode;
+  var ScrollPos: Integer);
+begin
+   Timer1.Enabled := False;
+   if ScrollCode = scEndScroll then
+   begin
+      multimedia_seek_time(ScrollPos);
+   end;
+   Timer1.Enabled := True;
+end;
+
 procedure TfrmMain.ButtonCLIClick(Sender: TObject);
   var mediaFile : String;
       rtn       : Integer;
       msg       : String;
 begin
+  multimedia_use_simple_filter_configuration(FFP_TRUE);
+
   sti_events.sender           := self;
   sti_events.screenID         := 0;
   sti_events.uiType           := FFP_CLI;
@@ -274,6 +289,8 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
       rtn       : Integer;
       msg       : String;
 begin
+  multimedia_use_simple_filter_configuration(FFP_TRUE);
+
   sti_events.sender           := self;
   sti_events.screenID         := PanelYUV.Handle;
   sti_events.uiType           := FFP_GUI;
@@ -297,7 +314,13 @@ begin
             DuplicateArguments( FArgc, FArgs, mediaFile, False);
             DuplicateArguments( FArgc, FArgs, '-vf', True);
             DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
-            rtn := multimedia_start_gui_player_with_arguments( FArgc, FArgs, @sti_events);
+            rtn := multimedia_setup_gui_player_with_arguments( FArgc, FArgs, @sti_events);
+            if rtn = 0 then
+            begin
+              multimedia_stream_start();
+            end
+            else
+              ShowMessage('Player setup failure: ' + IntToStr(rtn));
           except
             ShowMessage('Have a problem to play!');
           end;

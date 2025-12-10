@@ -102,8 +102,12 @@ interface
        procedure multimedia_yuv420p_to_rgb32( YuvData : PFFP_YUV_DATA ; RGBBuff : pointer) ; cdecl ; external LIBNAME;
        procedure multimedia_rgb_swap(RGBData : pointer ; width, height, bpp, shiftR, shiftG, shiftB : Integer) ; cdecl ; external LIBNAME;
 
+       procedure multimedia_seek_time(posInSecond: Integer); cdecl ; external LIBNAME;
+       procedure multimedia_use_simple_filter_configuration( sw : TFFP_BOOL); cdecl ; external LIBNAME;
        procedure multimedia_test_screen( XwinID, latency : Integer ) ; cdecl ; external LIBNAME;
        function  multimedia_setup_gui_player( events : PFFP_EVENTS ):Integer; cdecl ; external LIBNAME;
+       function  multimedia_setup_gui_player_with_arguments( argc : Integer ; args : PPFFP_CHAR ; events : PFFP_EVENTS) : Integer ; cdecl ; external LIBNAME;
+
        function  multimedia_start_gui_player( filename : PFFP_CHAR ; events : PFFP_EVENTS) : Integer ; cdecl ; external LIBNAME;
        function  multimedia_start_gui_player_with_arguments( argc : Integer ; args : PPFFP_CHAR ; events : PFFP_EVENTS) : Integer ; cdecl ; external LIBNAME;
        function  multimedia_start_cli_player(argc : Integer ; argv : PPFFP_CHAR ; events : PFFP_EVENTS):Integer; cdecl ; external LIBNAME;

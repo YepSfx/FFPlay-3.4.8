@@ -394,7 +394,7 @@ static const struct TextureFormatEntry {
 
 //---->> FFPlayLib
     static int isFileOpen = 0;
-
+    static FFP_BOOL useSimpleFilterConfiguration = FFP_FALSE;
     static FFP_EVENTS  *FFP_events = NULL;
     static FFP_AUD_PARAMS ffp_aud_params;
     static FFP_VID_PARAMS ffp_vid_params;
@@ -2043,30 +2043,38 @@ static int configure_filtergraph(AVFilterGraph *graph, const char *filtergraph,
     int nb_filters = graph->nb_filters;
     AVFilterInOut *outputs = NULL, *inputs = NULL;
 
-    if (filtergraph) {
-        outputs = avfilter_inout_alloc();
-        inputs  = avfilter_inout_alloc();
-        if (!outputs || !inputs) {
-            ret = AVERROR(ENOMEM);
-            goto fail;
+    if (useSimpleFilterConfiguration == FFP_FALSE)
+    {
+        if (filtergraph) {
+            outputs = avfilter_inout_alloc();
+            inputs  = avfilter_inout_alloc();
+            if (!outputs || !inputs) {
+                ret = AVERROR(ENOMEM);
+                goto fail;
+            }
+
+            outputs->name       = av_strdup("in");
+            outputs->filter_ctx = source_ctx;
+            outputs->pad_idx    = 0;
+            outputs->next       = NULL;
+
+            inputs->name        = av_strdup("out");
+            inputs->filter_ctx  = sink_ctx;
+            inputs->pad_idx     = 0;
+            inputs->next        = NULL;
+
+            if ((ret = avfilter_graph_parse_ptr(graph, filtergraph, &inputs, &outputs, NULL)) < 0)
+                goto fail;
+        }else{
+            if ((ret = avfilter_link(source_ctx, 0, sink_ctx, 0)) < 0)
+                goto fail;
         }
-
-        outputs->name       = av_strdup("in");
-        outputs->filter_ctx = source_ctx;
-        outputs->pad_idx    = 0;
-        outputs->next       = NULL;
-
-        inputs->name        = av_strdup("out");
-        inputs->filter_ctx  = sink_ctx;
-        inputs->pad_idx     = 0;
-        inputs->next        = NULL;
-
-        if ((ret = avfilter_graph_parse_ptr(graph, filtergraph, &inputs, &outputs, NULL)) < 0)
-            goto fail;
-    } else {
+    }
+    else
+    {
         if ((ret = avfilter_link(source_ctx, 0, sink_ctx, 0)) < 0)
             goto fail;
-    }
+    }   
 
     /* Reorder the filters to ensure that inputs of the custom filters are merged first */
     for (i = 0; i < graph->nb_filters - nb_filters; i++)
@@ -4817,5 +4825,10 @@ void EXPORTDLL multimedia_seek_time(int posInSecond)
     event.user.data1 = pos;
 
     SDL_PushEvent(&event);
+}
+
+void EXPORTDLL multimedia_use_simple_filter_configuration(FFP_BOOL sw)
+{
+    useSimpleFilterConfiguration = sw;
 }
 //<<----FFPlayLib

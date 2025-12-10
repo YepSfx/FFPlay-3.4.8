@@ -54,7 +54,7 @@
 			<DelphiCompile Include="FFPlay_Delphi_2010.dpr">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="uMain.pas">
+			<DCCReference Include="umain.pas">
 				<Form>frmMain</Form>
 			</DCCReference>
 			<DCCReference Include="FFPlay.pas"/>

@@ -126,5 +126,6 @@ void             EXPORTDLL multimedia_stream_stop();
 void             EXPORTDLL multimedia_stream_start();
 void             EXPORTDLL multimedia_exit();
 void 		         EXPORTDLL multimedia_test_screen( int xWinID, int latency ); 
+void             EXPORTDLL multimedia_use_simple_filter_configuration(FFP_BOOL sw);
 void             EXPORTDLL SaveFramebufferAsPPM(void* Buff, int w, int h, int Bpp); 
 

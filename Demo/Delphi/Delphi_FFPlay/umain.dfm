@@ -101,6 +101,7 @@ object frmMain: TfrmMain
     Anchors = [akLeft, akRight, akBottom]
     PageSize = 0
     TabOrder = 4
+    OnScroll = ScrollBar1Scroll
   end
   object ButtonTestScreen: TButton
     Left = 8
