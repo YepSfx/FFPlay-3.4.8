@@ -175,7 +175,7 @@ namespace WinformPlay
                 try 
                 {
                     string[] argv = { @"GUI_Player" };
-                    string[] args = { utf16FileName };
+                    string[] args = { utf16FileName, @"-vf", @"yadif=1" };
 
                     Array.Resize(ref argv, argv.Length + args.Length);
                     for (int i = 0; i < args.Length; i++)
