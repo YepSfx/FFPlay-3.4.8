@@ -220,6 +220,7 @@ void CMFCFFPlayDlg::setPlayingMode(enum PLAYINGMODE playmode)
 			m_Label_Pos.SetWindowText(CString(""));
 			m_Pannel_yuv.Invalidate();
 			m_Edit_Seek.SetWindowText(CString(""));
+			m_Is_Seek = false;
 			break;
 		case PLAY:
 			if (m_Is_Seek == true)
