@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
 using FFPlayLib;
+using System.IO;
 
 namespace WinformPlay
 {
@@ -167,6 +168,11 @@ namespace WinformPlay
             if (openMediaFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string utf16FileName = openMediaFileDialog.FileName;
+                string utf16SmiPath = Path.ChangeExtension(utf16FileName, ".smi");
+                string utf16SubtitleArg = utf16SmiPath.Replace("\\", "/");
+                utf16SubtitleArg = utf16SubtitleArg.Replace(":", @"\:");
+                utf16SubtitleArg = string.Format("subtitles='{0}':charenc=cp949", utf16SubtitleArg);
+                
                 IntPtr self = (IntPtr)mForm;
                 UInt32 hYuv = (UInt32)mPanelYUV.Handle;
                 
@@ -174,8 +180,19 @@ namespace WinformPlay
                 IntPtr[] utf8Ptrs = { IntPtr.Zero };
                 try 
                 {
-                    string[] argv = { @"GUI_Player" };
-                    string[] args = { utf16FileName, @"-vf", @"yadif=1" };
+                    string[] argv;
+                    string[] args;
+
+                    if (File.Exists(utf16SmiPath))
+                    {
+                        argv = new string[]{ @"GUI_Player" };
+                        args = new string[]{ utf16FileName, @"-vf", utf16SubtitleArg, @"-vf", @"yadif=1" };
+                    }
+                    else
+                    {
+                        argv = new string[] { @"GUI_Player" };
+                        args = new string[] { utf16FileName, @"-vf", @"yadif=1" };
+                    }
 
                     Array.Resize(ref argv, argv.Length + args.Length);
                     for (int i = 0; i < args.Length; i++)
@@ -274,7 +291,7 @@ namespace WinformPlay
                 try
                 {
                     string[] argv = { @"CLI_Player" };
-                    string[] args = { utf16FileName };
+                    string[] args = { utf16FileName};
 
                     Array.Resize(ref argv, argv.Length + args.Length);
                     for (int i = 0; i < args.Length; i++)

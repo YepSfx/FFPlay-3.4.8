@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -184,13 +185,28 @@ namespace WpfPlay
             if (mOpenFileDialog.ShowDialog() == true)
             {
                 string utf16FileName = mOpenFileDialog.FileName;
+                string utf16SmiPath = System.IO.Path.ChangeExtension(utf16FileName, ".smi");
+                string utf16SubtitleArg = utf16SmiPath.Replace("\\", "/");
+                utf16SubtitleArg = utf16SubtitleArg.Replace(":", @"\:");
+                utf16SubtitleArg = string.Format("subtitles='{0}':charenc=cp949", utf16SubtitleArg);
 
                 IntPtr argvPtr = IntPtr.Zero;
                 IntPtr[] utf8Ptrs = { IntPtr.Zero };
                 try
                 {
-                    string[] argv = { @"WPF_GUI_Player" };
-                    string[] args = { utf16FileName, @"-vf", @"yadif=1" };
+                    string[] argv;
+                    string[] args;
+
+                    if (File.Exists(utf16SmiPath))
+                    {
+                        argv = new string[] { @"GUI_Player" };
+                        args = new string[] { utf16FileName, @"-vf", utf16SubtitleArg, @"-vf", @"yadif=1" };
+                    }
+                    else
+                    {
+                        argv = new string[] { @"GUI_Player" };
+                        args = new string[] { utf16FileName, @"-vf", @"yadif=1" };
+                    }
 
                     Array.Resize(ref argv, argv.Length + args.Length);
                     for (int i = 0; i < args.Length; i++)

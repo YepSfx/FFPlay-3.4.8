@@ -498,7 +498,9 @@ begin
 end;
 
 procedure TfrmMain.ButtonPlayClick(Sender: TObject);
-  var mediaFile : AnsiString;
+  var mediaFile    : AnsiString;
+      subTitleFile : AnsiString;
+      subTitleArg  : AnsiString;
       rtn       : Integer;
       msg       : String;
 {$IFNDEF DEF_OUTPUT_WIN}
@@ -543,11 +545,24 @@ begin
        if OpenDialog.Execute() then
        begin
           mediaFile := AnsiString(OpenDialog.FileName);
+          subTitleFile := AnsiString(ChangeFileExt(mediaFile,'.smi'));
+          subTitleArg := StringReplace(subTitleFile, '\', '/',[rfReplaceAll]);
+          subTitleArg := StringReplace(subTitleArg, ':','\:',[rfReplaceAll]);
           try
             //rtn := multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
             DuplicateArguments( FArgc, FArgs, mediaFile);
-            DuplicateArguments( FArgc, FArgs, '-vf', True);
-            DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+            if FileExists(subTitleFile) then
+            begin
+              subTitleArg := Format('subtitles=''%s'':charenc=cp949',[subTitleArg]);
+              DuplicateArguments( FArgc, FArgs, '-vf', True);
+              DuplicateArguments( FArgc, FArgs, subTitleArg, True);
+              DuplicateArguments( FArgc, FArgs, '-vf', True);
+              DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+            end else begin
+              DuplicateArguments( FArgc, FArgs, '-vf', True);
+              DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+            end;
+
             //rtn := multimedia_start_gui_player_with_arguments( FArgc, FArgs, @sti_events);  //Don't use this
             rtn := multimedia_setup_gui_player_with_arguments( FArgc, FArgs, @sti_events);
             if rtn = 0 then
@@ -563,11 +578,22 @@ begin
        begin
          Application.ProcessMessages();
          mediaFile := AnsiString(OpenDialog.FileName);
+         subTitleFile := ChangeFileExt(mediaFile,'.smi');
+         subTitleArg := subTitleFile;
          try
            //rtn := multimedia_start_gui_player( PFFP_CHAR(mediaFile), @sti_events);
            DuplicateArguments( FArgc, FArgs, mediaFile);
-           DuplicateArguments( FArgc, FArgs, '-vf', True);
-           DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+           if FileExists(subTitleFile) then
+           begin
+             subTitleArg := Format('subtitles=''%s'':charenc=cp949',[subTitleArg]);
+             DuplicateArguments( FArgc, FArgs, '-vf', True);
+             DuplicateArguments( FArgc, FArgs, subTitleArg, True);
+             DuplicateArguments( FArgc, FArgs, '-vf', True);
+             DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+           end else begin
+             DuplicateArguments( FArgc, FArgs, '-vf', True);
+             DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+           end;
            //rtn := multimedia_start_gui_player_with_arguments( FArgc, FArgs, @sti_events);  //Don't use this
            rtn := multimedia_setup_gui_player_with_arguments( FArgc, FArgs, @sti_events);
            if rtn = 0 then
