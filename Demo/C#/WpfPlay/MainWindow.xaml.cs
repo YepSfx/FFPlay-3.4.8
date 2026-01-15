@@ -188,7 +188,7 @@ namespace WpfPlay
                 string utf16SmiPath = System.IO.Path.ChangeExtension(utf16FileName, ".smi");
                 string utf16SubtitleArg = utf16SmiPath.Replace("\\", "/");
                 utf16SubtitleArg = utf16SubtitleArg.Replace(":", @"\:");
-                utf16SubtitleArg = string.Format("subtitles='{0}':charenc=cp949", utf16SubtitleArg);
+                utf16SubtitleArg = string.Format("subtitles='{0}':charenc=cp949,yadif=1", utf16SubtitleArg);
 
                 IntPtr argvPtr = IntPtr.Zero;
                 IntPtr[] utf8Ptrs = { IntPtr.Zero };
@@ -200,7 +200,7 @@ namespace WpfPlay
                     if (File.Exists(utf16SmiPath))
                     {
                         argv = new string[] { @"GUI_Player" };
-                        args = new string[] { utf16FileName, @"-vf", utf16SubtitleArg, @"-vf", @"yadif=1" };
+                        args = new string[] { utf16FileName, @"-vf", utf16SubtitleArg };
                     }
                     else
                     {

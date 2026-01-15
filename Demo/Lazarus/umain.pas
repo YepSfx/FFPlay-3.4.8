@@ -553,11 +553,9 @@ begin
             DuplicateArguments( FArgc, FArgs, mediaFile);
             if FileExists(subTitleFile) then
             begin
-              subTitleArg := Format('subtitles=''%s'':charenc=cp949',[subTitleArg]);
+              subTitleArg := Format('subtitles=''%s'':charenc=cp949,yadif=1',[subTitleArg]);
               DuplicateArguments( FArgc, FArgs, '-vf', True);
               DuplicateArguments( FArgc, FArgs, subTitleArg, True);
-              DuplicateArguments( FArgc, FArgs, '-vf', True);
-              DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
             end else begin
               DuplicateArguments( FArgc, FArgs, '-vf', True);
               DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
@@ -585,11 +583,9 @@ begin
            DuplicateArguments( FArgc, FArgs, mediaFile);
            if FileExists(subTitleFile) then
            begin
-             subTitleArg := Format('subtitles=''%s'':charenc=cp949',[subTitleArg]);
+             subTitleArg := Format('subtitles=''%s'':charenc=cp949,yadif=1',[subTitleArg]);
              DuplicateArguments( FArgc, FArgs, '-vf', True);
              DuplicateArguments( FArgc, FArgs, subTitleArg, True);
-             DuplicateArguments( FArgc, FArgs, '-vf', True);
-             DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
            end else begin
              DuplicateArguments( FArgc, FArgs, '-vf', True);
              DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
