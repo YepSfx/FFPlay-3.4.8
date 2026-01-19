@@ -246,8 +246,10 @@ procedure TfrmMain.ButtonCLIClick(Sender: TObject);
   var mediaFile : String;
       rtn       : Integer;
       msg       : String;
+      args      : array[0..3] of PFFP_CHAR;
+      argc      : Integer;
 begin
-  multimedia_use_simple_filter_configuration(FFP_TRUE);
+  //multimedia_use_simple_filter_configuration(FFP_TRUE);
 
   sti_events.sender           := self;
   sti_events.screenID         := 0;
@@ -263,20 +265,26 @@ begin
   sti_events.eventVideo       := nil;
   PanelYUV.Visible            := True;
 
+  args[0] := PFFP_CHAR('FFPlay_Delphi');
+  args[1] := nil;
+  args[2] := PFFP_CHAR('-vf');
+  args[3] := PFFP_CHAR('yadif=1');
+  argc := 4;
 
-       if OpenDialog.Execute() then
-       begin
-          mediaFile := OpenDialog.FileName;
-          try
+  if OpenDialog.Execute() then
+   begin
+     mediaFile := OpenDialog.FileName;
+     try
             //rtn := multimedia_start_gui_player( PFFP_CHAR(UTF8Encode(mediaFile)), @sti_events);
-            DuplicateArguments( FArgc, FArgs, mediaFile, False);
-            DuplicateArguments( FArgc, FArgs, '-vf', True);
-            DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
-            rtn := multimedia_start_cli_player( FArgc, FArgs, @sti_events);
-          except
-            ShowMessage('Have a problem to play!');
-          end;
-       end;
+            //DuplicateArguments( FArgc, FArgs, mediaFile, False);
+            //DuplicateArguments( FArgc, FArgs, '-vf', True);
+            //DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+        args[1] := PFFP_CHAR( UTF8Encode(mediaFile) );
+        rtn := multimedia_start_cli_player( argc, @args, @sti_events);
+     except
+        ShowMessage('Have a problem to play!');
+     end;
+   end;
 end;
 
 procedure TfrmMain.ButtonPauseClick(Sender: TObject);
@@ -288,8 +296,10 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
   var mediaFile : String;
       rtn       : Integer;
       msg       : String;
+      args      : array[0..3] of PFFP_CHAR;
+      argc      : Integer;
 begin
-  multimedia_use_simple_filter_configuration(FFP_TRUE);
+  //multimedia_use_simple_filter_configuration(FFP_TRUE);
 
   sti_events.sender           := self;
   sti_events.screenID         := PanelYUV.Handle;
@@ -305,26 +315,31 @@ begin
   sti_events.eventVideo       := nil;
   PanelYUV.Visible            := True;
 
+  args[0] := PFFP_CHAR('FFPlay_Delphi');
+  args[1] := nil;
+  args[2] := PFFP_CHAR('-vf');
+  args[3] := PFFP_CHAR('yadif=1');
+  argc := 4;
 
-       if OpenDialog.Execute() then
+  if OpenDialog.Execute() then
+  begin
+     mediaFile := OpenDialog.FileName;
+     try
+       //rtn := multimedia_start_gui_player( PFFP_CHAR(UTF8Encode(mediaFile)), @sti_events);
+       //DuplicateArguments( FArgc, FArgs, mediaFile, False);
+       //DuplicateArguments( FArgc, FArgs, '-vf', True);
+       //DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
+       args[1] := PFFP_CHAR( UTF8Encode(mediaFile) );
+       rtn := multimedia_setup_gui_player_with_arguments( argc, @args, @sti_events);
+       if rtn = 0 then
        begin
-          mediaFile := OpenDialog.FileName;
-          try
-            //rtn := multimedia_start_gui_player( PFFP_CHAR(UTF8Encode(mediaFile)), @sti_events);
-            DuplicateArguments( FArgc, FArgs, mediaFile, False);
-            DuplicateArguments( FArgc, FArgs, '-vf', True);
-            DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
-            rtn := multimedia_setup_gui_player_with_arguments( FArgc, FArgs, @sti_events);
-            if rtn = 0 then
-            begin
-              multimedia_stream_start();
-            end
-            else
-              ShowMessage('Player setup failure: ' + IntToStr(rtn));
-          except
-            ShowMessage('Have a problem to play!');
-          end;
-       end;
+           multimedia_stream_start();
+       end else
+           ShowMessage('Player setup failure: ' + IntToStr(rtn));
+     except
+       ShowMessage('Have a problem to play!');
+     end;
+  end;
 end;
 
 procedure TfrmMain.ButtonStopClick(Sender: TObject);

@@ -21,7 +21,7 @@ interface
                                  FFP_PAUSED  = 2,
                                  FFP_RESUMED = 3 );
        type TFFP_CHAR = AnsiChar;
-       type PFFP_CHAR = ^TFFP_CHAR;
+       type PFFP_CHAR = PAnsiChar;
        type PPFFP_CHAR = array of PFFP_CHAR;
 
        type TFFP_AUD_PARAMS = record
