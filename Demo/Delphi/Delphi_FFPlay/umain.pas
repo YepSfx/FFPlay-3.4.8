@@ -298,6 +298,8 @@ procedure TfrmMain.ButtonPlayClick(Sender: TObject);
       msg       : String;
       args      : array[0..3] of PFFP_CHAR;
       argc      : Integer;
+      subTitleFile : String;
+      subTitleArg  : String;
 begin
   //multimedia_use_simple_filter_configuration(FFP_TRUE);
 
@@ -318,18 +320,27 @@ begin
   args[0] := PFFP_CHAR('FFPlay_Delphi');
   args[1] := nil;
   args[2] := PFFP_CHAR('-vf');
-  args[3] := PFFP_CHAR('yadif=1');
   argc := 4;
 
   if OpenDialog.Execute() then
   begin
      mediaFile := OpenDialog.FileName;
+     subTitleFile := (ChangeFileExt(mediaFile,'.smi'));
+     subTitleArg := StringReplace(subTitleFile, '\', '/',[rfReplaceAll]);
+     subTitleArg := StringReplace(subTitleArg, ':','\:',[rfReplaceAll]);
      try
        //rtn := multimedia_start_gui_player( PFFP_CHAR(UTF8Encode(mediaFile)), @sti_events);
        //DuplicateArguments( FArgc, FArgs, mediaFile, False);
        //DuplicateArguments( FArgc, FArgs, '-vf', True);
        //DuplicateArguments( FArgc, FArgs, 'yadif=1', True);
        args[1] := PFFP_CHAR( UTF8Encode(mediaFile) );
+       if FileExists(subTitleFile) then
+       begin
+          subTitleArg := Format('subtitles=''%s'':charenc=cp949,yadif=1',[subTitleArg]);
+          args[3] := PFFP_CHAR( UTF8Encode(subTitleArg) );
+       end else begin
+          args[3] := PFFP_CHAR('yadif=1');
+       end;
        rtn := multimedia_setup_gui_player_with_arguments( argc, @args, @sti_events);
        if rtn = 0 then
        begin
