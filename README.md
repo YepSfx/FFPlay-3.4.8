@@ -49,8 +49,6 @@ Instead of using a Makefile, two scripts are provided for building:
 - For detailed instructions on installing MSYS2 and building SDL2/FFmpeg, refer to their official documentation.
 
 
-## Screenshots
-https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/ubuntu.png
 
 
 
