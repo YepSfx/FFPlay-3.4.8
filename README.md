@@ -50,7 +50,9 @@ Instead of using a Makefile, two scripts are provided for building:
 
 
 ## Screenshots
-screenshots/ubuntu.png
+https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/ubuntu.png
+
+
 
 ---
 If you have any questions, please e-mail me @ cj.github.proj@gmail.com
