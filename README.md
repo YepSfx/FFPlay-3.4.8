@@ -48,8 +48,14 @@ Instead of using a Makefile, two scripts are provided for building:
 - Ensure all dependencies are correctly installed and available in your system path before building or running demos.
 - For detailed instructions on installing MSYS2 and building SDL2/FFmpeg, refer to their official documentation.
 
+## Screenshots
 
-
+![Ubuntu screenshot](https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/ubuntu.png "Lazarus FFPlayer in Ubuntu")
+![DELPHI screenshot](https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/win-delphi.png "DELPHI FFPlayer in Windows")
+![Lazarus screenshot](https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/win-laz.png "Lazarus FFPlayer in Windows")
+![MFC(C++) screenshot](https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/win-mfc(cpp).png "MFC(C++) FFPlayer in Windows")
+![Winforms (C# .Net) screenshot](https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/win-winforms.png "C# Winforms FFPlayer in Windows")
+![WPF (C# .Net) screenshot](https://raw.githubusercontent.com/YepSfx/FFPlay-3.4.8/main/screenshots/win-wpf.png "C# WPF FFPlayer in Windows")
 
 
 ---
