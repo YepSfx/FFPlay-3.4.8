@@ -47,3 +47,8 @@ Instead of using a Makefile, two scripts are provided for building:
 ### Notes
 - Ensure all dependencies are correctly installed and available in your system path before building or running demos.
 - For detailed instructions on installing MSYS2 and building SDL2/FFmpeg, refer to their official documentation.
+
+
+
+---
+If you have any questions, please e-mail me @ cj.github.proj@gmail.com
