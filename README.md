@@ -30,7 +30,7 @@ To build the library for **Windows OS**:
 
 ---
 
-## Build Requirements (Windows)
+## Build Requirements (Linux - Ubuntu)
 - **GCC version 14**
 - **SDL2** library must be built on the build machine.
 - **ffmpeg 3.4.x** (https://ffmpeg.org/download.html) must be built on the build machine.
