@@ -39,28 +39,37 @@ object frmMain: TfrmMain
     DesignSize = (
       988
       385)
+    object ImageRGB: TImage
+      Left = 5
+      Top = 6
+      Width = 979
+      Height = 374
+      Anchors = [akLeft, akTop, akRight, akBottom]
+      Center = True
+      Proportional = True
+      Stretch = True
+    end
     object PanelYUV: TPanel
-      Left = 8
+      Left = 6
       Top = 8
-      Width = 969
+      Width = 975
       Height = 368
       Anchors = [akLeft, akTop, akRight, akBottom]
       Color = clGreen
       ParentBackground = False
       TabOrder = 0
       OnDblClick = PanelYUVDblClick
-      DesignSize = (
-        969
-        368)
-      object Memo1: TMemo
-        Left = 8
-        Top = 8
-        Width = 449
-        Height = 350
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        TabOrder = 0
-        Visible = False
-      end
+    end
+    object Memo1: TMemo
+      Left = 10
+      Top = 12
+      Width = 393
+      Height = 361
+      Lines.Strings = (
+        'Memo1')
+      ScrollBars = ssBoth
+      TabOrder = 1
+      Visible = False
     end
   end
   object ButtonPlay: TButton

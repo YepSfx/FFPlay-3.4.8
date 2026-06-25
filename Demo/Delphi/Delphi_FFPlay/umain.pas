@@ -6,6 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, FFPlay;
 
+//{$DEFINE DEF_RGB}
 const WM_USER_RESIZE          = WM_USER + $01;
       WM_USER_REFRESH         = WM_USER + $02;
       WM_USER_STATUS          = WM_USER + $03;
@@ -22,10 +23,11 @@ type
     OpenDialog: TOpenDialog;
     Timer1      : TTimer;
     ScrollBar1  : TScrollBar;
-    Memo1: TMemo;
     Label1: TLabel;
     ButtonTestScreen: TButton;
     ButtonCLI: TButton;
+    Memo1: TMemo;
+    ImageRGB: TImage;
     procedure FormResize(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormDestroy(Sender: TObject);
@@ -57,7 +59,7 @@ type
     procedure OnRefreshEvent(var Msg : TMessage); message WM_USER_EVENT_REFRESH;
     procedure OnUserLog(var Msg : TMessage); message WM_USER_EVENT_LOG;
     procedure stopPlaying();
-    procedure updateScreen( Buffer : pointer ; w,h,Bpp : Integer);
+    procedure UpdateScreen( Buffer : pointer ; w,h,Bpp : Integer);
     procedure updateTime(Current : double);
   end;
 
@@ -313,9 +315,20 @@ begin
   sti_events.eventStatus      := @EventPlayStatus;
   sti_events.eventRefresh     := @EventRefreshHandler;
   sti_events.playStatus       := FFP_STOP;
-  sti_events.bRendererRGB     := 0;
-  sti_events.eventVideo       := nil;
-  PanelYUV.Visible            := True;
+  {$IFDEF DEF_RGB}
+    sti_events.bRendererRGB     := 1;
+    sti_events.eventVideo       := EventVideo;
+    ImageRGB.Enabled            := True;
+    ImageRGB.Visible            := True;
+    PanelYUV.Visible            := False;
+    PanelYUV.Enabled            := False;
+    PanelYUV.Top                := -8172*4;//Height +100;
+    PanelYUV.Left               := -8172*4;//Width +100;
+  {$ELSE}
+    sti_events.bRendererRGB     := 0;
+    sti_events.eventVideo       := nil;
+    PanelYUV.Visible            := True;
+  {$ENDIF}
 
   args[0] := PFFP_CHAR('FFPlay_Delphi');
   args[1] := nil;
@@ -392,9 +405,23 @@ begin
   ButtonPause.Enabled:= False;
 
   FresImage := TBitmap.Create();
-  Self.Caption := 'Delphi FFPlayer';
   FresImage.PixelFormat := pf32Bit;
+  {$IFDEF DEF_RGB}
+  PanelYUV.Enabled := False;
+  PanelYUV.Visible := False;
+  ImageRGB.Enabled := True;
+  ImageRGB.Visible := True;
+  ImageRGB.Parent.DoubleBuffered := True;
+  Self.DoubleBuffered := True;
+  Self.Caption := 'Delphi FFPlayer (RGB mode)';
+  {$ELSE}
+  PanelYUV.Enabled := True;
   PanelYUV.Visible := True;
+  ImageRGB.Enabled := False;
+  ImageRGB.Visible := False;
+  Self.Caption := 'Delphi FFPlayer (YUV mode)';
+  {$ENDIF}
+
   Memo1.Clear();
 end;
 
@@ -436,8 +463,13 @@ begin
                    StopPlaying();
                    dMsg := '[Stop Status]';
                    PrintDebugMessage( dMsg );
+                   {$IFDEF DEF_RGB}
+                   ImageRGB.Picture.Assign(nil);
+                   ImageRGB.Invalidate();
+                   {$ELSE}
                    PanelYUV.Visible:= True;
                    PanelYUV.Invalidate();
+                   {$ENDIF}
               end;
   FFP_PLAY:   begin
                    Timer1.Enabled     := True;
@@ -465,17 +497,34 @@ procedure TfrmMain.OnRefreshScreen(var Msg : TMessage);
 begin
   pPlay := PPlayData(Msg.WParam);
 
-  updateScreen(RGBBuffer, pPlay^.w, pPlay^.h, pPlay^.Bpp);
+  UpdateScreen(RGBBuffer, pPlay^.w, pPlay^.h, pPlay^.Bpp);
 
   FreeMem(pPlay);
 end;
 
 procedure TfrmMain.UpdateScreen(Buffer : pointer ; w, h, BPP : Integer);
-  var
-    pSrc, pDst : PByte;
-    size       : Integer;
-    dMsg       : String;
+  var pSrc, pDst : PByte;
+      lineLen,i : Integer;
 begin
+  pSrc := Buffer;
+  lineLen := w * Bpp;
+  try
+    multimedia_rgb_swap(Buffer, w, h, Bpp, 16, 8, 0);
+
+    FresImage.SetSize(w,h);
+    for i := 0 to h - 1 do
+    begin
+      pDst := FresImage.ScanLine[i];
+      CopyMemory( pDst, pSrc, lineLen);
+      Inc(pSrc, lineLen);
+    end;
+
+    ImageRGB.Picture.Assign(FresImage);
+    ImageRGB.Invalidate();
+  except
+    ShowMessage('Error occured! Stop playing...');
+    ButtonStopClick(Self);
+  end;
 end;
 
 procedure TfrmMain.OnResizeScreen(var Msg: TMessage);
