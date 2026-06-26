@@ -13,7 +13,7 @@ This repository provides a multimedia playback library and sample demos to demon
 - **Delphi / Lazarus**
 - **C++ MFC**
 - **C# (WinForms and WPF)**
-
+- **Python (Windows Only)**
 ---
 
 ## Usage
