@@ -22,9 +22,9 @@ object frmMain: TfrmMain
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 8
+    Left = 170
     Top = 430
-    Width = 3
+    Width = 9
     Height = 13
     Anchors = [akLeft, akBottom]
   end
