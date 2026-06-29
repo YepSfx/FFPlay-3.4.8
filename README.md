@@ -5,7 +5,7 @@ This repository provides a multimedia playback library and sample demos to demon
 ---
 
 ## Library
-**FFPlayLib** is a library for playing multimedia file formats supported by **FFPlay** in **FFmpeg 3.4.8**.
+**FFPlayLib** is a library for playing multimedia file formats supported by **FFPlay** in **FFmpeg 3.4.x**.
 
 ---
 
