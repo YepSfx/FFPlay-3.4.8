@@ -12,9 +12,11 @@ gcc -Wl,--large-address-aware -o FFPlay.exe FFPlay.o FFPlayLib.dll
 strip FFPlay.exe 
 
 cp ./FFPlayLib.dll ../Demo/Bin
+cp ./FFPlayLibWrapper.dll ../Demo/Bin
 cp ./FFPlay.exe  ../Demo/Bin
 
 rm ./FFPlayLib.dll
+rm ./FFPlayLibWrapper.dll
 rm ./FFPlay.exe
 rm *.o
 rm ./config.h
