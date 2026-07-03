@@ -18,7 +18,8 @@ def on_resize(sender, width, height, is_original):
     print(f'-->> Video Resize: {width}x{height}, original={is_original}')
 
 def on_status(sender, status):
-    win = wx.FindWindowById(sender)
+    sender32 = ctypes.c_int32(sender).value
+    win = wx.FindWindowById(sender32)
     if isinstance(win, frmMain):
        form = win
        if status == FFPlayLibWrapper.FFP_PLAY_STATUS.FFP_STOP:
@@ -92,9 +93,11 @@ class frmMain(wx.Frame):
             style=wx.DEFAULT_FRAME_STYLE,
         )
         self.Centre(wx.BOTH)
-        self.formID = self.GetId()
         self._init_components()
         self._bind_events()
+
+        self.formID = self.GetId();
+
         self.set_playing_mode(self.PLAYINGMODE.STOP)
 
     def _init_components(self):
@@ -139,7 +142,6 @@ class frmMain(wx.Frame):
         main_sizer.Add(self.mPanelYUV, 1, wx.EXPAND | wx.ALL, 12)
         main_sizer.Add(bottom_sizer, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 12)
 
-        self.yuvID = self.mPanelYUV.GetHandle()
         self.panel.SetSizer(main_sizer)
 
     def _bind_events(self):
@@ -174,6 +176,8 @@ class frmMain(wx.Frame):
                args = [arg.encode("utf-8") for arg in sys.argv]
                argc = len(args)
                argv = (ctypes.c_char_p * argc)(*args)
+
+               self.yuvID = self.mPanelYUV.GetHandle()
 
                self.elements.sender = self.formID
                self.elements.yuvHandle = self.yuvID

@@ -1,13 +1,15 @@
 cp ./configs/config-ubuntu.h ./config.h
 
-gcc -fPIC -I. -I./ -g -c -o cmdutils.o cmdutils.c
-gcc -fPIC -I. -I./ -I/usr/local/include/SDL2 -D_REENTRANT -g -c -o FFPlayLib.o FFPlayLib.c
+gcc -fPIC -I. -I./ -g -O2 -c -o cmdutils.o cmdutils.c
+gcc -fPIC -I. -I./ -I/usr/local/include/SDL2 -D_REENTRANT -g -O2 -c -o FFPlayLib.o FFPlayLib.c
+gcc -fPIC -I. -I./ -g -O2 -c -o FFPlayLibWrapper.o FFPlayLibWrapper.c
+
 #gcc -shared -o libFFPlay.so FFPlayLib.o cmdutils.o -L/usr/local/lib -lavdevice -lavfilter -lavformat -lavcodec -lswresample -lswscale -lavutil -lXv -lX11 -lXext -lxcb -lxcb-shm -#lxcb-xfixes -lxcb-shape -lsndio -lasound -lSDL2 -lm -ldl -lz -pthread
 
 gcc -shared -o libFFPlay.so FFPlayLib.o cmdutils.o -L/usr/local/lib -lavdevice -lavfilter -lavformat -lavcodec -lswresample -lswscale -lavutil -lXv -lX11 -lXext -lsndio -lasound -lSDL2 -lm -ldl -lz -pthread
+gcc -shared -o libFFPlayWrapper.so FFPlayLibWrapper.o libFFPlay.so
 
-
-strip libFFPlay.so
+strip libFFPlay.so libFFPlayWrapper.so
 
 gcc -I. -I./ -c -o FFPlay.o FFPlay.c
 gcc -o FFPlay FFPlay.o libFFPlay.so 
