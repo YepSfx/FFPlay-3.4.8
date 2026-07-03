@@ -1,7 +1,8 @@
-import wx
+import os
 import sys
 import ctypes
 from ctypes import *
+import wx
 import FFPlayLibWrapper
 
 def on_exit(sender, code):
@@ -229,6 +230,9 @@ class frmMain(wx.Frame):
            self.mLabelPos.SetLabel(f' Playing Position:  {curr} / {max}')
 
     def frmMain_FormClosing(self, event):
+        if self.currentStatus != FFPlayLibWrapper.FFP_PLAY_STATUS.FFP_STOP:
+           self.mButtonStop_Click(None)
+
         self.mTimer.Stop()
         event.Skip()    # DO NOT REMOVE
 
@@ -244,6 +248,10 @@ class frmMain(wx.Frame):
         print('**** Hello World! ****')
 
 if __name__ == "__main__":
+    if (os.environ.get("XDG_SESSION_TYPE") == "wayland" and os.environ.get("GDK_BACKEND") != "x11"):
+        os.environ["GDK_BACKEND"] = "x11"
+        os.execv(sys.executable, [sys.executable] + sys.argv)
+
     app = wx.App(False)
     frame = frmMain()
     frame.Show()
